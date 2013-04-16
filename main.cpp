@@ -1,6 +1,6 @@
 //Author: Chak Wai Yuan
 //RustyCoder Version: Major.Minor.Patch+build.number.date
-//RustyCoder Version: 0.1.0+build.1.20130413
+//RustyCoder Version: 0.1.0+build.2.20130416
 #include "res/resource.h"
 #include <windows.h>
 #include <iostream>
@@ -9,8 +9,8 @@
 using namespace std;
 /*  Make the class name into a global variable  */
 const wstring szClassName = L"Song Randomizer";
-const unsigned int MAIN_WIDTH = 900;
-const unsigned int MAIN_HEIGHT = 600;
+const unsigned int MAIN_CLIENT_AREA_WIDTH = 900;
+const unsigned int MAIN_CLIENT_AREA_HEIGHT = 600;
 HANDLE g_hChildStd_IN_Rd = NULL;
 HANDLE g_hChildStd_IN_Wr = NULL;
 HANDLE g_hChildStd_OUT_Rd = NULL;
@@ -30,6 +30,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
     HWND hwnd;               /* This is the handle for our window */
     MSG messages;            /* Here messages to the application are saved */
     WNDCLASSEX wincl;        /* Data structure for the windowclass */
+    RECT main_form_client_area;
 
     /* The Window structure */
     wincl.hInstance = hThisInstance;
@@ -58,16 +59,18 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
         wincl.lpszClassName,         /* Classname */
         wincl.lpszClassName,       /* Title Text */
         WS_OVERLAPPEDWINDOW, /* default window */
-        (static_cast<unsigned int>(GetSystemMetrics(SM_CXSCREEN)) - MAIN_WIDTH) / 2,       /* Windows decides the position */
-        (static_cast<unsigned int>(GetSystemMetrics(SM_CYSCREEN)) - MAIN_HEIGHT) / 2,       /* where the window ends up on the screen */
-        MAIN_WIDTH,                 /* The programs width */
-        MAIN_HEIGHT,                 /* and height in pixels */
+        (static_cast<unsigned int>(GetSystemMetrics(SM_CXSCREEN)) - MAIN_CLIENT_AREA_WIDTH) / 2,       /* Windows decides the position */
+        (static_cast<unsigned int>(GetSystemMetrics(SM_CYSCREEN)) - MAIN_CLIENT_AREA_HEIGHT) / 2,       /* where the window ends up on the screen */
+        MAIN_CLIENT_AREA_WIDTH,                 /* The programs width */
+        MAIN_CLIENT_AREA_HEIGHT,                 /* and height in pixels */
         HWND_DESKTOP,        /* The window is a child-window to desktop */
         NULL,                /* No menu */
         hThisInstance,       /* Program Instance handler */
         nullptr                 /* No Window Creation data */
         );
 
+    GetClientRect(hwnd, &main_form_client_area);
+    SetWindowPos(hwnd, nullptr, 0, 0, MAIN_CLIENT_AREA_WIDTH * 2 - main_form_client_area.right, MAIN_CLIENT_AREA_HEIGHT * 2 - main_form_client_area.bottom, SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOZORDER | SWP_NOMOVE);
     /* Make the window visible on the screen */
     ShowWindow(hwnd, nCmdShow);
 
@@ -159,7 +162,7 @@ void CreateChildProcess()
 {
    PROCESS_INFORMATION piProcInfo;
    STARTUPINFO siStartInfo;
-   BOOL bSuccess = FALSE;
+   bool bSuccess;
 
 // Set up members of the PROCESS_INFORMATION structure.
 
@@ -168,7 +171,7 @@ void CreateChildProcess()
 // Set up members of the STARTUPINFO structure.
 // This structure specifies the STDIN and STDOUT handles for redirection.
 
-   ZeroMemory( &siStartInfo, sizeof(STARTUPINFO));
+   ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
    siStartInfo.cb = sizeof(STARTUPINFO);
    siStartInfo.hStdError = g_hChildStd_OUT_Wr;
    siStartInfo.hStdOutput = g_hChildStd_OUT_Wr;
@@ -179,12 +182,12 @@ void CreateChildProcess()
 
    bSuccess = CreateProcess(L"lame.exe",
       L" \"--longhelp\"",     // command line
-      NULL,          // process security attributes
-      NULL,          // primary thread security attributes
-      TRUE,          // handles are inherited
-      0,             // creation flags
-      NULL,          // use parent's environment
-      NULL,          // use parent's current directory
+      nullptr,          // process security attributes
+      nullptr,          // primary thread security attributes
+      true,          // handles are inherited
+      BELOW_NORMAL_PRIORITY_CLASS,             // creation flags
+      nullptr,          // use parent's environment
+      nullptr,          // use parent's current directory
       &siStartInfo,  // STARTUPINFO pointer
       &piProcInfo);  // receives PROCESS_INFORMATION
 
@@ -209,7 +212,6 @@ void ReadFromPipe(void)
     // Stop when there is no more data.
     DWORD dwRead;
     CHAR chBuf[80];
-    BOOL bSuccess = FALSE;
     while(ReadFile(g_hChildStd_OUT_Rd, chBuf, 79, &dwRead, NULL))
     {
         int ndx = GetWindowTextLength (textbox1);
