@@ -6,7 +6,7 @@
     name="RustyCoder"
     type="win32"
 />
-<description>Just another simple GUI</description>
+<description>A Simple GUI for Media Encoding and Decoding!</description>
 <dependency>
     <dependentAssembly>
         <assemblyIdentity

@@ -1,25 +1,24 @@
 //Author: Chak Wai Yuan
 //RustyCoder Version: Major.Minor.Patch+build.number.date
-//RustyCoder Version: 0.1.0+build.2.20130416
+//RustyCoder Version: 0.1.0+build.3.20130422
+//http://semver.org/
+
 #include "res/resource.h"
 #include <windows.h>
+#include <stdio.h>
 #include <iostream>
 #include <sstream>
 
-using namespace std;
-/*  Make the class name into a global variable  */
-const wstring szClassName = L"Song Randomizer";
+HWND hwnd; //This is the handle for our window
+const std::wstring szClassName = L"Song Randomizer"; //Make the class name into a global variable
+
 const unsigned int MAIN_CLIENT_AREA_WIDTH = 900;
 const unsigned int MAIN_CLIENT_AREA_HEIGHT = 600;
-HANDLE g_hChildStd_IN_Rd = NULL;
-HANDLE g_hChildStd_IN_Wr = NULL;
-HANDLE g_hChildStd_OUT_Rd = NULL;
-HANDLE g_hChildStd_OUT_Wr = NULL;
-HWND textbox1;
-HWND button1;
+
 void StartProc(void);
-void CreateChildProcess(void);
-void ReadFromPipe(void);
+bool CreateChildProcess(HANDLE _stdOut_Rd, HANDLE _stdOut_Wr);
+void ReadFromPipe(HANDLE _stdOut_Rd);
+void showErrorMsg(void);
 std::wstring convertInt(int number);
 
 /*  Declare Windows procedure  */
@@ -27,10 +26,8 @@ LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow)
 {
-    HWND hwnd;               /* This is the handle for our window */
     MSG messages;            /* Here messages to the application are saved */
     WNDCLASSEX wincl;        /* Data structure for the windowclass */
-    RECT main_form_client_area;
 
     /* The Window structure */
     wincl.hInstance = hThisInstance;
@@ -59,8 +56,8 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
         wincl.lpszClassName,         /* Classname */
         wincl.lpszClassName,       /* Title Text */
         WS_OVERLAPPEDWINDOW, /* default window */
-        (static_cast<unsigned int>(GetSystemMetrics(SM_CXSCREEN)) - MAIN_CLIENT_AREA_WIDTH) / 2,       /* Windows decides the position */
-        (static_cast<unsigned int>(GetSystemMetrics(SM_CYSCREEN)) - MAIN_CLIENT_AREA_HEIGHT) / 2,       /* where the window ends up on the screen */
+        (GetSystemMetrics(SM_CXSCREEN) - MAIN_CLIENT_AREA_WIDTH) / 2,       /* Windows decides the position */
+        (GetSystemMetrics(SM_CYSCREEN) - MAIN_CLIENT_AREA_HEIGHT) / 2,       /* where the window ends up on the screen */
         MAIN_CLIENT_AREA_WIDTH,                 /* The programs width */
         MAIN_CLIENT_AREA_HEIGHT,                 /* and height in pixels */
         HWND_DESKTOP,        /* The window is a child-window to desktop */
@@ -69,8 +66,6 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
         nullptr                 /* No Window Creation data */
         );
 
-    GetClientRect(hwnd, &main_form_client_area);
-    SetWindowPos(hwnd, nullptr, 0, 0, MAIN_CLIENT_AREA_WIDTH * 2 - main_form_client_area.right, MAIN_CLIENT_AREA_HEIGHT * 2 - main_form_client_area.bottom, SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOZORDER | SWP_NOMOVE);
     /* Make the window visible on the screen */
     ShowWindow(hwnd, nCmdShow);
 
@@ -95,11 +90,11 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
     {
         case WM_CREATE:
         {
-            // GetDlgItem to get handle of control
-
             NONCLIENTMETRICS ncm;
             ncm.cbSize = sizeof(NONCLIENTMETRICS);
             SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
+            HWND textbox1;
+            HWND button1;
             HFONT hfont = CreateFontIndirect(&ncm.lfMessageFont);
             textbox1 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD | ES_AUTOVSCROLL | ES_MULTILINE, 0, 0, 885, 500, hwnd, (HMENU)IDC_TEXTBOX1, GetModuleHandle(nullptr), nullptr);
             SendMessage(textbox1, WM_SETFONT, (WPARAM)hfont, MAKELPARAM(FALSE,0));
@@ -131,102 +126,90 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 void StartProc(void)
 {
+    HANDLE stdOut_Rd;
+    HANDLE stdOut_Wr;
     SECURITY_ATTRIBUTES saAttr;
     saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-    saAttr.bInheritHandle = TRUE;
-    saAttr.lpSecurityDescriptor = NULL;
-   if ( ! CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr, &saAttr, 0) )
-      MessageBox(NULL, L"Error", L"Error", MB_OK);
+    saAttr.bInheritHandle = true;
+    saAttr.lpSecurityDescriptor = nullptr;
 
-// Ensure the read handle to the pipe for STDOUT is not inherited.
+    if(!CreatePipe(&stdOut_Rd, &stdOut_Wr, &saAttr, 0))
+        showErrorMsg();
 
-   if ( ! SetHandleInformation(g_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0) )
-      MessageBox(NULL, L"Error", L"Error", MB_OK);
+    if(!SetHandleInformation(stdOut_Rd, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT))
+        showErrorMsg();
 
-// Create a pipe for the child process's STDIN.
+    if(CreateChildProcess(stdOut_Rd, stdOut_Wr))
+        ReadFromPipe(stdOut_Rd);
 
-   if (! CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0))
-      MessageBox(NULL, L"Error", L"Error", MB_OK);
-
-// Ensure the write handle to the pipe for STDIN is not inherited.
-
-   if ( ! SetHandleInformation(g_hChildStd_IN_Wr, HANDLE_FLAG_INHERIT, 0) )
-      MessageBox(NULL, L"Error", L"Error", MB_OK);
-    CreateChildProcess();
-    CloseHandle(g_hChildStd_OUT_Wr);
-    ReadFromPipe();
+    if(!CloseHandle(stdOut_Rd))
+        showErrorMsg();
 }
 
-// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-void CreateChildProcess()
+bool CreateChildProcess(HANDLE _stdOut_Rd, HANDLE _stdOut_Wr)
 {
-   PROCESS_INFORMATION piProcInfo;
-   STARTUPINFO siStartInfo;
-   bool bSuccess;
+    PROCESS_INFORMATION piProcInfo;
+    STARTUPINFO siStartInfo;
+    bool bSuccess;
 
-// Set up members of the PROCESS_INFORMATION structure.
+    memset(&piProcInfo, 0, sizeof(PROCESS_INFORMATION));
 
-   ZeroMemory( &piProcInfo, sizeof(PROCESS_INFORMATION) );
+    memset(&siStartInfo, 0, sizeof(STARTUPINFO));
 
-// Set up members of the STARTUPINFO structure.
-// This structure specifies the STDIN and STDOUT handles for redirection.
+    siStartInfo.cb = sizeof(STARTUPINFO);
+    siStartInfo.hStdOutput = _stdOut_Wr;
+    siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
-   ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
-   siStartInfo.cb = sizeof(STARTUPINFO);
-   siStartInfo.hStdError = g_hChildStd_OUT_Wr;
-   siStartInfo.hStdOutput = g_hChildStd_OUT_Wr;
-   siStartInfo.hStdInput = g_hChildStd_IN_Rd;
-   siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+    bSuccess = CreateProcess(L"lame.exe",
+                             L" --longhelp", // command line
+                             nullptr, // process security attributes
+                             nullptr, // primary thread security attributes
+                             true, // handles are inherited
+                             BELOW_NORMAL_PRIORITY_CLASS | CREATE_NO_WINDOW, // creation flags
+                             nullptr, // use parent's environment
+                             nullptr, // use parent's current directory
+                             &siStartInfo, // STARTUPINFO pointer
+                             &piProcInfo); // receives PROCESS_INFORMATION
 
-// Create the child process.
+    if(!CloseHandle(_stdOut_Wr))
+        showErrorMsg();
 
-   bSuccess = CreateProcess(L"lame.exe",
-      L" \"--longhelp\"",     // command line
-      nullptr,          // process security attributes
-      nullptr,          // primary thread security attributes
-      true,          // handles are inherited
-      BELOW_NORMAL_PRIORITY_CLASS,             // creation flags
-      nullptr,          // use parent's environment
-      nullptr,          // use parent's current directory
-      &siStartInfo,  // STARTUPINFO pointer
-      &piProcInfo);  // receives PROCESS_INFORMATION
-
-   // If an error occurs, exit the application.
-   if(!bSuccess)
-      MessageBox(NULL, convertInt(bSuccess).c_str(), L"Error", MB_OK);
-   else
-   {
-      // Close handles to the child process and its primary thread.
-      // Some applications might keep these handles to monitor the status
-      // of the child process, for example.
-
-      CloseHandle(piProcInfo.hProcess);
-      CloseHandle(piProcInfo.hThread);
-   }
-}
-
-void ReadFromPipe(void)
-{
-    // Read output from the child process's pipe for STDOUT
-    // and write to the parent process's pipe for STDOUT.
-    // Stop when there is no more data.
-    DWORD dwRead;
-    CHAR chBuf[80];
-    while(ReadFile(g_hChildStd_OUT_Rd, chBuf, 79, &dwRead, NULL))
+    // If an error occurs, exit the application.
+    if(bSuccess)
     {
-        int ndx = GetWindowTextLength (textbox1);
-        SetFocus (textbox1);
-        SendMessage (textbox1, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-        if (!SendMessageA(textbox1, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(chBuf)))
-            MessageBox(NULL, L"Text cannot be changed!", L"Error", MB_OK);
-        for(unsigned int index = 0; index < 80; index++)
-            chBuf[index] = 0;
+        CloseHandle(piProcInfo.hProcess);
+        CloseHandle(piProcInfo.hThread);
     }
+    else
+        showErrorMsg();
+    return bSuccess;
+}
+
+void ReadFromPipe(HANDLE _stdOut_Rd)
+{
+    unsigned long dwRead = 0;
+    char chBuf[80];
+    int ndx;
+    HWND textbox1 = GetDlgItem(hwnd, IDC_TEXTBOX1);
+    while(ReadFile(_stdOut_Rd, chBuf, 79, &dwRead, nullptr))
+    {
+        ndx = GetWindowTextLength(textbox1);
+        SetFocus(textbox1);
+        SendMessage(textbox1, EM_SETSEL, ndx, ndx);
+        if (!SendMessageA(textbox1, EM_REPLACESEL, false, reinterpret_cast<LPARAM>(chBuf)))
+            MessageBox(nullptr, L"Text cannot be changed!", L"Error", MB_OK);
+        memset(chBuf, 0, sizeof(chBuf));
+    }
+}
+
+void showErrorMsg()
+{
+    MessageBox(nullptr, L"Error", L"Error", MB_OK);
 }
 
 std::wstring convertInt(int number)
 {
-   wstringstream ss;//create a stringstream
-   ss << number;//add number to the stream
-   return ss.str();//return a string with the contents of the stream
+    std::wstringstream ss;    //create a stringstream
+    ss << number;        //add number to the stream
+    return ss.str();     //return a string with the contents of the stream
 }
