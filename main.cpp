@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     Version: Major.Minor.Patch+build.number.date
-    Version: 0.2.0+build.5.20130710
+    Version: 0.2.0+build.6.20130711
 */
 
 #include <iostream>
@@ -26,9 +26,8 @@
 #include <thread>
 
 #include <stdio.h>
-#include <windows.h>
 
-#include "res/resource.h"
+#include "listview.h"
 
 HWND hwnd; //This is the handle for our window
 const std::wstring szClassName = L"RustyCoder"; //Make the class name into a global variable
@@ -113,10 +112,16 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
     {
         case WM_CREATE:
         {
+            INITCOMMONCONTROLSEX initctrl;
+            initctrl.dwICC = ICC_LISTVIEW_CLASSES;
+            InitCommonControlsEx(&initctrl);
+
             NONCLIENTMETRICS ncm;
             HWND textbox1;
             HWND button1;
             HMENU menu_strip1, menu_strip_sub1;
+            ListView listview1(hwnd);
+            listview1.set_column(0, L"Filename");
             menu_strip1 = CreateMenu();
             menu_strip_sub1 = CreatePopupMenu();
             AppendMenu(menu_strip_sub1, MF_STRING, ID_MENU1_FILE_EXIT, L"E&xit");
@@ -125,7 +130,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             ncm.cbSize = sizeof(NONCLIENTMETRICS);
             SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
             HFONT hfont = CreateFontIndirect(&ncm.lfMessageFont);
-            textbox1 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD | ES_AUTOVSCROLL | ES_MULTILINE, 0, 510, 700, 20, hwnd, (HMENU)ID_TEXTBOX1, GetModuleHandle(nullptr), nullptr);
+            textbox1 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD | ES_AUTOVSCROLL | ES_MULTILINE, 0, 400, 700, 300, hwnd, (HMENU)ID_TEXTBOX1, GetModuleHandle(nullptr), nullptr);
             SendMessage(textbox1, WM_SETFONT, (WPARAM)hfont, MAKELPARAM(FALSE,0));
             button1 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Start", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 701, 501, 75, 30, hwnd, (HMENU)ID_BUTTON1, GetModuleHandle(nullptr), nullptr);
             SendMessage(button1, WM_SETFONT, (WPARAM)hfont, MAKELPARAM(FALSE,0));
@@ -195,10 +200,11 @@ bool create_child_process(HANDLE _standard_output_write)
 
     process_startup_info.cb = sizeof(STARTUPINFO);
     process_startup_info.hStdOutput = _standard_output_write;
+    process_startup_info.hStdError = _standard_output_write;
     process_startup_info.dwFlags |= STARTF_USESTDHANDLES;
 
     bSuccess = CreateProcess(L"lame.exe",
-                             L" --longhelp",                                    // command line
+                             L" \"C:\\abc.mp3\" \"C:\\bcd.mp3\"",                                    // command line
                              nullptr,                                           // process security attributes
                              nullptr,                                           // primary thread security attributes
                              true,                                              // handles are inherited

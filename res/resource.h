@@ -1,4 +1,10 @@
-﻿#define ID_TEXTBOX1 101
+﻿#ifndef RUSTY_RESOURCE_H
+#define RUSTY_RESOURCE_H
+
+#define ID_TEXTBOX1 101
 #define ID_BUTTON1 102
 #define ID_MENU1 103
 #define ID_MENU1_FILE_EXIT 104
+#define ID_LISTVIEW1 105
+
+#endif
