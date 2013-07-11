@@ -1,2 +1,4 @@
-﻿#define IDC_TEXTBOX1 301
-#define IDC_BUTTON1 302
+﻿#define ID_TEXTBOX1 101
+#define ID_BUTTON1 102
+#define ID_MENU1 103
+#define ID_MENU1_FILE_EXIT 104

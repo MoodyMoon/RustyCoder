@@ -2,7 +2,7 @@
     RustyCoder
     http://sourceforge.net/projects/rustycoder/
 
-    Copyright (C) 2012-2013  Chak Wai Yuan
+    Copyright (C) 2012-2013 Chak Wai Yuan
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     Version: Major.Minor.Patch+build.number.date
-    Version: 0.1.0+build.4.20130625
+    Version: 0.2.0+build.5.20130710
 */
 
 #include <iostream>
@@ -33,12 +33,12 @@
 HWND hwnd; //This is the handle for our window
 const std::wstring szClassName = L"RustyCoder"; //Make the class name into a global variable
 
-const unsigned int MAIN_CLIENT_WIDTH = 900;
+const unsigned int MAIN_CLIENT_WIDTH = 800;
 const unsigned int MAIN_CLIENT_HEIGHT = 600;
 
 void button1_on_click(void);
 void start_stream_redirection(void);
-bool create_child_process(HANDLE standard_output_read, HANDLE standard_output_write);
+bool create_child_process(HANDLE standard_output_write);
 void read_from_pipe(HANDLE standard_output_read);
 void show_error_msg(void);
 void textbox1_append_text(HWND textbox, char _output_buffer[], unsigned long _text_length);
@@ -63,7 +63,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
     wincl.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
     wincl.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
     wincl.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wincl.lpszMenuName = nullptr;               /* No menu */
+    wincl.lpszMenuName = MAKEINTRESOURCE(ID_MENU1);
     wincl.cbClsExtra = 0;                       /* No extra bytes after the window class */
     wincl.cbWndExtra = 0;                       /* structure or the window instance */
 
@@ -85,7 +85,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
         MAIN_CLIENT_WIDTH,                                              /* The programs width */
         MAIN_CLIENT_HEIGHT,                                             /* and height in pixels */
         HWND_DESKTOP,                                                   /* The window is a child-window to desktop */
-        NULL,                                                           /* No menu */
+        nullptr,                                                        /* No menu */
         hThisInstance,                                                  /* Program Instance handler */
         nullptr                                                         /* No Window Creation data */
         );
@@ -116,20 +116,25 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             NONCLIENTMETRICS ncm;
             HWND textbox1;
             HWND button1;
-
+            HMENU menu_strip1, menu_strip_sub1;
+            menu_strip1 = CreateMenu();
+            menu_strip_sub1 = CreatePopupMenu();
+            AppendMenu(menu_strip_sub1, MF_STRING, ID_MENU1_FILE_EXIT, L"E&xit");
+            AppendMenu(menu_strip1, MF_STRING | MF_POPUP, reinterpret_cast<unsigned int>(menu_strip_sub1), L"&File");
+            SetMenu(hwnd, menu_strip1);
             ncm.cbSize = sizeof(NONCLIENTMETRICS);
             SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
             HFONT hfont = CreateFontIndirect(&ncm.lfMessageFont);
-            textbox1 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD | ES_AUTOVSCROLL | ES_MULTILINE, 0, 0, 885, 500, hwnd, (HMENU)IDC_TEXTBOX1, GetModuleHandle(nullptr), nullptr);
+            textbox1 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD | ES_AUTOVSCROLL | ES_MULTILINE, 0, 510, 700, 20, hwnd, (HMENU)ID_TEXTBOX1, GetModuleHandle(nullptr), nullptr);
             SendMessage(textbox1, WM_SETFONT, (WPARAM)hfont, MAKELPARAM(FALSE,0));
-            button1 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Start", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 0, 501, 75, 30, hwnd, (HMENU)IDC_BUTTON1, GetModuleHandle(nullptr), nullptr);
+            button1 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Start", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 701, 501, 75, 30, hwnd, (HMENU)ID_BUTTON1, GetModuleHandle(nullptr), nullptr);
             SendMessage(button1, WM_SETFONT, (WPARAM)hfont, MAKELPARAM(FALSE,0));
             break;
         }
         case WM_COMMAND:
             switch(LOWORD(wParam))
             {
-                case IDC_BUTTON1:
+                case ID_BUTTON1:
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
@@ -171,14 +176,14 @@ void start_stream_redirection(void)
     if(!SetHandleInformation(standard_output_read, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT))
         show_error_msg();
 
-    if(create_child_process(standard_output_read, standard_output_write))
+    if(create_child_process(standard_output_write))
         read_from_pipe(standard_output_read);
 
     if(!CloseHandle(standard_output_read))
         show_error_msg();
 }
 
-bool create_child_process(HANDLE _standard_output_read, HANDLE _standard_output_write)
+bool create_child_process(HANDLE _standard_output_write)
 {
     PROCESS_INFORMATION process_info;
     STARTUPINFO process_startup_info;
@@ -222,7 +227,7 @@ void read_from_pipe(HANDLE _standard_output_read)
     unsigned long bytes_read = 0;
     char output_buffer[80];
     unsigned long text_length;
-    HWND textbox1 = GetDlgItem(hwnd, IDC_TEXTBOX1);
+    HWND textbox1 = GetDlgItem(hwnd, ID_TEXTBOX1);
 
     while(ReadFile(_standard_output_read, output_buffer, 79, &bytes_read, nullptr))
     {
