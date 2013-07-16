@@ -1,8 +1,10 @@
 #include "listview.h"
 
-ListView::ListView(HWND hwnd_mainwin)
+HWND ListView::hwnd = nullptr;
+
+void ListView::set_handle(HWND hwnd_listview)
 {
-    hwnd = CreateWindowEx(WS_EX_WINDOWEDGE, WC_LISTVIEW, L"", WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_EDITLABELS, 0, 0, 700, 200, hwnd_mainwin, (HMENU)ID_LISTVIEW1, GetModuleHandle(nullptr), nullptr);
+    hwnd = hwnd_listview;
 }
 
 void ListView::set_column(int column_index, std::wstring column_name)
@@ -13,6 +15,24 @@ void ListView::set_column(int column_index, std::wstring column_name)
     temp_col.cx = 180;
     temp_col.pszText = const_cast<wchar_t*>(column_name.c_str());
     temp_col.cchTextMax = 30;
-    temp_col.iSubItem = column_index;
-    ListView_InsertColumn(hwnd, 0, &temp_col);
+    temp_col.iSubItem = 0;
+    ListView_InsertColumn(hwnd, column_index, &temp_col);
 }
+
+/*
+void ListView::dispose(void)
+{
+    if(!DestroyWindow(ListView::hwnd))
+        std::cout << "Fail to destroy ListView" << std::endl;
+    else
+        std::cout << "Successfully destroyed ListView" << std::endl;
+}
+
+void ListView::exists(void)
+{
+    if(IsWindow(ListView::hwnd))
+        std::cout << "ListView exists!" << std::endl;
+    else
+        std::cout << "ListView does not exists!" << std::endl;
+}
+*/

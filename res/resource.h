@@ -1,10 +1,19 @@
 ﻿#ifndef RUSTY_RESOURCE_H
 #define RUSTY_RESOURCE_H
 
-#define ID_TEXTBOX1 101
-#define ID_BUTTON1 102
-#define ID_MENU1 103
-#define ID_MENU1_FILE_EXIT 104
-#define ID_LISTVIEW1 105
+#define ID_MENU1 101
+#define ID_MENU1_FILE_EXIT 102
+#define ID_LISTVIEW1 103
+#define ID_BUTTON1 104
+#define ID_BUTTON2 105
+#define ID_BUTTON3 106
+#define ID_BUTTON4 107
+#define ID_BUTTON5 108
+#define ID_BUTTON6 109
+#define ID_BUTTON7 110
+#define ID_LABEL1 111
+#define ID_LABEL2 112
+#define ID_TEXTBOX1 113
+#define ID_TEXTBOX2 114
 
 #endif

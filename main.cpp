@@ -18,8 +18,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     Version: Major.Minor.Patch+build.number.date
-    Version: 0.2.0+build.6.20130711
+    Version: 0.2.0+build.7.20130716
 */
+
+#define WIN32_LEAN_AND_MEAN
 
 #include <iostream>
 #include <sstream>
@@ -32,8 +34,8 @@
 HWND hwnd; //This is the handle for our window
 const std::wstring szClassName = L"RustyCoder"; //Make the class name into a global variable
 
-const unsigned int MAIN_CLIENT_WIDTH = 800;
-const unsigned int MAIN_CLIENT_HEIGHT = 600;
+const unsigned int MAIN_CLIENT_WIDTH = 750;
+const unsigned int MAIN_CLIENT_HEIGHT = 530;
 
 void button1_on_click(void);
 void start_stream_redirection(void);
@@ -117,41 +119,162 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             InitCommonControlsEx(&initctrl);
 
             NONCLIENTMETRICS ncm;
-            HWND textbox1;
-            HWND button1;
-            HMENU menu_strip1, menu_strip_sub1;
-            ListView listview1(hwnd);
-            listview1.set_column(0, L"Filename");
-            menu_strip1 = CreateMenu();
-            menu_strip_sub1 = CreatePopupMenu();
-            AppendMenu(menu_strip_sub1, MF_STRING, ID_MENU1_FILE_EXIT, L"E&xit");
-            AppendMenu(menu_strip1, MF_STRING | MF_POPUP, reinterpret_cast<unsigned int>(menu_strip_sub1), L"&File");
-            SetMenu(hwnd, menu_strip1);
             ncm.cbSize = sizeof(NONCLIENTMETRICS);
             SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
             HFONT hfont = CreateFontIndirect(&ncm.lfMessageFont);
-            textbox1 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VSCROLL | WS_VISIBLE | WS_CHILD | ES_AUTOVSCROLL | ES_MULTILINE, 0, 400, 700, 300, hwnd, (HMENU)ID_TEXTBOX1, GetModuleHandle(nullptr), nullptr);
-            SendMessage(textbox1, WM_SETFONT, (WPARAM)hfont, MAKELPARAM(FALSE,0));
-            button1 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Start", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 701, 501, 75, 30, hwnd, (HMENU)ID_BUTTON1, GetModuleHandle(nullptr), nullptr);
-            SendMessage(button1, WM_SETFONT, (WPARAM)hfont, MAKELPARAM(FALSE,0));
+
+            HMENU menu_strip1, menu_strip_sub1;
+            menu_strip1 = CreateMenu();
+
+            menu_strip_sub1 = CreatePopupMenu();
+            AppendMenu(menu_strip_sub1, MF_STRING, ID_MENU1_FILE_EXIT, L"E&xit");
+            AppendMenu(menu_strip1, MF_STRING | MF_POPUP, reinterpret_cast<unsigned int>(menu_strip_sub1), L"&File");
+
+            SetMenu(hwnd, menu_strip1);
+
+            HWND listview1;
+            listview1 = CreateWindow(WC_LISTVIEW, L"", WS_BORDER | WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SHOWSELALWAYS, 0, 0, MAIN_CLIENT_WIDTH - 16, 387, hwnd, reinterpret_cast<HMENU>(ID_LISTVIEW1), GetModuleHandle(nullptr), nullptr);
+            ListView_SetExtendedListViewStyleEx(listview1, LVS_EX_BORDERSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES, LVS_EX_BORDERSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+            ListView::set_handle(listview1);    //Must set handle before using member functions
+            ListView::set_column(0, L"Filename");
+            ListView::set_column(1, L"Size");
+
+            HWND button1;
+            button1 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"^", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 5, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON1), GetModuleHandle(nullptr), nullptr);
+            SendMessage(button1, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND button2;
+            button2 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"^", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 35, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON2), GetModuleHandle(nullptr), nullptr);
+            SendMessage(button2, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND button3;
+            button3 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"V", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 65, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON3), GetModuleHandle(nullptr), nullptr);
+            SendMessage(button3, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND button4;
+            button4 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"V", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 95, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON4), GetModuleHandle(nullptr), nullptr);
+            SendMessage(button4, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND button5;
+            button5 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"D", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, MAIN_CLIENT_WIDTH - 46, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON5), GetModuleHandle(nullptr), nullptr);
+            SendMessage(button5, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND button6;
+            button6 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"...", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, MAIN_CLIENT_WIDTH - 46, 422, 25, 22, hwnd, reinterpret_cast<HMENU>(ID_BUTTON6), GetModuleHandle(nullptr), nullptr);
+            SendMessage(button6, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND button7;
+            button7 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"S", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, MAIN_CLIENT_WIDTH - 46, 445, 25, 22, hwnd, reinterpret_cast<HMENU>(ID_BUTTON7), GetModuleHandle(nullptr), nullptr);
+            SendMessage(button7, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND label1;
+            label1 = CreateWindow(L"STATIC", L"File Destination", WS_CHILD | WS_VISIBLE | SS_LEFTNOWORDWRAP, 10, 425, 82, 20, hwnd, reinterpret_cast<HMENU>(ID_LABEL1), GetModuleHandle(nullptr), nullptr);
+            SendMessage(label1, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND label2;
+            label2 = CreateWindow(L"STATIC", L"Arguments", WS_CHILD | WS_VISIBLE | SS_LEFTNOWORDWRAP, 10, 448, 62, 20, hwnd, reinterpret_cast<HMENU>(ID_LABEL2), GetModuleHandle(nullptr), nullptr);
+            SendMessage(label2, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+
+            HWND textbox1;
+            textbox1 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VISIBLE | WS_CHILD, 97, 423, 603, 20, hwnd, reinterpret_cast<HMENU>(ID_TEXTBOX1), GetModuleHandle(nullptr), nullptr);
+            SendMessage(textbox1, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+            SendMessage(textbox1, EM_SETREADONLY, true, 0);
+
+            HWND textbox2;
+            textbox2 = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", nullptr, WS_TABSTOP | WS_VISIBLE | WS_CHILD, 97, 446, 603, 20, hwnd, reinterpret_cast<HMENU>(ID_TEXTBOX2), GetModuleHandle(nullptr), nullptr);
+            SendMessage(textbox2, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
+            break;
+        }
+        case WM_GETMINMAXINFO:
+        {
+            LPMINMAXINFO min_max_size;
+            min_max_size = reinterpret_cast<LPMINMAXINFO>(lParam);
+            min_max_size->ptMinTrackSize.x = MAIN_CLIENT_WIDTH;
+            min_max_size->ptMinTrackSize.y = MAIN_CLIENT_HEIGHT;
+            break;
+        }
+        case WM_SIZE:
+        case WM_SIZING:
+        {
+            RECT hwnd_coords;
+            GetWindowRect(hwnd, &hwnd_coords);
+
+            HWND listview1;
+            listview1 = GetDlgItem(hwnd, ID_LISTVIEW1);
+            SetWindowPos(listview1, listview1, 0, 0, hwnd_coords.right - hwnd_coords.left - 16, 387, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
+
+            HWND button5;
+            button5 = GetDlgItem(hwnd, ID_BUTTON5);
+            SetWindowPos(button5, button5, hwnd_coords.right - hwnd_coords.left - 46, 392, 25, 25, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
+
+            HWND button6;
+            button6 = GetDlgItem(hwnd, ID_BUTTON6);
+            SetWindowPos(button6, button6, hwnd_coords.right - hwnd_coords.left - 46, 422, 25, 22, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
+
+            HWND button7;
+            button7 = GetDlgItem(hwnd, ID_BUTTON7);
+            SetWindowPos(button7, button7, hwnd_coords.right - hwnd_coords.left - 46, 445, 25, 22, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
+
+            HWND textbox1;
+            textbox1 = GetDlgItem(hwnd, ID_TEXTBOX1);
+            SetWindowPos(textbox1, textbox1, 97, 423, hwnd_coords.right - hwnd_coords.left - 147, 20, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
+
+            HWND textbox2;
+            textbox2 = GetDlgItem(hwnd, ID_TEXTBOX2);
+            SetWindowPos(textbox2, textbox2, 97, 446, hwnd_coords.right - hwnd_coords.left - 147, 20, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
             break;
         }
         case WM_COMMAND:
+        {
             switch(LOWORD(wParam))
             {
                 case ID_BUTTON1:
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
+                        {
                             button1_on_click();
                             break;
+                        }
+                    }
+                    break;
+                case ID_MENU1_FILE_EXIT:
+                    switch(HIWORD(wParam))
+                    {
+                        case BN_CLICKED:
+                        {
+                            SendMessage(hwnd, WM_CLOSE, 0, 0);
+                            break;
+                        }
                     }
                     break;
             }
             break;
+        }
+        case WM_CTLCOLORSTATIC:
+        {
+            HWND handle, textbox1;
+            HDC hdc;
+            hdc = reinterpret_cast<HDC>(lParam);
+            handle = reinterpret_cast<HWND>(lParam);
+            textbox1 = GetDlgItem(hwnd, ID_TEXTBOX1);
+
+            if(handle == textbox1)
+            {
+                SetBkColor(hdc, RGB(255, 255, 255));
+                return reinterpret_cast<LRESULT>(GetStockObject(DC_BRUSH));
+            }
+            else
+            {
+                return DefWindowProc(hwnd, message, wParam, lParam);
+            }
+            break;
+        }
         case WM_DESTROY:
+        {
             PostQuitMessage(0);       /* send a WM_QUIT to the message queue */
             break;
+        }
         default:                      /* for messages that we don't deal with */
             return DefWindowProc(hwnd, message, wParam, lParam);
     }
