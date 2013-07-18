@@ -1,8 +1,6 @@
 #include "listview.h"
 
-HWND ListView::hwnd = nullptr;
-
-void ListView::set_handle(HWND hwnd_listview)
+ListView::ListView(HWND hwnd_listview)
 {
     hwnd = hwnd_listview;
 }
@@ -19,6 +17,10 @@ void ListView::set_column(int column_index, std::wstring column_name)
     ListView_InsertColumn(hwnd, column_index, &temp_col);
 }
 
+void ListView::set_ex_styles(long styles)
+{
+    ListView_SetExtendedListViewStyleEx(hwnd, styles, styles);
+}
 /*
 void ListView::dispose(void)
 {
