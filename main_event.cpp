@@ -1,5 +1,24 @@
 #include "main_event.h"
 
+MainEvent::OS MainEvent::main_os_is_supported(void)
+{
+    OSVERSIONINFOEX osver;
+    memset(&osver, 0, sizeof(OSVERSIONINFOEX));
+    osver.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+    if(GetVersionEx(reinterpret_cast<LPOSVERSIONINFO>(&osver)))
+    {
+        if(osver.wProductType == VER_NT_WORKSTATION && osver.dwMajorVersion >= 5 && osver.dwMajorVersion <= 6)
+        {
+            if(osver.dwMajorVersion == 5 && osver.dwMinorVersion >= 1)
+                return WIN_XP;
+            else if(osver.dwMajorVersion == 6 && osver.dwMinorVersion <= 2)
+                return WIN_VISTA_OR_LATER;
+        }
+    }
+    return OS_NOT_SUPPORTED;
+}
+
 void MainEvent::main_on_create(HWND hwnd)
 {
     INITCOMMONCONTROLSEX initctrl;
@@ -12,36 +31,42 @@ void MainEvent::main_on_create(HWND hwnd)
     HFONT hfont = CreateFontIndirect(&ncm.lfMessageFont);
 
     HMENU menu, menu_file_add, menu_file_dummy;
-    
+
     menu = CreateMenu();
     menu_file_add = CreatePopupMenu();
     menu_file_dummy = CreatePopupMenu();
-    
+
     AppendMenu(menu, MF_STRING | MF_POPUP, reinterpret_cast<unsigned int>(menu_file_add), L"File");
     AppendMenu(menu_file_add, MF_STRING, ID_MENU1_FILE_ADD, L"&Add files");
     AppendMenu(menu_file_add, MF_STRING | MF_POPUP, reinterpret_cast<unsigned int>(menu_file_dummy), L"&Dummy");
     AppendMenu(menu_file_dummy, MF_STRING, ID_MENU1_FILE_DUMMY, L"&Dummy");
     AppendMenu(menu_file_add, MF_STRING, ID_MENU1_FILE_EXIT, L"E&xit");
-    
+
     SetMenu(hwnd, menu);
 
-    ListView listview1(CreateWindow(WC_LISTVIEW, L"", WS_BORDER | WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SHOWSELALWAYS, 0, 0, MAIN_CLIENT_WIDTH - 16, 387, hwnd, reinterpret_cast<HMENU>(ID_LISTVIEW1), GetModuleHandle(nullptr), nullptr));;
-    listview1.set_ex_styles(LVS_EX_BORDERSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-    listview1.set_column(0, L"Filename");
-    listview1.set_column(1, L"Size");
+    HWND listview1;
+    listview1 = CreateWindow(WC_LISTVIEW, L"", WS_BORDER | WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SHOWSELALWAYS, 0, 0, MAIN_CLIENT_WIDTH - 16, 387, hwnd, reinterpret_cast<HMENU>(ID_LISTVIEW1), GetModuleHandle(nullptr), nullptr);
+    ListView::set_ex_styles(listview1, LVS_EX_BORDERSELECT | LVS_EX_DOUBLEBUFFER | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+    ListView::set_column(listview1, 0, L"File name", 250);
+    ListView::set_column(listview1, 1, L"File size", 70);
+    ListView::set_column(listview1, 2, L"File format", 70);
+    ListView::set_column(listview1, 3, L"Output format", 70);
+    ListView::set_column(listview1, 4, L"File directory", 250);
+    ListView::set_column(listview1, 5, L"Output directory", 250);
+    ListView::set_column(listview1, 6, L"Profile", 70);
 
     HWND button1;
     button1 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"^", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 5, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON1), GetModuleHandle(nullptr), nullptr);
     SendMessage(button1, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
-    
+
     HWND button2;
     button2 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"^", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 35, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON2), GetModuleHandle(nullptr), nullptr);
     SendMessage(button2, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
-    
+
     HWND button3;
     button3 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"V", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 65, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON3), GetModuleHandle(nullptr), nullptr);
     SendMessage(button3, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
-    
+
     HWND button4;
     button4 = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"V", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 95, 392, 25, 25, hwnd, reinterpret_cast<HMENU>(ID_BUTTON4), GetModuleHandle(nullptr), nullptr);
     SendMessage(button4, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
@@ -96,19 +121,19 @@ void MainEvent::main_on_size_sizing(HWND hwnd)
     HWND button1;
     button1 = GetDlgItem(hwnd, ID_BUTTON1);
     SetWindowPos(button1, button1, 5, hwnd_coords.bottom - hwnd_coords.top - 143, 25, 25, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
-    
+
     HWND button2;
     button2 = GetDlgItem(hwnd, ID_BUTTON2);
     SetWindowPos(button2, button2, 35, hwnd_coords.bottom - hwnd_coords.top - 143, 25, 25, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
-            
+
     HWND button3;
     button3 = GetDlgItem(hwnd, ID_BUTTON3);
     SetWindowPos(button3, button3, 65, hwnd_coords.bottom - hwnd_coords.top - 143, 25, 25, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
-            
+
     HWND button4;
     button4 = GetDlgItem(hwnd, ID_BUTTON4);
     SetWindowPos(button4, button4, 95, hwnd_coords.bottom - hwnd_coords.top - 143, 25, 25, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
-            
+
     HWND button5;
     button5 = GetDlgItem(hwnd, ID_BUTTON5);
     SetWindowPos(button5, button5, hwnd_coords.right - hwnd_coords.left - 46, hwnd_coords.bottom - hwnd_coords.top - 143, 25, 25, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
@@ -144,6 +169,13 @@ void MainEvent::button1_on_click(HWND hwnd)
     thread1.detach();
 }
 
+void MainEvent::button2_on_click(HWND hwnd)
+{
+    HWND listview1;
+    listview1 = GetDlgItem(hwnd, ID_LISTVIEW1);
+    ListView::remove_all_items(listview1);
+}
+
 void MainEvent::menu_exit_on_click(HWND hwnd)
 {
     SendMessage(hwnd, WM_CLOSE, 0, 0);
@@ -163,15 +195,34 @@ LRESULT MainEvent::main_on_ctlcolorstatic(HWND hwnd, UINT message, WPARAM wParam
         return reinterpret_cast<LRESULT>(GetStockObject(DC_BRUSH));
     }
     else
-    {
         return DefWindowProc(hwnd, message, wParam, lParam);
-    }
 }
 
 void MainEvent::menu_file_add_on_click(HWND hwnd)
 {
-    FileDialog filedialog1;
-    filedialog1.open_file_dialog(hwnd);
+    FileDialog filedialog1(hwnd);
+    std::vector<std::wstring>& file_paths = filedialog1.get_file_paths();
+    int file_paths_count = file_paths.size();
+    if(file_paths_count > 0)
+    {
+        HWND listview1;
+        listview1 = GetDlgItem(hwnd, ID_LISTVIEW1);
+        std::wstring list_items[4];
+
+        SendMessage(listview1, WM_SETREDRAW, false, 0);
+
+        for(int index = 0; index < file_paths_count; ++index)
+        {
+            list_items[0] = get_file_name(file_paths[index]);
+            list_items[1] = long_long_to_wstr(get_file_size(file_paths[index]));
+            list_items[2] = get_file_format(file_paths[index]);
+            list_items[3] = get_file_directory(file_paths[index]);
+            ListView::set_item(listview1, list_items);
+        }
+
+        SendMessage(listview1, WM_SETREDRAW, true, 0);
+        SendMessage(listview1, WM_PAINT, 0, 0);
+    }
 }
 
 void MainEvent::start_stream_redirection(HWND hwnd)
@@ -214,7 +265,7 @@ bool MainEvent::create_child_process(HANDLE _standard_output_write)
     process_startup_info.dwFlags |= STARTF_USESTDHANDLES;
 
     bSuccess = CreateProcess(L"lame.exe",
-                             L" \"C:\\abc.mp3\" \"C:\\bcd.mp3\"",                                    // command line
+                             L" \"C:\\abc.mp3\" \"C:\\bcd.mp3\"",               // command line
                              nullptr,                                           // process security attributes
                              nullptr,                                           // primary thread security attributes
                              true,                                              // handles are inherited
@@ -253,12 +304,58 @@ void MainEvent::read_from_pipe(HWND hwnd, HANDLE _standard_output_read)
     }
 }
 
-void MainEvent::textbox1_append_text(HWND textbox, char _output_buffer[], unsigned long _text_length)
+void MainEvent::textbox1_append_text(const HWND textbox, char _output_buffer[], unsigned long _text_length)
 {
     SetFocus(textbox);
     SendMessage(textbox, EM_SETSEL, _text_length, _text_length);
     if (!SendMessageA(textbox, EM_REPLACESEL, false, reinterpret_cast<LPARAM>(_output_buffer)))
         MessageBox(nullptr, L"Text cannot be changed!", L"Error", MB_OK);
+}
+
+std::wstring MainEvent::get_file_name(const std::wstring& file_path)
+{
+    size_t index = file_path.find_last_of(L'\\');
+    if(index != std::string::npos)
+        return file_path.substr(index + 1, file_path.length() - 1);
+    else
+        return nullptr;
+}
+
+long long MainEvent::get_file_size(const std::wstring& file_path)
+{
+    long long size = -1;
+    LARGE_INTEGER temp_size;
+    HANDLE file = CreateFile(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if(file != INVALID_HANDLE_VALUE)
+        if(GetFileSizeEx(file, &temp_size))
+            size = temp_size.QuadPart;
+    CloseHandle(file);
+    return size;
+}
+
+std::wstring MainEvent::get_file_format(const std::wstring& file_path)
+{
+    size_t index = file_path.find_last_of(L'.');
+    if(index != std::string::npos)
+        return file_path.substr(index, file_path.length() - 1);
+    else
+        return nullptr;
+}
+
+std::wstring MainEvent::get_file_directory(const std::wstring& file_path)
+{
+    size_t index = file_path.find_last_of(L'\\');
+    if(index != std::string::npos)
+        return file_path.substr(0, index);
+    else
+        return nullptr;
+}
+
+std::wstring MainEvent::long_long_to_wstr(long long number)
+{
+    std::wstringstream temp;
+    temp << number;
+    return temp.str();
 }
 
 void MainEvent::show_error_msg(void)

@@ -10,12 +10,11 @@
 
 class ListView
 {
-    private:
-        HWND hwnd = nullptr;
     public:
-        ListView(HWND hwnd_mainwin);
-        void set_column(int column_index, std::wstring column_name);
-        void set_ex_styles(long styles);
+        static void set_column(HWND hwnd, int column_index, std::wstring column_name, int col_width);
+        static void set_item(HWND hwnd, const std::wstring items[]);
+        static void set_ex_styles(HWND hwnd, long styles);
+        static void remove_all_items(HWND hwnd);
         /*
         static void dispose(void);
         static void exists(void);

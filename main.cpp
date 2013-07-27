@@ -18,14 +18,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     Version: Major.Minor.Patch+build.number.date
-    Version: 0.2.1+build.8.20130718
+    Version: 0.3.0+build.9.20130727
 */
-
-#define WIN32_LEAN_AND_MEAN
 
 #include "main_event.h"
 
-const std::wstring szClassName = L"RustyCoder (Experimental)"; //Make the class name into a global variable
+const std::wstring szClassName = L"RustyCoder (Experimental)";
+MainEvent::OS MainEvent::supported_os = MainEvent::OS::OS_NOT_SUPPORTED;
 
 /*  Declare Windows procedure  */
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
@@ -36,54 +35,63 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
     MSG messages;            /* Here messages to the application are saved */
     WNDCLASSEX wincl;        /* Data structure for the windowclass */
 
-    /* The Window structure */
-    wincl.hInstance = hThisInstance;
-    wincl.lpszClassName = szClassName.c_str();
-    wincl.lpfnWndProc = WindowProcedure;      /* This function is called by windows */
-    wincl.style = CS_DBLCLKS;                 /* Catch double-clicks */
-    wincl.cbSize = sizeof(WNDCLASSEX);
+    MainEvent::supported_os = MainEvent::main_os_is_supported();
 
-    /* Use default icon and mouse-pointer */
-    wincl.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-    wincl.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
-    wincl.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wincl.lpszMenuName = nullptr;
-    wincl.cbClsExtra = 0;                       /* No extra bytes after the window class */
-    wincl.cbWndExtra = 0;                       /* structure or the window instance */
-
-    /* Use Windows's default colour as the background of the window */
-    wincl.hbrBackground = (HBRUSH)COLOR_BACKGROUND + 1;
-
-    /* Register the window class, and if it fails quit the program */
-    if (!RegisterClassEx(&wincl))
-        return 0;
-
-    /* The class is registered, let's create the program*/
-    hwnd = CreateWindowEx(
-        0,                                                              /* Extended possibilites for variation */
-        wincl.lpszClassName,                                            /* Classname */
-        wincl.lpszClassName,                                            /* Title Text */
-        WS_OVERLAPPEDWINDOW,                                            /* default window */
-        (GetSystemMetrics(SM_CXSCREEN) - MainEvent::MAIN_CLIENT_WIDTH) / 2,        /* Windows decides the position */
-        (GetSystemMetrics(SM_CYSCREEN) - MainEvent::MAIN_CLIENT_HEIGHT) / 2,       /* where the window ends up on the screen */
-        MainEvent::MAIN_CLIENT_WIDTH,                                              /* The programs width */
-        MainEvent::MAIN_CLIENT_HEIGHT,                                             /* and height in pixels */
-        HWND_DESKTOP,                                                   /* The window is a child-window to desktop */
-        nullptr,                                                        /* No menu */
-        hThisInstance,                                                  /* Program Instance handler */
-        nullptr                                                         /* No Window Creation data */
-        );
-
-    /* Make the window visible on the screen */
-    ShowWindow(hwnd, nCmdShow);
-
-    /* Run the message loop. It will run until GetMessage() returns 0 */
-    while(GetMessage(&messages, nullptr, 0, 0))
+    if(MainEvent::supported_os)
     {
-        /* Translate virtual-key messages into character messages */
-        TranslateMessage(&messages);
-        /* Send message to WindowProcedure */
-        DispatchMessage(&messages);
+        /* The Window structure */
+        wincl.hInstance = hThisInstance;
+        wincl.lpszClassName = szClassName.c_str();
+        wincl.lpfnWndProc = WindowProcedure;      /* This function is called by windows */
+        wincl.style = CS_DBLCLKS;                 /* Catch double-clicks */
+        wincl.cbSize = sizeof(WNDCLASSEX);
+
+        /* Use default icon and mouse-pointer */
+        wincl.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+        wincl.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+        wincl.hCursor = LoadCursor(nullptr, IDC_ARROW);
+        wincl.lpszMenuName = nullptr;
+        wincl.cbClsExtra = 0;                       /* No extra bytes after the window class */
+        wincl.cbWndExtra = 0;                       /* structure or the window instance */
+
+        /* Use Windows's default colour as the background of the window */
+        wincl.hbrBackground = (HBRUSH)COLOR_BACKGROUND + 1;
+
+        /* Register the window class, and if it fails quit the program */
+        if (!RegisterClassEx(&wincl))
+            return 0;
+
+        /* The class is registered, let's create the program*/
+        hwnd = CreateWindowEx(
+            0,                                                              /* Extended possibilites for variation */
+            wincl.lpszClassName,                                            /* Classname */
+            wincl.lpszClassName,                                            /* Title Text */
+            WS_OVERLAPPEDWINDOW,                                            /* default window */
+            (GetSystemMetrics(SM_CXSCREEN) - MainEvent::MAIN_CLIENT_WIDTH) / 2,        /* Windows decides the position */
+            (GetSystemMetrics(SM_CYSCREEN) - MainEvent::MAIN_CLIENT_HEIGHT) / 2,       /* where the window ends up on the screen */
+            MainEvent::MAIN_CLIENT_WIDTH,                                              /* The programs width */
+            MainEvent::MAIN_CLIENT_HEIGHT,                                             /* and height in pixels */
+            HWND_DESKTOP,                                                   /* The window is a child-window to desktop */
+            nullptr,                                                        /* No menu */
+            hThisInstance,                                                  /* Program Instance handler */
+            nullptr                                                         /* No Window Creation data */
+            );
+
+        /* Make the window visible on the screen */
+        ShowWindow(hwnd, nCmdShow);
+
+        /* Run the message loop. It will run until GetMessage() returns 0 */
+        while(GetMessage(&messages, nullptr, 0, 0))
+        {
+            /* Translate virtual-key messages into character messages */
+            TranslateMessage(&messages);
+            /* Send message to WindowProcedure */
+            DispatchMessage(&messages);
+        }
+    }
+    else
+    {
+        MessageBox(nullptr, L"OS not supported.", L"Error", MB_OK);
     }
 
     /* The program return-value is 0 - The value that PostQuitMessage() gave */
@@ -116,6 +124,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             switch(LOWORD(wParam))
             {
                 case ID_BUTTON1:
+                {
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
@@ -125,7 +134,21 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                         }
                     }
                     break;
+                }
+                case ID_BUTTON2:
+                {
+                    switch(HIWORD(wParam))
+                    {
+                        case BN_CLICKED:
+                        {
+                            MainEvent::button2_on_click(hwnd);
+                            break;
+                        }
+                    }
+                    break;
+                }
                 case ID_MENU1_FILE_EXIT:
+                {
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
@@ -135,7 +158,9 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                         }
                     }
                     break;
+                }
                 case ID_MENU1_FILE_ADD:
+                {
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
@@ -145,6 +170,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                         }
                     }
                     break;
+                }
             }
             break;
         }
