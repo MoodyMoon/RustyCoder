@@ -1,6 +1,6 @@
 #include "listview.h"
 
-void ListView::set_column(HWND hwnd, int column_index, std::wstring column_name, int col_width)
+void ListView::set_column(const HWND hwnd, const int column_index, const std::wstring column_name, const int col_width)
 {
     LVCOLUMN new_col;
     new_col.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -12,10 +12,10 @@ void ListView::set_column(HWND hwnd, int column_index, std::wstring column_name,
     ListView_InsertColumn(hwnd, column_index, &new_col);
 }
 
-void ListView::set_item(HWND hwnd, const std::wstring items[])
+void ListView::set_item(const HWND hwnd, const std::wstring items[])
 {
     LVITEM new_item;
-    int item_count = ListView_GetItemCount(hwnd);
+    const int item_count = ListView_GetItemCount(hwnd);
     new_item.mask = LVIF_TEXT;
     new_item.iItem = item_count;
     new_item.iSubItem = 0;
@@ -23,23 +23,24 @@ void ListView::set_item(HWND hwnd, const std::wstring items[])
     
     ListView_InsertItem(hwnd, &new_item);
 
-    for(int index = 1; index <= 2; ++index)
+    for(int i = 1; i <= 2; ++i)
     {
-        new_item.iSubItem = index;
-        new_item.pszText = const_cast<wchar_t*>(items[index].c_str());
+        new_item.iSubItem = i;
+        new_item.pszText = const_cast<wchar_t*>(items[i].c_str());
         ListView_SetItem(hwnd, &new_item);
     }
+
     new_item.iSubItem = 4;
     new_item.pszText = const_cast<wchar_t*>(items[3].c_str());
     ListView_SetItem(hwnd, &new_item);
 }
 
-void ListView::set_ex_styles(HWND hwnd, long styles)
+void ListView::set_ex_styles(const HWND hwnd, const long styles)
 {
     ListView_SetExtendedListViewStyleEx(hwnd, styles, styles);
 }
 
-void ListView::remove_all_items(HWND hwnd)
+void ListView::remove_all_items(const HWND hwnd)
 {
     ListView_DeleteAllItems(hwnd);
 }

@@ -19,7 +19,7 @@ MainEvent::OS MainEvent::main_os_is_supported(void)
     return OS_NOT_SUPPORTED;
 }
 
-void MainEvent::main_on_create(HWND hwnd)
+void MainEvent::main_on_create(const HWND hwnd)
 {
     INITCOMMONCONTROLSEX initctrl;
     initctrl.dwICC = ICC_LISTVIEW_CLASSES;
@@ -101,7 +101,7 @@ void MainEvent::main_on_create(HWND hwnd)
     SendMessage(textbox2, WM_SETFONT, reinterpret_cast<WPARAM>(hfont), MAKELPARAM(FALSE, 0));
 }
 
-void MainEvent::main_on_getminmaxinfo(LPARAM lParam)
+void MainEvent::main_on_getminmaxinfo(const LPARAM lParam)
 {
     LPMINMAXINFO min_max_size;
     min_max_size = reinterpret_cast<LPMINMAXINFO>(lParam);
@@ -109,7 +109,7 @@ void MainEvent::main_on_getminmaxinfo(LPARAM lParam)
     min_max_size->ptMinTrackSize.y = MainEvent::MAIN_CLIENT_HEIGHT;
 }
 
-void MainEvent::main_on_size_sizing(HWND hwnd)
+void MainEvent::main_on_size_sizing(const HWND hwnd)
 {
     RECT hwnd_coords;
     GetWindowRect(hwnd, &hwnd_coords);
@@ -163,20 +163,20 @@ void MainEvent::main_on_size_sizing(HWND hwnd)
     SetWindowPos(textbox2, textbox2, 97, hwnd_coords.bottom - hwnd_coords.top - 85, hwnd_coords.right - hwnd_coords.left - 147, 22, SWP_NOOWNERZORDER | SWP_NOSENDCHANGING | SWP_NOZORDER);
 }
 
-void MainEvent::button1_on_click(HWND hwnd)
+void MainEvent::button1_on_click(const HWND hwnd)
 {
     std::thread thread1(start_stream_redirection, hwnd);
     thread1.detach();
 }
 
-void MainEvent::button2_on_click(HWND hwnd)
+void MainEvent::button2_on_click(const HWND hwnd)
 {
     HWND listview1;
     listview1 = GetDlgItem(hwnd, ID_LISTVIEW1);
     ListView::remove_all_items(listview1);
 }
 
-void MainEvent::menu_exit_on_click(HWND hwnd)
+void MainEvent::menu_exit_on_click(const HWND hwnd)
 {
     SendMessage(hwnd, WM_CLOSE, 0, 0);
 }
@@ -198,11 +198,12 @@ LRESULT MainEvent::main_on_ctlcolorstatic(HWND hwnd, UINT message, WPARAM wParam
         return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-void MainEvent::menu_file_add_on_click(HWND hwnd)
+void MainEvent::menu_file_add_on_click(const HWND hwnd)
 {
     FileDialog filedialog1(hwnd);
     std::vector<std::wstring>& file_paths = filedialog1.get_file_paths();
-    int file_paths_count = file_paths.size();
+    const int file_paths_count = file_paths.size();
+    
     if(file_paths_count > 0)
     {
         HWND listview1;
@@ -211,12 +212,12 @@ void MainEvent::menu_file_add_on_click(HWND hwnd)
 
         SendMessage(listview1, WM_SETREDRAW, false, 0);
 
-        for(int index = 0; index < file_paths_count; ++index)
+        for(int i = 0; i < file_paths_count; ++i)
         {
-            list_items[0] = get_file_name(file_paths[index]);
-            list_items[1] = long_long_to_wstr(get_file_size(file_paths[index]));
-            list_items[2] = get_file_format(file_paths[index]);
-            list_items[3] = get_file_directory(file_paths[index]);
+            list_items[0] = get_file_name(file_paths[i]);
+            list_items[1] = long_long_to_wstr(get_file_size(file_paths[i]));
+            list_items[2] = get_file_format(file_paths[i]);
+            list_items[3] = get_file_directory(file_paths[i]);
             ListView::set_item(listview1, list_items);
         }
 
@@ -225,7 +226,7 @@ void MainEvent::menu_file_add_on_click(HWND hwnd)
     }
 }
 
-void MainEvent::start_stream_redirection(HWND hwnd)
+void MainEvent::start_stream_redirection(const HWND hwnd)
 {
     HANDLE standard_output_read;
     HANDLE standard_output_write;
@@ -249,7 +250,7 @@ void MainEvent::start_stream_redirection(HWND hwnd)
         show_error_msg();
 }
 
-bool MainEvent::create_child_process(HANDLE _standard_output_write)
+bool MainEvent::create_child_process(const HANDLE standard_output_write)
 {
     PROCESS_INFORMATION process_info;
     STARTUPINFO process_startup_info;
@@ -260,8 +261,8 @@ bool MainEvent::create_child_process(HANDLE _standard_output_write)
     memset(&process_startup_info, 0, sizeof(STARTUPINFO));
 
     process_startup_info.cb = sizeof(STARTUPINFO);
-    process_startup_info.hStdOutput = _standard_output_write;
-    process_startup_info.hStdError = _standard_output_write;
+    process_startup_info.hStdOutput = standard_output_write;
+    process_startup_info.hStdError = standard_output_write;
     process_startup_info.dwFlags |= STARTF_USESTDHANDLES;
 
     bSuccess = CreateProcess(L"lame.exe",
@@ -275,7 +276,7 @@ bool MainEvent::create_child_process(HANDLE _standard_output_write)
                              &process_startup_info,                             // STARTUPINFO pointer
                              &process_info);                                    // receives PROCESS_INFORMATION
 
-    if(!CloseHandle(_standard_output_write))
+    if(!CloseHandle(standard_output_write))
         show_error_msg();
 
     // If an error occurs, exit the application.
@@ -289,14 +290,14 @@ bool MainEvent::create_child_process(HANDLE _standard_output_write)
     return bSuccess;
 }
 
-void MainEvent::read_from_pipe(HWND hwnd, HANDLE _standard_output_read)
+void MainEvent::read_from_pipe(const HWND hwnd, const HANDLE standard_output_read)
 {
-    unsigned long bytes_read = 0;
+    unsigned long bytes_read = 0ul;
     char output_buffer[80];
     unsigned long text_length;
     HWND textbox1 = GetDlgItem(hwnd, ID_TEXTBOX1);
 
-    while(ReadFile(_standard_output_read, output_buffer, 79, &bytes_read, nullptr))
+    while(ReadFile(standard_output_read, output_buffer, 79, &bytes_read, nullptr))
     {
         text_length = SendMessage(textbox1, WM_GETTEXTLENGTH, 0, 0);
         textbox1_append_text(textbox1, output_buffer, text_length);
@@ -304,26 +305,26 @@ void MainEvent::read_from_pipe(HWND hwnd, HANDLE _standard_output_read)
     }
 }
 
-void MainEvent::textbox1_append_text(const HWND textbox, char _output_buffer[], unsigned long _text_length)
+void MainEvent::textbox1_append_text(const HWND textbox, const char output_buffer[], const unsigned long text_length)
 {
     SetFocus(textbox);
-    SendMessage(textbox, EM_SETSEL, _text_length, _text_length);
-    if (!SendMessageA(textbox, EM_REPLACESEL, false, reinterpret_cast<LPARAM>(_output_buffer)))
+    SendMessage(textbox, EM_SETSEL, text_length, text_length);
+    if (!SendMessageA(textbox, EM_REPLACESEL, false, reinterpret_cast<LPARAM>(output_buffer)))
         MessageBox(nullptr, L"Text cannot be changed!", L"Error", MB_OK);
 }
 
 std::wstring MainEvent::get_file_name(const std::wstring& file_path)
 {
-    size_t index = file_path.find_last_of(L'\\');
-    if(index != std::string::npos)
-        return file_path.substr(index + 1, file_path.length() - 1);
+    const size_t i = file_path.find_last_of(L'\\');
+    if(i != std::string::npos)
+        return file_path.substr(i + 1, file_path.length() - 1);
     else
         return nullptr;
 }
 
 long long MainEvent::get_file_size(const std::wstring& file_path)
 {
-    long long size = -1;
+    long long size = -1ll; //1
     LARGE_INTEGER temp_size;
     HANDLE file = CreateFile(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if(file != INVALID_HANDLE_VALUE)
@@ -335,26 +336,38 @@ long long MainEvent::get_file_size(const std::wstring& file_path)
 
 std::wstring MainEvent::get_file_format(const std::wstring& file_path)
 {
-    size_t index = file_path.find_last_of(L'.');
-    if(index != std::string::npos)
-        return file_path.substr(index, file_path.length() - 1);
+    const size_t i = file_path.find_last_of(L'.');
+    if(i != std::string::npos)
+        return file_path.substr(i, file_path.length() - 1);
     else
         return nullptr;
 }
 
 std::wstring MainEvent::get_file_directory(const std::wstring& file_path)
 {
-    size_t index = file_path.find_last_of(L'\\');
-    if(index != std::string::npos)
-        return file_path.substr(0, index);
+    const size_t i = file_path.find_last_of(L'\\');
+    if(i != std::string::npos)
+        return file_path.substr(0, i);
     else
         return nullptr;
 }
 
-std::wstring MainEvent::long_long_to_wstr(long long number)
+std::wstring MainEvent::long_long_to_wstr(const long long number_ll)
 {
     std::wstringstream temp;
-    temp << number;
+    long double number_l = static_cast<long double>(number_ll);
+    const long long size_class[] = {1099511627776ll, 1073741824ll, 1048576ll, 1024ll, 0ll};
+    const wchar_t size_class_name[][3] = {L"TB", L"GB", L"MB", L"KB", L"B"};
+    
+    for(int i = 0; i <= 4; ++i)
+    {
+        if(number_ll >= size_class[i])
+        {
+            number_l = number_l / static_cast<long double>(size_class[i]);
+            temp << std::fixed << std::setprecision(2) << number_l << L' ' << size_class_name[i];
+            break;
+        }
+    }
     return temp.str();
 }
 

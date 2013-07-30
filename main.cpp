@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     Version: Major.Minor.Patch+build.number.date
-    Version: 0.3.0+build.9.20130727
+    Version: 0.3.0+build.10.20130730
 */
 
 #include "main_event.h"
@@ -63,18 +63,18 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
 
         /* The class is registered, let's create the program*/
         hwnd = CreateWindowEx(
-            0,                                                              /* Extended possibilites for variation */
-            wincl.lpszClassName,                                            /* Classname */
-            wincl.lpszClassName,                                            /* Title Text */
-            WS_OVERLAPPEDWINDOW,                                            /* default window */
-            (GetSystemMetrics(SM_CXSCREEN) - MainEvent::MAIN_CLIENT_WIDTH) / 2,        /* Windows decides the position */
-            (GetSystemMetrics(SM_CYSCREEN) - MainEvent::MAIN_CLIENT_HEIGHT) / 2,       /* where the window ends up on the screen */
-            MainEvent::MAIN_CLIENT_WIDTH,                                              /* The programs width */
-            MainEvent::MAIN_CLIENT_HEIGHT,                                             /* and height in pixels */
-            HWND_DESKTOP,                                                   /* The window is a child-window to desktop */
-            nullptr,                                                        /* No menu */
-            hThisInstance,                                                  /* Program Instance handler */
-            nullptr                                                         /* No Window Creation data */
+            0,                                                                          /* Extended possibilites for variation */
+            wincl.lpszClassName,                                                        /* Classname */
+            wincl.lpszClassName,                                                        /* Title Text */
+            WS_OVERLAPPEDWINDOW,                                                        /* default window */
+            (GetSystemMetrics(SM_CXSCREEN) - MainEvent::MAIN_CLIENT_WIDTH) / 2,         /* Windows decides the position */
+            (GetSystemMetrics(SM_CYSCREEN) - MainEvent::MAIN_CLIENT_HEIGHT) / 2,        /* where the window ends up on the screen */
+            MainEvent::MAIN_CLIENT_WIDTH,                                               /* The programs width */
+            MainEvent::MAIN_CLIENT_HEIGHT,                                              /* and height in pixels */
+            HWND_DESKTOP,                                                               /* The window is a child-window to desktop */
+            nullptr,                                                                    /* No menu */
+            hThisInstance,                                                              /* Program Instance handler */
+            nullptr                                                                     /* No Window Creation data */
             );
 
         /* Make the window visible on the screen */

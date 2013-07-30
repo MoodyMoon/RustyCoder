@@ -12,10 +12,10 @@ class FileDialog
     private:
         std::vector<std::wstring> file_paths;
 
-        void set_vector_element(const wchar_t* const fullpath);
-        void set_vector_element(const wchar_t* const path, const wchar_t* const filename);
+        void set_vector_element(const wchar_t fullpath[]);
+        void set_vector_element(const wchar_t path[], const wchar_t filename[]);
     public:
-        FileDialog(HWND hwnd);
+        FileDialog(const HWND hwnd);
         std::vector<std::wstring>& get_file_paths(void);
         void print_all_paths(void);
 };
