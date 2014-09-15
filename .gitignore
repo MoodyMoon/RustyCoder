@@ -1,0 +1,12 @@
+# * symbol represents everything inside the current folder
+# / symbol represents folders
+
+bin/
+build/*
+!build/*.sln
+!build/*.vcxproj
+!build/*.vcxproj.filters
+doc/*
+!doc/Doxyfile
+lib/
+misc/

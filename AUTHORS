@@ -1,0 +1,20 @@
+RustyCoder
+Chak Wai Yuan - Creator and main author
+
+This software uses the following 3rd party components:
+
+LAME MP3 Encoder
+GPLv2+
+http://lame.sourceforge.net/
+
+libsndfile
+LGPLv2.1+
+http://www.mega-nerd.com/libsndfile/
+
+mpg123
+LGPLv2.1
+http://mpg123.de/
+
+msinttypes
+New BSD License
+https://code.google.com/p/msinttypes/

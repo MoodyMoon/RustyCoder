@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="3rd-Party Headers">
+      <UniqueIdentifier>{9a024dbe-ade6-45d5-8550-93c576d3768b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{b2207443-bcf8-4f91-8b90-4db78f45dac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{77cca85f-2a85-4f4b-8ce7-7797f7af15f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls">
+      <UniqueIdentifier>{1d995b10-f4d9-4270-b9ea-e8d19c7abdd2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\include\libsndfile\sndfile.h">
+      <Filter>3rd-Party Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\mpg123\mpg123.h">
+      <Filter>3rd-Party Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\msinttypes\inttypes.h">
+      <Filter>3rd-Party Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\button.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\filedialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\menubar.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\panel.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\window.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\rustycoder.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\stdafx.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\targetver.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\resources\resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\msgbox.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\exceptions.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\decoder_interface.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\samples.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\encoder_interface.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\rst_sndfile_decoder.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\rst_sndfile_encoder.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\lame\lame.h">
+      <Filter>3rd-Party Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\rst_mpg123.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\rst_lame.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\file_reader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\file_writer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\common.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\win_utils.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\vertical_split_window.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\global_window_procedure.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\event_handler_interface.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mainform.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\handle.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\include\controls\button.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\filedialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\rustycoder.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\stdafx.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\menubar.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\panel.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\window.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\msgbox.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\exceptions.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\samples.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\rst_sndfile_decoder.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\rst_sndfile_encoder.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\rst_mpg123.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\rst_lame.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\file_reader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\file_writer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\win_utils.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\vertical_split_window.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\global_window_procedure.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mainform.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="..\src\include\resources\app.manifest">
+      <Filter>Resources</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\src\include\resources\icon.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\include\resources\RustyCoder.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
