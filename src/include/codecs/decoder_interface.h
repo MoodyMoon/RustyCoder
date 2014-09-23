@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_DECODER_INTERFACE_H
-#define CORE_DECODER_INTERFACE_H
+#ifndef CODECS_DECODER_INTERFACE_H
+#define CODECS_DECODER_INTERFACE_H
 
 #include "stdafx.h"
 

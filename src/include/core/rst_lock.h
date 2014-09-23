@@ -17,24 +17,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
-#include "RustyCoder.h"
+#ifndef CORE_RST_LOCK_H
+#define CORE_RST_LOCK_H
 
-int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
+/*!
+Windows synchronization objects do not ensure threads FIFO behaviour
+*/
+class RustyLock
 {
-    MainForm mainform(hThisInstance, nCmdShow);
-    msg_loop_start();
-}
+    private:
+        bool auto_lock_and_unlock = false;
+        bool locked = false;
+        CRITICAL_SECTION lock;
 
-WPARAM msg_loop_start(void)
-{
-    while(GetMessage(&lpMsg, nullptr, 0u, 0u))
-    {
-        /* Translate virtual-key messages into character messages */
-        TranslateMessage(&lpMsg);
-        /* Send message to WindowProcedure */
-        DispatchMessage(&lpMsg);
-    }
+    public:
+        RustyLock(bool auto_lock_and_unlock);
+        void Lock(void);
+        void Unlock(void);
+        ~RustyLock(void);
+};
 
-    return lpMsg.wParam;
-}
+#endif

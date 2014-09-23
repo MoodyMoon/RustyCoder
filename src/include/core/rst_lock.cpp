@@ -18,23 +18,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "RustyCoder.h"
+#include "rst_lock.h"
 
-int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
+RustyLock::RustyLock(bool auto_lock_and_unlock) : auto_lock_and_unlock(auto_lock_and_unlock)
 {
-    MainForm mainform(hThisInstance, nCmdShow);
-    msg_loop_start();
+    InitializeCriticalSection(&lock);
+    if(auto_lock_and_unlock)
+        Lock();
 }
 
-WPARAM msg_loop_start(void)
+void RustyLock::Lock()
 {
-    while(GetMessage(&lpMsg, nullptr, 0u, 0u))
+    assert(!locked);
+    if(!locked)
     {
-        /* Translate virtual-key messages into character messages */
-        TranslateMessage(&lpMsg);
-        /* Send message to WindowProcedure */
-        DispatchMessage(&lpMsg);
+        EnterCriticalSection(&lock);
+        locked = true;
     }
+}
 
-    return lpMsg.wParam;
+void RustyLock::Unlock()
+{
+    assert(locked);
+    if(locked)
+    {
+        LeaveCriticalSection(&lock);
+        locked = false;
+    }
+}
+
+RustyLock::~RustyLock()
+{
+    if(!auto_lock_and_unlock)
+        Unlock();
+    DeleteCriticalSection(&lock);
 }

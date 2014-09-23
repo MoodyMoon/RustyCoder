@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_SAMPLES_H
-#define CORE_SAMPLES_H
+#ifndef CODECS_SAMPLES_H
+#define CODECS_SAMPLES_H
 
 class Samples
 {

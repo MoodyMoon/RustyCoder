@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,6 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\include\codecs\codec_controller.h" />
+    <ClInclude Include="..\src\include\codecs\decoder_interface.h" />
+    <ClInclude Include="..\src\include\codecs\encoder_interface.h" />
+    <ClInclude Include="..\src\include\codecs\rst_lame.h" />
+    <ClInclude Include="..\src\include\codecs\rst_mpg123.h" />
+    <ClInclude Include="..\src\include\codecs\rst_sndfile_decoder.h" />
+    <ClInclude Include="..\src\include\codecs\rst_sndfile_encoder.h" />
+    <ClInclude Include="..\src\include\codecs\samples.h" />
     <ClInclude Include="..\src\include\controls\button.h" />
     <ClInclude Include="..\src\include\controls\event_handler_interface.h" />
     <ClInclude Include="..\src\include\controls\filedialog.h" />
@@ -30,16 +38,11 @@
     <ClInclude Include="..\src\include\controls\vertical_split_window.h" />
     <ClInclude Include="..\src\include\controls\window.h" />
     <ClInclude Include="..\src\include\core\common.h" />
-    <ClInclude Include="..\src\include\core\decoder_interface.h" />
-    <ClInclude Include="..\src\include\core\encoder_interface.h" />
     <ClInclude Include="..\src\include\core\exceptions.h" />
     <ClInclude Include="..\src\include\core\file_reader.h" />
     <ClInclude Include="..\src\include\core\file_writer.h" />
-    <ClInclude Include="..\src\include\core\rst_lame.h" />
-    <ClInclude Include="..\src\include\core\rst_mpg123.h" />
-    <ClInclude Include="..\src\include\core\rst_sndfile_decoder.h" />
-    <ClInclude Include="..\src\include\core\rst_sndfile_encoder.h" />
-    <ClInclude Include="..\src\include\core\samples.h" />
+    <ClInclude Include="..\src\include\core\rst_lock.h" />
+    <ClInclude Include="..\src\include\core\rst_thread.h" />
     <ClInclude Include="..\src\include\core\win_utils.h" />
     <ClInclude Include="..\src\include\lame\lame.h" />
     <ClInclude Include="..\src\include\libsndfile\sndfile.h" />
@@ -52,6 +55,12 @@
     <ClInclude Include="..\src\rustycoder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\include\codecs\codec_controller.cpp" />
+    <ClCompile Include="..\src\include\codecs\rst_lame.cpp" />
+    <ClCompile Include="..\src\include\codecs\rst_mpg123.cpp" />
+    <ClCompile Include="..\src\include\codecs\rst_sndfile_decoder.cpp" />
+    <ClCompile Include="..\src\include\codecs\rst_sndfile_encoder.cpp" />
+    <ClCompile Include="..\src\include\codecs\samples.cpp" />
     <ClCompile Include="..\src\include\controls\button.cpp" />
     <ClCompile Include="..\src\include\controls\filedialog.cpp" />
     <ClCompile Include="..\src\include\controls\global_window_procedure.cpp" />
@@ -63,11 +72,8 @@
     <ClCompile Include="..\src\include\core\exceptions.cpp" />
     <ClCompile Include="..\src\include\core\file_reader.cpp" />
     <ClCompile Include="..\src\include\core\file_writer.cpp" />
-    <ClCompile Include="..\src\include\core\rst_lame.cpp" />
-    <ClCompile Include="..\src\include\core\rst_mpg123.cpp" />
-    <ClCompile Include="..\src\include\core\rst_sndfile_decoder.cpp" />
-    <ClCompile Include="..\src\include\core\rst_sndfile_encoder.cpp" />
-    <ClCompile Include="..\src\include\core\samples.cpp" />
+    <ClCompile Include="..\src\include\core\rst_lock.cpp" />
+    <ClCompile Include="..\src\include\core\rst_thread.cpp" />
     <ClCompile Include="..\src\include\core\win_utils.cpp" />
     <ClCompile Include="..\src\include\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

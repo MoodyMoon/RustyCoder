@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_RST_LAME_H
-#define CORE_RST_LAME_H
+#ifndef CODECS_RST_LAME_H
+#define CODECS_RST_LAME_H
 
 /*!
 Encoder for (MPEG-1, MPEG-2, MPEG-2.5) Audio Layer III

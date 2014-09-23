@@ -35,14 +35,12 @@ class VerticalSplitWindowEventHandler : public EventHandlerInterface
         HCURSOR size_cursor = reinterpret_cast<HCURSOR>(LoadImage(nullptr, MAKEINTRESOURCE(OCR_SIZEWE), IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR | LR_SHARED));
         TRACKMOUSEEVENT track_mouse;
 
-        int old_splitter_x;
-        int old_mouse_x;
-        int splitter_temp_x;
+        unsigned int old_splitter_x;
+        unsigned int old_mouse_x;
+        unsigned int splitter_temp_x;
 
         const unsigned int splitter_width = 5u;
         bool left_mouse_down = false;
-
-        
 
         virtual LRESULT HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 

@@ -37,10 +37,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /** C++ standard headers */
 #include <cassert>
 #include <exception>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <string>
+#include <thread>
 #include <typeinfo>
 
 /** Windows headers */
@@ -71,11 +73,20 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 /** Core */
 #include "core/common.h"
 #include "core/exceptions.h"
-#include "core/samples.h"
+#include "core/rst_lock.h"
+#include "core/rst_thread.h"
 #include "core/file_reader.h"
 #include "core/file_writer.h"
-#include "core/decoder_interface.h"
-#include "core/encoder_interface.h"
+
+/** Wrappers for third-party libraries */
+#include "codecs/samples.h"
+#include "codecs/decoder_interface.h"
+#include "codecs/encoder_interface.h"
+#include "codecs/rst_mpg123.h"
+#include "codecs/rst_sndfile_decoder.h"
+#include "codecs/rst_sndfile_encoder.h"
+#include "codecs/rst_lame.h"
+#include "codecs/codec_controller.h"
 
 /** Win32 control wrappers */
 #include "controls/handle.h"
@@ -88,12 +99,6 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "controls/menubar.h"
 #include "controls/panel.h"
 #include "controls/vertical_split_window.h"
-
-/** Wrappers for third-party libraries */
-#include "core/rst_mpg123.h"
-#include "core/rst_sndfile_decoder.h"
-#include "core/rst_sndfile_encoder.h"
-#include "core/rst_lame.h"
 
 /** Misc */
 #include "core/win_utils.h"

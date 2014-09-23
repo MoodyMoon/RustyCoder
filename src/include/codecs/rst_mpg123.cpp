@@ -398,7 +398,7 @@ uint64_t Mpg123<void>::GetFrameCount() const noexcept
 
 Samples::SampleContainers Mpg123<void>::GetPreferableOutputContainer() const noexcept
 {
-    return valid_containers[7];
+    return valid_containers[6];
 }
 
 Mpg123<void>::~Mpg123(void)

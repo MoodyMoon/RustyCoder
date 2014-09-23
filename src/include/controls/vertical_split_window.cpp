@@ -129,7 +129,7 @@ LRESULT VerticalSplitWindowEventHandler::HandleEvent(HWND hWnd, UINT uMsg, WPARA
             {
                 splitter_temp_x = old_splitter_x + GET_X_LPARAM(lParam) - old_mouse_x;
 
-                if(splitter_temp_x >= 0 && (splitter_temp_x) <= split_window->GetClientRight() - splitter_width - 1)
+                if(splitter_temp_x >= 0 && (splitter_temp_x <= split_window->GetClientRight() - splitter_width - 1))
                 {
                     splitter.left = splitter_temp_x;
                     splitter.right = splitter_temp_x + splitter_width - 1;

@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_RST_SNDFILE_ENCODER_H
-#define CORE_RST_SNDFILE_ENCODER_H
+#ifndef CODECS_RST_SNDFILE_ENCODER_H
+#define CODECS_RST_SNDFILE_ENCODER_H
 
 /*!
 Encoder for WAV (Microsoft), AIFF (Apple/SGI), AU (Sun/NeXT), PAF (Ensoniq PARIS), IFF (Amiga IFF/SVX8/SV16),

@@ -17,24 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
-#include "RustyCoder.h"
+#ifndef CORE_RST_THREAD_H
+#define CORE_RST_THREAD_H
 
-int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
+class RustyThread
 {
-    MainForm mainform(hThisInstance, nCmdShow);
-    msg_loop_start();
-}
+    private:
+        std::unique_ptr<std::thread> thread;
 
-WPARAM msg_loop_start(void)
-{
-    while(GetMessage(&lpMsg, nullptr, 0u, 0u))
-    {
-        /* Translate virtual-key messages into character messages */
-        TranslateMessage(&lpMsg);
-        /* Send message to WindowProcedure */
-        DispatchMessage(&lpMsg);
-    }
+    public:
+        RustyThread(std::function<void(void)> func);
+        ~RustyThread();
+};
 
-    return lpMsg.wParam;
-}
+#endif

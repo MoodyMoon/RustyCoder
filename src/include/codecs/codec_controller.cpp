@@ -18,23 +18,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "RustyCoder.h"
+#include "codec_controller.h"
 
-int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
-{
-    MainForm mainform(hThisInstance, nCmdShow);
-    msg_loop_start();
-}
-
-WPARAM msg_loop_start(void)
-{
-    while(GetMessage(&lpMsg, nullptr, 0u, 0u))
-    {
-        /* Translate virtual-key messages into character messages */
-        TranslateMessage(&lpMsg);
-        /* Send message to WindowProcedure */
-        DispatchMessage(&lpMsg);
-    }
-
-    return lpMsg.wParam;
-}

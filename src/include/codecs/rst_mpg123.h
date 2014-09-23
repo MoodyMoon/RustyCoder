@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_RST_MPG123_H
-#define CORE_RST_MPG123_H
+#ifndef CODECS_RST_MPG123_H
+#define CODECS_RST_MPG123_H
 
 class Mpg123LifetimeHandler;
 

@@ -85,7 +85,7 @@ class Window
         void ResizeTo(int nWidth, int nHeight, bool bRepaint = true);
         void MoveAndResizeTo(int x, int y, int nWidth, int nHeight, bool bRepaint = true);
 
-        ~Window(void);
+        virtual ~Window(void);
 };
 
 #endif

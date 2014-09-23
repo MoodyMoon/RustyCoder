@@ -18,23 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "RustyCoder.h"
+#include "rst_thread.h"
 
-int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
+RustyThread::RustyThread(std::function<void(void)> func)
 {
-    MainForm mainform(hThisInstance, nCmdShow);
-    msg_loop_start();
+    thread.reset(new std::thread(func));
 }
 
-WPARAM msg_loop_start(void)
+RustyThread::~RustyThread()
 {
-    while(GetMessage(&lpMsg, nullptr, 0u, 0u))
-    {
-        /* Translate virtual-key messages into character messages */
-        TranslateMessage(&lpMsg);
-        /* Send message to WindowProcedure */
-        DispatchMessage(&lpMsg);
-    }
-
-    return lpMsg.wParam;
+    thread->join();
 }
