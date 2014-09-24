@@ -20,10 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_decoder.h"
 
-const Samples::SampleContainers SndFileDecoder<void>::valid_containers[4] = {Samples::SampleContainers::INT_S16,
-                                                                             Samples::SampleContainers::INT_S32,
-                                                                             Samples::SampleContainers::FLOAT_32,
-                                                                             Samples::SampleContainers::FLOAT_64};
+const Sample::SampleContainer SndFileDecoder<void>::valid_containers[4] = {Sample::SampleContainer::INT_S16,
+                                                                           Sample::SampleContainer::INT_S32,
+                                                                           Sample::SampleContainer::FLOAT_32,
+                                                                           Sample::SampleContainer::FLOAT_64};
 template<class T>
 SndFileDecoder<T>::SndFileDecoder(const char * const file, T *container, uint64_t container_size)
 {
@@ -195,7 +195,7 @@ uint64_t SndFileDecoder<void>::GetFrameCount() const noexcept
     return sfinfo.frames;
 }
 
-Samples::SampleContainers SndFileDecoder<void>::GetPreferableOutputContainer() const noexcept
+Sample::SampleContainer SndFileDecoder<void>::GetPreferableOutputContainer() const noexcept
 {
     int subtype = SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | sfinfo.format;
 

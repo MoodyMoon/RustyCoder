@@ -20,11 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_RST_LAME_H
 #define CODECS_RST_LAME_H
 
-/*!
-Encoder for (MPEG-1, MPEG-2, MPEG-2.5) Audio Layer III
-*/
-template<class T>
-class Lame : public EncoderInterface<T>
+class LameOptions
 {
     public:
         /*!
@@ -43,7 +39,7 @@ class Lame : public EncoderInterface<T>
             Q8, /*!< <tt>-q 8</tt> */
             Q9  /*!< <tt>-q 9</tt> (Low quality, fastest) */
         };
-        
+
         /*!
         Similar to \c -m in lame command line
         */
@@ -53,7 +49,7 @@ class Lame : public EncoderInterface<T>
             JOINT_STEREO = MPEG_mode::JOINT_STEREO, /*!< <tt>-m j</tt> */
             MONO = MPEG_mode::MONO                  /*!< <tt>-m m</tt> */
         };
-        
+
         /*!
         Similar to \c --*+replaygain*+ in lame command line
         */
@@ -63,7 +59,7 @@ class Lame : public EncoderInterface<T>
             FAST,    /*!< <tt>\--replaygain-fast</tt> */
             ACCURATE /*!< <tt>\--replaygain-accurate</tt> */
         };
-        
+
         /*!
         Bitrate encoding selection
         */
@@ -74,10 +70,10 @@ class Lame : public EncoderInterface<T>
             VARIABLE_NEW = vbr_mode::vbr_mtrh, /*!< <tt>\--vbr-new</tt> */
             AVERAGE = vbr_mode::vbr_abr        /*!< <tt>\--abr \<bitrate\></tt> */
         };
-        
+
         /*!
         For the option \c -b and \c -B in lame command line. Obtained from LAME USAGE.\n\n
-        
+
         <tt>
         MPEG-1   layer III sample frequencies (kHz):  32  48  44.1\n
         bitrates (kbps): 32 40 48 56 64 80 96 112 128 160 192 224 256 320\n\n
@@ -111,6 +107,24 @@ class Lame : public EncoderInterface<T>
             B_320 = 320
         };
 
+        AlgorithmQuality algorithm_quality;
+        Mode mode;
+        ReplayGain replaygain_mode;
+        bool copyright;
+        bool use_naoki_psytune;
+        BitrateEncoding bitrate_encoding;
+        float vbr_quality;
+        Bitrate min_or_max_bitrate1;
+        Bitrate min_or_max_bitrate2;
+};
+
+/*!
+Encoder for (MPEG-1, MPEG-2, MPEG-2.5) Audio Layer III
+*/
+template<class T>
+class Lame : public EncoderInterface<T>
+{
+    public:
         enum Tag
         {
             ID3V1_TAG,
@@ -136,15 +150,15 @@ class Lame : public EncoderInterface<T>
         void Lame2(const char * const file,
                    int sample_rate,
                    int channel_count,
-                   AlgorithmQuality algorithm_quality,
-                   Mode mode,
-                   ReplayGain replaygain_mode,
+                   LameOptions::AlgorithmQuality algorithm_quality,
+                   LameOptions::Mode mode,
+                   LameOptions::ReplayGain replaygain_mode,
                    bool copyright,
                    bool use_naoki_psytune,
-                   BitrateEncoding bitrate_encoding,
+                   LameOptions::BitrateEncoding bitrate_encoding,
                    float vbr_quality,
-                   Bitrate min_or_max_bitrate1,
-                   Bitrate min_or_max_bitrate2,
+                   LameOptions::Bitrate min_or_max_bitrate1,
+                   LameOptions::Bitrate min_or_max_bitrate2,
                    T *container,
                    uint64_t container_size);
 
@@ -188,15 +202,15 @@ class Lame : public EncoderInterface<T>
         Lame(const char * const file,
              int sample_rate,
              int channel_count,
-             AlgorithmQuality algorithm_quality,
-             Mode mode,
-             ReplayGain replaygain_mode,
+             LameOptions::AlgorithmQuality algorithm_quality,
+             LameOptions::Mode mode,
+             LameOptions::ReplayGain replaygain_mode,
              bool copyright,
              bool use_naoki_psytune,
-             BitrateEncoding bitrate_encoding,
+             LameOptions::BitrateEncoding bitrate_encoding,
              float vbr_quality,
-             Bitrate min_or_max_bitrate1,
-             Bitrate min_or_max_bitrate2,
+             LameOptions::Bitrate min_or_max_bitrate1,
+             LameOptions::Bitrate min_or_max_bitrate2,
              T *container,
              uint64_t container_size);
 
@@ -214,7 +228,7 @@ template<>
 class Lame<void> : public EncoderInterface<void>
 {
     public:
-        static const Samples::SampleContainers valid_containers[3];
+        static const Sample::SampleContainer valid_containers[3];
 
         Lame() = delete;
         Lame(const Lame &) = delete;

@@ -20,16 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_RST_SNDFILE_ENCODER_H
 #define CODECS_RST_SNDFILE_ENCODER_H
 
-/*!
-Encoder for WAV (Microsoft), AIFF (Apple/SGI), AU (Sun/NeXT), PAF (Ensoniq PARIS), IFF (Amiga IFF/SVX8/SV16),
-WAV (NIST Sphere), VOC (Creative Labs), SF (Berkeley/IRCAM/CARL), W64 (SoundFoundry WAVE 64),
-MAT4 (GNU Octave 2.0 / Matlab 4.2), MAT5 (GNU Octave 2.1 / Matlab 5.0), PVF (Portable Voice Format),
-XI (FastTracker 2), HTK (HMM Tool Kit), SDS(Midi Sample Dump Standard), AVR (Audio Visual Research),
-WAVEX (Microsoft), SD2 (Sound Designer II), CAF (Apple Core Audio File), WVE(Psion Series 3),
-MPC(Akai MPC 2k), RF64 (RIFF 64).
-*/
-template<class T>
-class SndFileEncoder : public EncoderInterface<T>
+class SndFileEncoderOptions
 {
     public:
         /*!
@@ -50,7 +41,7 @@ class SndFileEncoder : public EncoderInterface<T>
             WAV_MS_ADPACM = SF_FORMAT_WAV | SF_FORMAT_MS_ADPCM,
             WAV_GSM610 = SF_FORMAT_WAV | SF_FORMAT_GSM610,
             WAV_G721_32_ADPCM = SF_FORMAT_WAV | SF_FORMAT_G721_32,
-            
+
             /*! AIFF (Apple/SGI) */
             AIFF_PCM_INT_U8 = SF_FORMAT_AIFF | SF_FORMAT_PCM_U8,
             AIFF_PCM_INT_S8 = SF_FORMAT_AIFF | SF_FORMAT_PCM_S8,
@@ -200,6 +191,20 @@ class SndFileEncoder : public EncoderInterface<T>
             RF64_ALAW = SF_FORMAT_RF64 | SF_FORMAT_ALAW
         };
 
+        OutputFormat format;
+};
+
+/*!
+Encoder for WAV (Microsoft), AIFF (Apple/SGI), AU (Sun/NeXT), PAF (Ensoniq PARIS), IFF (Amiga IFF/SVX8/SV16),
+WAV (NIST Sphere), VOC (Creative Labs), SF (Berkeley/IRCAM/CARL), W64 (SoundFoundry WAVE 64),
+MAT4 (GNU Octave 2.0 / Matlab 4.2), MAT5 (GNU Octave 2.1 / Matlab 5.0), PVF (Portable Voice Format),
+XI (FastTracker 2), HTK (HMM Tool Kit), SDS(Midi Sample Dump Standard), AVR (Audio Visual Research),
+WAVEX (Microsoft), SD2 (Sound Designer II), CAF (Apple Core Audio File), WVE(Psion Series 3),
+MPC(Akai MPC 2k), RF64 (RIFF 64).
+*/
+template<class T>
+class SndFileEncoder : public EncoderInterface<T>
+{
     private:
         SF_INFO sfinfo;
         SNDFILE *sndfile = nullptr;
@@ -208,7 +213,7 @@ class SndFileEncoder : public EncoderInterface<T>
         uint64_t container_frame_capacity = 0;
         uint64_t valid_output_frame_count = 0;
 
-        void SndFileEncoder2(const char * const file, int sample_rate, int channel_count, OutputFormat format, T *container, uint64_t container_size);
+        void SndFileEncoder2(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, T *container, uint64_t container_size);
         virtual void SetFrameBuffer(T *container, uint64_t container_size);
 
     public:
@@ -230,7 +235,7 @@ class SndFileEncoder : public EncoderInterface<T>
         \warning \c container_size must be > 0.
         \warning \c container_size must be multiple of the number of audio channels.
         */
-        SndFileEncoder(const char * const file, int sample_rate, int channel_count, OutputFormat format, T *container, uint64_t container_size);
+        SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, T *container, uint64_t container_size);
 
         virtual const char * const GetFileExtension(void) const noexcept;
 
@@ -246,7 +251,7 @@ template<>
 class SndFileEncoder<void> : public EncoderInterface<void>
 {
     public:
-        static const Samples::SampleContainers valid_containers[4];
+        static const Sample::SampleContainer valid_containers[4];
 
         SndFileEncoder() = delete;
         SndFileEncoder(const SndFileEncoder &) = delete;

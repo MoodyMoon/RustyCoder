@@ -20,23 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_lame.h"
 
-const Samples::SampleContainers Lame<void>::valid_containers[3] = {Samples::SampleContainers::INT_S16,
-                                                                   Samples::SampleContainers::FLOAT_32,
-                                                                   Samples::SampleContainers::FLOAT_64};
+const Sample::SampleContainer Lame<void>::valid_containers[3] = {Sample::SampleContainer::INT_S16,
+                                                                 Sample::SampleContainer::FLOAT_32,
+                                                                 Sample::SampleContainer::FLOAT_64};
 
 template<class T>
 Lame<T>::Lame(const char * const file,
               int sample_rate,
               int channel_count,
-              AlgorithmQuality algorithm_quality,
-              Mode mode,
-              ReplayGain replaygain_mode,
+              LameOptions::AlgorithmQuality algorithm_quality,
+              LameOptions::Mode mode,
+              LameOptions::ReplayGain replaygain_mode,
               bool copyright,
               bool use_naoki_psytune,
-              BitrateEncoding bitrate_encoding,
+              LameOptions::BitrateEncoding bitrate_encoding,
               float vbr_quality,
-              Bitrate min_or_max_bitrate1,
-              Bitrate min_or_max_bitrate2,
+              LameOptions::Bitrate min_or_max_bitrate1,
+              LameOptions::Bitrate min_or_max_bitrate2,
               T *container,
               uint64_t container_size)
 {
@@ -47,15 +47,15 @@ template<>
 Lame<short>::Lame(const char * const file,
                   int sample_rate,
                   int channel_count,
-                  AlgorithmQuality algorithm_quality,
-                  Mode mode,
-                  ReplayGain replaygain_mode,
+                  LameOptions::AlgorithmQuality algorithm_quality,
+                  LameOptions::Mode mode,
+                  LameOptions::ReplayGain replaygain_mode,
                   bool copyright,
                   bool use_naoki_psytune,
-                  BitrateEncoding bitrate_encoding,
+                  LameOptions::BitrateEncoding bitrate_encoding,
                   float vbr_quality,
-                  Bitrate min_or_max_bitrate1,
-                  Bitrate min_or_max_bitrate2,
+                  LameOptions::Bitrate min_or_max_bitrate1,
+                  LameOptions::Bitrate min_or_max_bitrate2,
                   short *container,
                   uint64_t container_size)
 {
@@ -66,15 +66,15 @@ template<>
 Lame<float>::Lame(const char * const file,
                   int sample_rate,
                   int channel_count,
-                  AlgorithmQuality algorithm_quality,
-                  Mode mode,
-                  ReplayGain replaygain_mode,
+                  LameOptions::AlgorithmQuality algorithm_quality,
+                  LameOptions::Mode mode,
+                  LameOptions::ReplayGain replaygain_mode,
                   bool copyright,
                   bool use_naoki_psytune,
-                  BitrateEncoding bitrate_encoding,
+                  LameOptions::BitrateEncoding bitrate_encoding,
                   float vbr_quality,
-                  Bitrate min_or_max_bitrate1,
-                  Bitrate min_or_max_bitrate2,
+                  LameOptions::Bitrate min_or_max_bitrate1,
+                  LameOptions::Bitrate min_or_max_bitrate2,
                   float *container,
                   uint64_t container_size)
 {
@@ -85,15 +85,15 @@ template<>
 Lame<double>::Lame(const char * const file,
                    int sample_rate,
                    int channel_count,
-                   AlgorithmQuality algorithm_quality,
-                   Mode mode,
-                   ReplayGain replaygain_mode,
+                   LameOptions::AlgorithmQuality algorithm_quality,
+                   LameOptions::Mode mode,
+                   LameOptions::ReplayGain replaygain_mode,
                    bool copyright,
                    bool use_naoki_psytune,
-                   BitrateEncoding bitrate_encoding,
+                   LameOptions::BitrateEncoding bitrate_encoding,
                    float vbr_quality,
-                   Bitrate min_or_max_bitrate1,
-                   Bitrate min_or_max_bitrate2,
+                   LameOptions::Bitrate min_or_max_bitrate1,
+                   LameOptions::Bitrate min_or_max_bitrate2,
                    double *container,
                    uint64_t container_size)
 {
@@ -104,15 +104,15 @@ template<class T>
 void Lame<T>::Lame2(const char * const file,
                     int sample_rate,
                     int channel_count,
-                    AlgorithmQuality algorithm_quality,
-                    Mode mode,
-                    ReplayGain replaygain_mode,
+                    LameOptions::AlgorithmQuality algorithm_quality,
+                    LameOptions::Mode mode,
+                    LameOptions::ReplayGain replaygain_mode,
                     bool copyright,
                     bool use_naoki_psytune,
-                    BitrateEncoding bitrate_encoding,
+                    LameOptions::BitrateEncoding bitrate_encoding,
                     float vbr_quality,
-                    Bitrate min_or_max_bitrate1,
-                    Bitrate min_or_max_bitrate2,
+                    LameOptions::Bitrate min_or_max_bitrate1,
+                    LameOptions::Bitrate min_or_max_bitrate2,
                     T *container,
                     uint64_t container_size)
 {
@@ -149,13 +149,13 @@ void Lame<T>::Lame2(const char * const file,
 
     switch(replaygain_mode)
     {
-        case FAST:
-        case ACCURATE:
+        case LameOptions::ReplayGain::FAST:
+        case LameOptions::ReplayGain::ACCURATE:
         {
             error = lame_set_findReplayGain(gf, 1);
             IfErrorThenFreeAndThrow("Cannot enable ReplayGain analysis.");
 
-            if(replaygain_mode == ReplayGain::ACCURATE)
+            if(replaygain_mode == LameOptions::ReplayGain::ACCURATE)
             {
                 error = lame_set_decode_on_the_fly(gf, 1);
                 IfErrorThenFreeAndThrow("Cannot enable peak sample searching.");
@@ -172,13 +172,13 @@ void Lame<T>::Lame2(const char * const file,
 
     switch(bitrate_encoding)
     {
-        case CONSTANT:
+        case LameOptions::BitrateEncoding::CONSTANT:
             error = lame_set_VBR(gf, vbr_mode::vbr_off);
             break;
-        case VARIABLE_OLD:
+        case LameOptions::BitrateEncoding::VARIABLE_OLD:
             error = lame_set_VBR(gf, vbr_mode::vbr_rh);
             break;
-        case VARIABLE_NEW:
+        case LameOptions::BitrateEncoding::VARIABLE_NEW:
             error = lame_set_VBR(gf, vbr_mode::vbr_mtrh);
             break;
         default:
@@ -189,12 +189,12 @@ void Lame<T>::Lame2(const char * const file,
 
     switch(bitrate_encoding)
     {
-        case CONSTANT:
+        case LameOptions::BitrateEncoding::CONSTANT:
             error = lame_set_brate(gf, min_or_max_bitrate1);
             IfErrorThenFreeAndThrow("Cannot set constant bitrate.");
             break;
-        case VARIABLE_OLD:
-        case VARIABLE_NEW:
+        case LameOptions::BitrateEncoding::VARIABLE_OLD:
+        case LameOptions::BitrateEncoding::VARIABLE_NEW:
         {
             error = lame_set_VBR_quality(gf, vbr_quality);
             IfErrorThenFreeAndThrow("Cannot set vbr quality.");
@@ -215,7 +215,7 @@ void Lame<T>::Lame2(const char * const file,
             }
             break;
         }
-        case AVERAGE:
+        case LameOptions::BitrateEncoding::AVERAGE:
             lame_set_VBR_mean_bitrate_kbps(gf, min_or_max_bitrate1);
             IfErrorThenFreeAndThrow("Cannot set mean bitrate.");
             break;

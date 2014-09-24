@@ -100,7 +100,7 @@ class Mpg123<void> : public DecoderInterface<void>
         void FreeAndThrow(int error_code);
 
     public:
-        static const Samples::SampleContainers valid_containers[7];
+        static const Sample::SampleContainer valid_containers[7];
 
         Mpg123(const Mpg123 &) = delete;
         Mpg123 & operator=(const Mpg123 &) = delete;
@@ -117,7 +117,7 @@ class Mpg123<void> : public DecoderInterface<void>
         virtual unsigned int GetChannelCount(void) const noexcept;
         virtual unsigned int GetSampleRate(void) const noexcept;
         virtual uint64_t GetFrameCount(void) const noexcept;
-        virtual Samples::SampleContainers GetPreferableOutputContainer() const noexcept;
+        virtual Sample::SampleContainer GetPreferableOutputContainer() const noexcept;
         ~Mpg123(void);
 };
 

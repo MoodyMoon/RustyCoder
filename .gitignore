@@ -10,3 +10,4 @@ doc/*
 !doc/Doxyfile
 lib/
 misc/
+obj/

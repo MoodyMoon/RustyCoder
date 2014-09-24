@@ -89,7 +89,7 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
         Mpg123<void> mpg1(WindowsUtilities::UTF8_Encode(source).c_str(), life);
         Mpg123<float> mpg2(WindowsUtilities::UTF8_Encode(source).c_str(), buffer, sizeof(buffer), life);
         //SndFileEncoder<float> snd(TypeConv::utf8_encode(destination).c_str(), mpg1.GetSampleRate(), mpg1.GetChannelCount(), SndFileEncoder<float>::OutputFormat::WAV_PCM_FLOAT_32, buffer, sizeof(buffer));
-        Lame<float> lame(WindowsUtilities::UTF8_Encode(destination).c_str(), mpg1.GetSampleRate(), mpg1.GetChannelCount(), Lame<float>::AlgorithmQuality::Q0, Lame<float>::Mode::JOINT_STEREO, Lame<float>::ReplayGain::ACCURATE, false, true, Lame<float>::BitrateEncoding::VARIABLE_NEW, 0, Lame<float>::Bitrate::B_224, Lame<float>::Bitrate::B_320, buffer, sizeof(buffer));
+        Lame<float> lame(WindowsUtilities::UTF8_Encode(destination).c_str(), mpg1.GetSampleRate(), mpg1.GetChannelCount(), LameOptions::AlgorithmQuality::Q0, LameOptions::Mode::JOINT_STEREO, LameOptions::ReplayGain::ACCURATE, false, true, LameOptions::BitrateEncoding::VARIABLE_NEW, 0, LameOptions::Bitrate::B_224, LameOptions::Bitrate::B_320, buffer, sizeof(buffer));
         do
         {
             buffer_valid_frames_count = mpg2.ReadFrames();

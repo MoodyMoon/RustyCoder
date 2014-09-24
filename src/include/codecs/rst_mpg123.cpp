@@ -20,13 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_mpg123.h"
 
-const Samples::SampleContainers Mpg123<void>::valid_containers[7] = {Samples::SampleContainers::INT_S8,
-                                                                     Samples::SampleContainers::INT_U8,
-                                                                     Samples::SampleContainers::INT_S16,
-                                                                     Samples::SampleContainers::INT_U16,
-                                                                     Samples::SampleContainers::INT_S32,
-                                                                     Samples::SampleContainers::INT_U32,
-                                                                     Samples::SampleContainers::FLOAT_32};
+const Sample::SampleContainer Mpg123<void>::valid_containers[7] = {Sample::SampleContainer::INT_S8,
+                                                                   Sample::SampleContainer::INT_U8,
+                                                                   Sample::SampleContainer::INT_S16,
+                                                                   Sample::SampleContainer::INT_U16,
+                                                                   Sample::SampleContainer::INT_S32,
+                                                                   Sample::SampleContainer::INT_U32,
+                                                                   Sample::SampleContainer::FLOAT_32};
 
 bool Mpg123LifetimeHandler::init = false;
 
@@ -88,39 +88,39 @@ void Mpg123<T>::Mpg123_2(const char * const file, T *container, uint64_t contain
 
     size_t type_hash = typeid(T).hash_code();
 
-    Samples::SampleContainers container_type;
+    Sample::SampleContainer container_type;
 
     if(type_hash == typeid(char).hash_code())
-        container_type = Samples::SampleContainers::INT_S8;
+        container_type = Sample::SampleContainer::INT_S8;
     else if(type_hash == typeid(unsigned char).hash_code())
-        container_type = Samples::SampleContainers::INT_U8;
+        container_type = Sample::SampleContainer::INT_U8;
     else if(type_hash == typeid(short).hash_code())
-        container_type = Samples::SampleContainers::INT_S16;
+        container_type = Sample::SampleContainer::INT_S16;
     else if(type_hash == typeid(unsigned short).hash_code())
-        container_type = Samples::SampleContainers::INT_U16;
+        container_type = Sample::SampleContainer::INT_U16;
     else if(type_hash == typeid(int).hash_code())
-        container_type = Samples::SampleContainers::INT_S32;
+        container_type = Sample::SampleContainer::INT_S32;
     else if(type_hash == typeid(unsigned int).hash_code())
-        container_type = Samples::SampleContainers::INT_U32;
+        container_type = Sample::SampleContainer::INT_U32;
     else
-        container_type = Samples::SampleContainers::FLOAT_32;
+        container_type = Sample::SampleContainer::FLOAT_32;
 
     switch(container_type)
     {
-        case Samples::SampleContainers::INT_S8:
-        case Samples::SampleContainers::INT_U8:
+        case Sample::SampleContainer::INT_S8:
+        case Sample::SampleContainer::INT_U8:
             error = mpg123_param(mh, MPG123_ADD_FLAGS, MPG123_FORCE_8BIT, 0.);
             break;
-        case Samples::SampleContainers::FLOAT_32:
+        case Sample::SampleContainer::FLOAT_32:
             error = mpg123_param(mh, MPG123_ADD_FLAGS, MPG123_FORCE_FLOAT, 0.);
             break;
     }
 
     switch(container_type)
     {
-        case Samples::SampleContainers::INT_S8:
-        case Samples::SampleContainers::INT_U8:
-        case Samples::SampleContainers::FLOAT_32:
+        case Sample::SampleContainer::INT_S8:
+        case Sample::SampleContainer::INT_U8:
+        case Sample::SampleContainer::FLOAT_32:
         {
             if(error != MPG123_OK)
             {
@@ -143,22 +143,22 @@ void Mpg123<T>::Mpg123_2(const char * const file, T *container, uint64_t contain
 
     switch(container_type)
     {
-        case Samples::SampleContainers::INT_S8:
+        case Sample::SampleContainer::INT_S8:
             error = mpg123_format(mh, mpg123_void.GetSampleRate(), mpg123_void.GetChannelCount(), MPG123_ENC_SIGNED_8);
             break;
-        case Samples::SampleContainers::INT_U8:
+        case Sample::SampleContainer::INT_U8:
             error = mpg123_format(mh, mpg123_void.GetSampleRate(), mpg123_void.GetChannelCount(), MPG123_ENC_UNSIGNED_8);
             break;
-        case Samples::SampleContainers::INT_S16:
+        case Sample::SampleContainer::INT_S16:
             error = mpg123_format(mh, mpg123_void.GetSampleRate(), mpg123_void.GetChannelCount(), MPG123_ENC_SIGNED_16);
             break;
-        case Samples::SampleContainers::INT_U16:
+        case Sample::SampleContainer::INT_U16:
             error = mpg123_format(mh, mpg123_void.GetSampleRate(), mpg123_void.GetChannelCount(), MPG123_ENC_UNSIGNED_16);
             break;
-        case Samples::SampleContainers::INT_S32:
+        case Sample::SampleContainer::INT_S32:
             error = mpg123_format(mh, mpg123_void.GetSampleRate(), mpg123_void.GetChannelCount(), MPG123_ENC_SIGNED_32);
             break;
-        case Samples::SampleContainers::INT_U32:
+        case Sample::SampleContainer::INT_U32:
             error = mpg123_format(mh, mpg123_void.GetSampleRate(), mpg123_void.GetChannelCount(), MPG123_ENC_UNSIGNED_32);
             break;
         default:
@@ -396,7 +396,7 @@ uint64_t Mpg123<void>::GetFrameCount() const noexcept
     return frame_count;
 }
 
-Samples::SampleContainers Mpg123<void>::GetPreferableOutputContainer() const noexcept
+Sample::SampleContainer Mpg123<void>::GetPreferableOutputContainer() const noexcept
 {
     return valid_containers[6];
 }

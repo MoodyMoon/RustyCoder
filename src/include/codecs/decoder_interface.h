@@ -115,7 +115,7 @@ class DecoderInterface<void>
         container type is returned which allows preservation of most of the audio quality.
         \return Samples::SampleContainers
         */
-        virtual Samples::SampleContainers GetPreferableOutputContainer() const noexcept = 0;
+        virtual Sample::SampleContainer GetPreferableOutputContainer() const noexcept = 0;
 
         virtual ~DecoderInterface(void) {};
 };

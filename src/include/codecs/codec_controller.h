@@ -20,41 +20,71 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_CODEC_CONTROLLER_H
 #define CODECS_CODEC_CONTROLLER_H
 
-template<class T>
-class SndFileEncoderOptions;
-
-template<class T>
-class LameOptions;
-
 class CodecController
 {
+    public:
+        enum Decoder
+        {
+            SNDFILEDECODER,
+            MPG123
+        };
+
+        enum Encoder
+        {
+            SNDFILEENCODER,
+            LAME
+        };
+
+    private:
+        const std::string source_file_full_path;
+        const std::string output_file_full_path;
+        Decoder decoder_id;
+        Encoder encoder_id;
+        SndFileEncoderOptions * const sndfileencoder_options = nullptr;
+        LameOptions * const lame_options = nullptr;
+
+        DecoderInterface<void> *decoder_void = nullptr;
+        DecoderInterface<char> *decoder_char = nullptr;
+        DecoderInterface<unsigned char> *decoder_unsigned_char = nullptr;
+        DecoderInterface<short> *decoder_short = nullptr;
+        DecoderInterface<unsigned short> *decoder_unsigned_short = nullptr;
+        DecoderInterface<int> *decoder_int = nullptr;
+        DecoderInterface<unsigned int> *decoder_unsigned_int = nullptr;
+        DecoderInterface<float> *decoder_float = nullptr;
+        DecoderInterface<double> *decoder_double = nullptr;
+
+        EncoderInterface<void> *encoder_void = nullptr;
+        EncoderInterface<char> *encoder_char = nullptr;
+        EncoderInterface<unsigned char> *encoder_unsigned_char = nullptr;
+        EncoderInterface<short> *encoder_short = nullptr;
+        EncoderInterface<unsigned short> *encoder_unsigned_short = nullptr;
+        EncoderInterface<int> *encoder_int = nullptr;
+        EncoderInterface<unsigned int> *encoder_unsigned_int = nullptr;
+        EncoderInterface<float> *encoder_float = nullptr;
+        EncoderInterface<double> *encoder_double = nullptr;
+
+        std::unique_ptr<char> sample_buffer_char;
+        std::unique_ptr<unsigned char> sample_buffer_unsigned_char;
+        std::unique_ptr<short> sample_buffer_short;
+        std::unique_ptr<unsigned short> sample_buffer_unsigned_short;
+        std::unique_ptr<int> sample_buffer_int;
+        std::unique_ptr<unsigned int> sample_buffer_unsigned_int;
+        std::unique_ptr<float> sample_buffer_float;
+        std::unique_ptr<double> sample_buffer_double;
+
+        uint64_t buffer_valid_frames_count;
+
+        void CodecController2(void);
+        Sample::SampleContainer GetPreferableOutputContainer(void);
+
     public:
         CodecController(const CodecController &) = delete;
         CodecController & operator=(const CodecController &) = delete;
 
-        CodecController(void);
-};
-
-template<class T>
-class SndFileOptions
-{
-    public:
-        SndFileEncoder::OutputFormat format;
-};
-
-template<class T>
-class LameOptions
-{
-    public:
-        Lame::AlgorithmQuality algorithm_quality;
-        Lame::Mode mode;
-        Lame::ReplayGain replaygain_mode;
-        bool copyright;
-        bool use_naoki_psytune;
-        Lame::BitrateEncoding bitrate_encoding;
-        float vbr_quality;
-        Lame::Bitrate min_or_max_bitrate1;
-        Lame::Bitrate min_or_max_bitrate2;
+        CodecController(const std::string source_file_full_path, const std::string output_file_full_path, Decoder decoder_id, Encoder encoder_id, SndFileEncoderOptions * const options);
+        CodecController(const std::string source_file_full_path, const std::string output_file_full_path, Decoder decoder_id, Encoder encoder_id, LameOptions * const options);
+        void Convert(void);
+        ~CodecController(void);
 };
 
 #endif

@@ -20,43 +20,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_encoder.h"
 
-const Samples::SampleContainers SndFileEncoder<void>::valid_containers[4] = {Samples::SampleContainers::INT_S16,
-                                                                             Samples::SampleContainers::INT_S32,
-                                                                             Samples::SampleContainers::FLOAT_32,
-                                                                             Samples::SampleContainers::FLOAT_64};
+const Sample::SampleContainer SndFileEncoder<void>::valid_containers[4] = {Sample::SampleContainer::INT_S16,
+                                                                           Sample::SampleContainer::INT_S32,
+                                                                           Sample::SampleContainer::FLOAT_32,
+                                                                           Sample::SampleContainer::FLOAT_64};
 
 template<class T>
-SndFileEncoder<T>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, OutputFormat format, T *container, uint64_t container_size)
+SndFileEncoder<T>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, T *container, uint64_t container_size)
 {
     throw UnimplementedFeatureException("SndFileEncoder");
 }
 
 template<>
-SndFileEncoder<short>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, OutputFormat format, short *container, uint64_t container_size)
+SndFileEncoder<short>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, short *container, uint64_t container_size)
 {
     SndFileEncoder2(file, sample_rate, channel_count, format, container, container_size);
 }
 
 template<>
-SndFileEncoder<int>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, OutputFormat format, int *container, uint64_t container_size)
+SndFileEncoder<int>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, int *container, uint64_t container_size)
 {
     SndFileEncoder2(file, sample_rate, channel_count, format, container, container_size);
 }
 
 template<>
-SndFileEncoder<float>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, OutputFormat format, float *container, uint64_t container_size)
+SndFileEncoder<float>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, float *container, uint64_t container_size)
 {
     SndFileEncoder2(file, sample_rate, channel_count, format, container, container_size);
 }
 
 template<>
-SndFileEncoder<double>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, OutputFormat format, double *container, uint64_t container_size)
+SndFileEncoder<double>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, double *container, uint64_t container_size)
 {
     SndFileEncoder2(file, sample_rate, channel_count, format, container, container_size);
 }
 
 template<class T>
-void SndFileEncoder<T>::SndFileEncoder2(const char * const file, int sample_rate, int channel_count, OutputFormat format, T *container, uint64_t container_size)
+void SndFileEncoder<T>::SndFileEncoder2(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, T *container, uint64_t container_size)
 {
     sfinfo.samplerate = sample_rate;
     sfinfo.channels = channel_count;

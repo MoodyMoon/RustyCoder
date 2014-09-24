@@ -20,18 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_SAMPLES_H
 #define CODECS_SAMPLES_H
 
-class Samples
+class Sample
 {
     public:
-        Samples() = delete;
-        Samples(const Samples &) = delete;
-        Samples & operator=(const Samples &) = delete;
+        Sample() = delete;
+        Sample(const Sample &) = delete;
+        Sample & operator=(const Sample &) = delete;
 
         /*!
         Intermediate sample formats.\n
         <b>It can only contain data types which are included in the compiler.</b>
         */
-        enum class SampleContainers
+        enum class SampleContainer
         {
             INT_S8,         /*!< char */
             INT_U8,         /*!< unsigned char */
