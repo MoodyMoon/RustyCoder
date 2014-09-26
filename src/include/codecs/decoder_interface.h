@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 
 /*!
-Interface for all decoders.
-\note All decoders must implement this interface to be of use to higher levels classes. All samples 
+Base for all decoders.
+\note All decoders must implement this class to be of use to higher levels classes. All samples 
 obtained from all relevant member functions must return samples which are SCALED
 to the value range of its container. This interface assumes char is 8 bits wide, short 16 bits and int 32 bits.
 The word "frame" refers to the a decoded audio frame and not a encoded audio frame like a MPEG frame.
@@ -84,6 +84,8 @@ template<>
 class DecoderInterface<void>
 {
     public:
+        std::unique_ptr<Sample::SampleContainer> valid_containers;
+
         DecoderInterface(void) = default;
         DecoderInterface(const DecoderInterface &) = delete;
         DecoderInterface & operator=(const DecoderInterface &) = delete;
@@ -102,7 +104,7 @@ class DecoderInterface<void>
 
         /*!
         Get number of frames in the entire audio stream.
-        \return Number of audio frames.
+        \return Number of audio frames
         */
         virtual uint64_t GetFrameCount(void) const noexcept = 0;
 
@@ -115,7 +117,13 @@ class DecoderInterface<void>
         container type is returned which allows preservation of most of the audio quality.
         \return Samples::SampleContainers
         */
-        virtual Sample::SampleContainer GetPreferableOutputContainer() const noexcept = 0;
+        virtual Sample::SampleContainer GetPreferableOutputContainer(void) const noexcept = 0;
+
+        /*!
+        Get number of valid containers
+        \return Number of valid containers
+        */
+        virtual size_t GetValidContainersCount(void) const noexcept = 0;
 
         virtual ~DecoderInterface(void) {};
 };

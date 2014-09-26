@@ -20,14 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_mpg123.h"
 
-const Sample::SampleContainer Mpg123<void>::valid_containers[7] = {Sample::SampleContainer::INT_S8,
-                                                                   Sample::SampleContainer::INT_U8,
-                                                                   Sample::SampleContainer::INT_S16,
-                                                                   Sample::SampleContainer::INT_U16,
-                                                                   Sample::SampleContainer::INT_S32,
-                                                                   Sample::SampleContainer::INT_U32,
-                                                                   Sample::SampleContainer::FLOAT_32};
-
 bool Mpg123LifetimeHandler::init = false;
 
 template<class T>
@@ -324,6 +316,16 @@ Mpg123<T>::~Mpg123()
 
 Mpg123<void>::Mpg123(const char * const file, const Mpg123LifetimeHandler &/*life*/)
 {
+    DecoderInterface<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
+    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+    _valid_containers[0] = Sample::SampleContainer::INT_S8;
+    _valid_containers[1] = Sample::SampleContainer::INT_U8;
+    _valid_containers[2] = Sample::SampleContainer::INT_S16;
+    _valid_containers[3] = Sample::SampleContainer::INT_U16;
+    _valid_containers[4] = Sample::SampleContainer::INT_S32;
+    _valid_containers[5] = Sample::SampleContainer::INT_U32;
+    _valid_containers[6] = Sample::SampleContainer::FLOAT_32;
+
     mh = mpg123_new(nullptr, &error);
 
     if(mh == nullptr)
@@ -398,7 +400,13 @@ uint64_t Mpg123<void>::GetFrameCount() const noexcept
 
 Sample::SampleContainer Mpg123<void>::GetPreferableOutputContainer() const noexcept
 {
-    return valid_containers[6];
+    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+    return _valid_containers[6];
+}
+
+size_t Mpg123<void>::GetValidContainersCount(void) const noexcept
+{
+    return valid_containers_count;
 }
 
 Mpg123<void>::~Mpg123(void)

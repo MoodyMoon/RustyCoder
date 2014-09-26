@@ -24,12 +24,14 @@ MainForm::MainForm(HINSTANCE hThisInstance, int /* nCmdShow */)
 {
     this->hInstance = hInstance;
     events.reset(new MainFormEvents(this));
-    panel1_events.reset(new MainFormPanel1Events(this));
+    
+    panel2_events.reset(new MainFormPanel2Events(this));
     window.reset(new Window(hThisInstance, events.get(), class_name, class_name, RUSTYCODER_ICON, CW_USEDEFAULT, CW_USEDEFAULT, 750, 550, SW_SHOWNORMAL, WS_EX_LEFT, WS_OVERLAPPEDWINDOW));
 }
 
 MainFormEvents::MainFormEvents(MainForm * const mf) : mf(mf) {}
 MainFormPanel1Events::MainFormPanel1Events(MainForm * const mf) : mf(mf) {}
+MainFormPanel2Events::MainFormPanel2Events(MainForm * const mf) : mf(mf) {}
 
 //InitCommonControlsEx is not needed to enabled new theme
 void MainFormEvents::OnLoad(HWND hWnd)
@@ -49,7 +51,9 @@ void MainFormEvents::OnLoad(HWND hWnd)
 
     ControlHandle handle = mf->vertical_split_window1->GetHandle();
 
+    mf->panel1_events.reset(new MainFormPanel1Events(mf));
     mf->panel1.reset(new Panel(mf->hInstance, mf->panel1_events.get(), &handle, L"Panel1", MAINFRAME_PANEL1, 0, 0, 2, 2, WS_EX_CLIENTEDGE, WS_CHILD | WS_VISIBLE));
+    
     mf->panel2.reset(new Panel(mf->hInstance, mf->panel2_events.get(), &handle, L"Panel2", MAINFRAME_PANEL2, 10, 0, 2, 2, WS_EX_CLIENTEDGE, WS_CHILD | WS_VISIBLE));
 
     mf->vertical_split_window1->SetLeftPanel(mf->panel1.get());
@@ -60,11 +64,6 @@ void MainFormEvents::OnGetMinMaxInfo(MINMAXINFO *min_max_info)
 {
     min_max_info->ptMinTrackSize.x = 750;
     min_max_info->ptMinTrackSize.y = 550;
-}
-
-void MainFormEvents::Button1_OnClick(void)
-{
-    mf->window->ResizeTo(0, 0);
 }
 
 void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
@@ -78,10 +77,14 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
 
     if(ofd.HasResult())
     {
-        MsgBox::Show(ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH).c_str());
+        MsgBox::Show(ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH));
         source = ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH);
         destination = L"D:\\abc2.mp3";
 
+        LameOptions options;
+        CodecController codec_controller(WindowsUtilities::UTF8_Encode(source), WindowsUtilities::UTF8_Encode(destination), CodecController::Decoder::MPG123, CodecController::Encoder::LAME, &options);
+
+        /*
         int64_t frame_offset;
         int64_t buffer_valid_frames_count;
         float buffer[2000];
@@ -96,12 +99,23 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
             frame_offset = mpg2.GetCurrentFrameOffset();
             lame.WriteFrames(buffer_valid_frames_count);
         }while(buffer_valid_frames_count == 1000);
+        */
     }
 }
 
 void MainFormEvents::Menu_File_Exit_OnClick(void)
 {
     mf->window.reset();
+}
+
+void MainFormEvents::Button1_OnClick(void)
+{
+    mf->window->ResizeTo(0, 0);
+}
+
+void MainFormEvents::Button2_OnClick(void)
+{
+    
 }
 
 LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -119,6 +133,13 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                             break;
                     }
                     break;
+                case MAINFRAME_BUTTON2:
+                    switch(HIWORD(wParam))
+                    {
+                        case BN_CLICKED:
+                            Button2_OnClick();
+                            break;
+                    }
                 case MAINFRAME_FILE_ADD_FILES:
                     switch(HIWORD(wParam))
                     {

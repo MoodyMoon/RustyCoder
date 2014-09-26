@@ -20,10 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_decoder.h"
 
-const Sample::SampleContainer SndFileDecoder<void>::valid_containers[4] = {Sample::SampleContainer::INT_S16,
-                                                                           Sample::SampleContainer::INT_S32,
-                                                                           Sample::SampleContainer::FLOAT_32,
-                                                                           Sample::SampleContainer::FLOAT_64};
 template<class T>
 SndFileDecoder<T>::SndFileDecoder(const char * const file, T *container, uint64_t container_size)
 {
@@ -169,6 +165,13 @@ SndFileDecoder<T>::~SndFileDecoder()
 
 SndFileDecoder<void>::SndFileDecoder(const char * const file)
 {
+    DecoderInterface<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
+    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+    _valid_containers[0] = Sample::SampleContainer::INT_S16;
+    _valid_containers[1] = Sample::SampleContainer::INT_S32;
+    _valid_containers[2] = Sample::SampleContainer::FLOAT_32;
+    _valid_containers[3] = Sample::SampleContainer::FLOAT_64;
+
     sfinfo.format = 0;
 
     sndfile = sf_open(file, SFM_READ, &sfinfo);
@@ -199,20 +202,22 @@ Sample::SampleContainer SndFileDecoder<void>::GetPreferableOutputContainer() con
 {
     int subtype = SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | sfinfo.format;
 
+    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+
     switch(subtype)
     {
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_PCM_S8:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_PCM_16:
-            return valid_containers[0];
+            return _valid_containers[0];
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_PCM_24:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_PCM_32:
-            return valid_containers[1];
+            return _valid_containers[1];
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_PCM_U8:
-            return valid_containers[0];
+            return _valid_containers[0];
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_FLOAT:
-            return valid_containers[2];
+            return _valid_containers[2];
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_DOUBLE:
-            return valid_containers[3];
+            return _valid_containers[3];
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_ULAW:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_ALAW:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_IMA_ADPCM:
@@ -222,18 +227,23 @@ Sample::SampleContainer SndFileDecoder<void>::GetPreferableOutputContainer() con
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_G721_32:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_G723_24:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_G723_40:
-            return valid_containers[0];
+            return _valid_containers[0];
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_DWVW_12:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_DWVW_16:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_DWVW_24:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_DWVW_N:
-            return valid_containers[1];
+            return _valid_containers[1];
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_DPCM_8:
         case SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | SF_FORMAT_DPCM_16:
-            return valid_containers[0];
+            return _valid_containers[0];
         default:
-            return valid_containers[2];
+            return _valid_containers[2];
     }
+}
+
+size_t SndFileDecoder<void>::GetValidContainersCount() const noexcept
+{
+    return valid_containers_count;
 }
 
 SndFileDecoder<void>::~SndFileDecoder(void)

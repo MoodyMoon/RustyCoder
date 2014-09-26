@@ -55,11 +55,12 @@ class MainFormEvents : public EventHandlerInterface
 {
     private:
         MainForm * const mf;
-        void Button1_OnClick(void);
         void OnLoad(HWND hWnd);
         void OnGetMinMaxInfo(MINMAXINFO * const min_max_info);
         void Menu_File_AddFiles_OnClick(HWND hWnd);
         void Menu_File_Exit_OnClick(void);
+        void Button1_OnClick(void);
+        void Button2_OnClick(void);
 
     public:
         MainFormEvents(const MainFormEvents &) = delete;
@@ -73,7 +74,7 @@ class MainFormEvents : public EventHandlerInterface
 class MainFormPanel1Events : public EventHandlerInterface
 {
     private:
-    MainForm * const mf;
+        MainForm * const mf;
 
     public:
         MainFormPanel1Events(const MainFormPanel1Events &) = delete;

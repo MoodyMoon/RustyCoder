@@ -20,11 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_encoder.h"
 
-const Sample::SampleContainer SndFileEncoder<void>::valid_containers[4] = {Sample::SampleContainer::INT_S16,
-                                                                           Sample::SampleContainer::INT_S32,
-                                                                           Sample::SampleContainer::FLOAT_32,
-                                                                           Sample::SampleContainer::FLOAT_64};
-
 template<class T>
 SndFileEncoder<T>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, T *container, uint64_t container_size)
 {
@@ -146,4 +141,19 @@ template<class T>
 SndFileEncoder<T>::~SndFileEncoder()
 {
     METHOD_ASSERT(sf_close(sndfile), ==, 0);
+}
+
+SndFileEncoder<void>::SndFileEncoder()
+{
+    EncoderInterface<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
+    Sample::SampleContainer * const _valid_containers = EncoderInterface<void>::valid_containers.get();
+    _valid_containers[0] = Sample::SampleContainer::INT_S16;
+    _valid_containers[1] = Sample::SampleContainer::INT_S32;
+    _valid_containers[2] = Sample::SampleContainer::FLOAT_32;
+    _valid_containers[3] = Sample::SampleContainer::FLOAT_64;
+}
+
+size_t SndFileEncoder<void>::GetValidContainersCount() const noexcept
+{
+    return valid_containers_count;
 }

@@ -228,11 +228,13 @@ template<>
 class Lame<void> : public EncoderInterface<void>
 {
     public:
-        static const Sample::SampleContainer valid_containers[3];
+        const size_t valid_containers_count = 3;
 
-        Lame() = delete;
         Lame(const Lame &) = delete;
         Lame & operator=(const Lame &) = delete;
+
+        Lame(void);
+        virtual size_t GetValidContainersCount(void) const noexcept;
 };
 
 #endif

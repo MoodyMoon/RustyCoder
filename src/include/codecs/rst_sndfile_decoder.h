@@ -82,12 +82,11 @@ template<>
 class SndFileDecoder<void> : public DecoderInterface<void>
 {
     private:
+        const size_t valid_containers_count = 4;
         SF_INFO sfinfo;
         SNDFILE *sndfile = nullptr;
 
     public:
-        static const Sample::SampleContainer valid_containers[4];
-
         SndFileDecoder(const SndFileDecoder &) = delete;
         SndFileDecoder & operator=(const SndFileDecoder &) = delete;
 
@@ -101,7 +100,8 @@ class SndFileDecoder<void> : public DecoderInterface<void>
         virtual unsigned int GetChannelCount(void) const noexcept;
         virtual unsigned int GetSampleRate(void) const noexcept;
         virtual uint64_t GetFrameCount(void) const noexcept;
-        virtual Sample::SampleContainer GetPreferableOutputContainer() const noexcept;
+        virtual Sample::SampleContainer GetPreferableOutputContainer(void) const noexcept;
+        virtual size_t GetValidContainersCount(void) const noexcept;
         ~SndFileDecoder(void);
 };
 

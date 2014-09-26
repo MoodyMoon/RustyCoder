@@ -75,9 +75,18 @@ template<>
 class EncoderInterface<void>
 {
     public:
+        std::unique_ptr<Sample::SampleContainer> valid_containers;
+
         EncoderInterface(void) = default;
         EncoderInterface(const EncoderInterface &) = delete;
         EncoderInterface & operator=(const EncoderInterface &) = delete;
+
+        /*!
+        Get number of valid containers
+        \return Number of valid containers
+        */
+        virtual size_t GetValidContainersCount(void) const noexcept = 0;
+
         virtual ~EncoderInterface(void) {};
 };
 

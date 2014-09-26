@@ -20,10 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_lame.h"
 
-const Sample::SampleContainer Lame<void>::valid_containers[3] = {Sample::SampleContainer::INT_S16,
-                                                                 Sample::SampleContainer::FLOAT_32,
-                                                                 Sample::SampleContainer::FLOAT_64};
-
 template<class T>
 Lame<T>::Lame(const char * const file,
               int sample_rate,
@@ -382,4 +378,18 @@ template<class T>
 Lame<T>::~Lame()
 {
     lame_close(gf);
+}
+
+Lame<void>::Lame()
+{
+    EncoderInterface<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
+    Sample::SampleContainer * const _valid_containers = EncoderInterface<void>::valid_containers.get();
+    _valid_containers[0] = Sample::SampleContainer::INT_S16;
+    _valid_containers[1] = Sample::SampleContainer::FLOAT_32;
+    _valid_containers[2] = Sample::SampleContainer::FLOAT_64;
+}
+
+size_t Lame<void>::GetValidContainersCount() const noexcept
+{
+    return valid_containers_count;
 }

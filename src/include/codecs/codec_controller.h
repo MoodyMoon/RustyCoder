@@ -43,25 +43,25 @@ class CodecController
         SndFileEncoderOptions * const sndfileencoder_options = nullptr;
         LameOptions * const lame_options = nullptr;
 
-        DecoderInterface<void> *decoder_void = nullptr;
-        DecoderInterface<char> *decoder_char = nullptr;
-        DecoderInterface<unsigned char> *decoder_unsigned_char = nullptr;
-        DecoderInterface<short> *decoder_short = nullptr;
-        DecoderInterface<unsigned short> *decoder_unsigned_short = nullptr;
-        DecoderInterface<int> *decoder_int = nullptr;
-        DecoderInterface<unsigned int> *decoder_unsigned_int = nullptr;
-        DecoderInterface<float> *decoder_float = nullptr;
-        DecoderInterface<double> *decoder_double = nullptr;
+        std::unique_ptr<DecoderInterface<char>> decoder_char;
+        std::unique_ptr<DecoderInterface<unsigned char>> decoder_unsigned_char;
+        std::unique_ptr<DecoderInterface<short>> decoder_short;
+        std::unique_ptr<DecoderInterface<unsigned short>> decoder_unsigned_short;
+        std::unique_ptr<DecoderInterface<int>> decoder_int;
+        std::unique_ptr<DecoderInterface<unsigned int>> decoder_unsigned_int;
+        std::unique_ptr<DecoderInterface<float>> decoder_float;
+        std::unique_ptr<DecoderInterface<double>> decoder_double;
 
-        EncoderInterface<void> *encoder_void = nullptr;
-        EncoderInterface<char> *encoder_char = nullptr;
-        EncoderInterface<unsigned char> *encoder_unsigned_char = nullptr;
-        EncoderInterface<short> *encoder_short = nullptr;
-        EncoderInterface<unsigned short> *encoder_unsigned_short = nullptr;
-        EncoderInterface<int> *encoder_int = nullptr;
-        EncoderInterface<unsigned int> *encoder_unsigned_int = nullptr;
-        EncoderInterface<float> *encoder_float = nullptr;
-        EncoderInterface<double> *encoder_double = nullptr;
+        std::unique_ptr<Mpg123LifetimeHandler> mpg123_lifetime_handler;
+
+        std::unique_ptr<EncoderInterface<char>> encoder_char;
+        std::unique_ptr<EncoderInterface<unsigned char>> encoder_unsigned_char;
+        std::unique_ptr<EncoderInterface<short>> encoder_short;
+        std::unique_ptr<EncoderInterface<unsigned short>> encoder_unsigned_short;
+        std::unique_ptr<EncoderInterface<int>> encoder_int;
+        std::unique_ptr<EncoderInterface<unsigned int>> encoder_unsigned_int;
+        std::unique_ptr<EncoderInterface<float>> encoder_float;
+        std::unique_ptr<EncoderInterface<double>> encoder_double;
 
         std::unique_ptr<char> sample_buffer_char;
         std::unique_ptr<unsigned char> sample_buffer_unsigned_char;
@@ -81,8 +81,8 @@ class CodecController
         CodecController(const CodecController &) = delete;
         CodecController & operator=(const CodecController &) = delete;
 
-        CodecController(const std::string source_file_full_path, const std::string output_file_full_path, Decoder decoder_id, Encoder encoder_id, SndFileEncoderOptions * const options);
-        CodecController(const std::string source_file_full_path, const std::string output_file_full_path, Decoder decoder_id, Encoder encoder_id, LameOptions * const options);
+        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder decoder_id, Encoder encoder_id, SndFileEncoderOptions * const options);
+        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder decoder_id, Encoder encoder_id, LameOptions * const options);
         void Convert(void);
         ~CodecController(void);
 };

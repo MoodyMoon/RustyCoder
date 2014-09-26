@@ -251,11 +251,13 @@ template<>
 class SndFileEncoder<void> : public EncoderInterface<void>
 {
     public:
-        static const Sample::SampleContainer valid_containers[4];
+        const size_t valid_containers_count = 4;
 
-        SndFileEncoder() = delete;
         SndFileEncoder(const SndFileEncoder &) = delete;
         SndFileEncoder & operator=(const SndFileEncoder &) = delete;
+
+        SndFileEncoder(void);
+        virtual size_t GetValidContainersCount(void) const noexcept;
 };
 
 #endif
