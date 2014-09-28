@@ -382,8 +382,8 @@ Lame<T>::~Lame()
 
 Lame<void>::Lame()
 {
-    EncoderInterface<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
-    Sample::SampleContainer * const _valid_containers = EncoderInterface<void>::valid_containers.get();
+    Encoder<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
+    Sample::SampleContainer * const _valid_containers = Encoder<void>::valid_containers.get();
     _valid_containers[0] = Sample::SampleContainer::INT_S16;
     _valid_containers[1] = Sample::SampleContainer::FLOAT_32;
     _valid_containers[2] = Sample::SampleContainer::FLOAT_64;

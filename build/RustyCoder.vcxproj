@@ -20,8 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\codecs\codec_controller.h" />
-    <ClInclude Include="..\src\include\codecs\decoder_interface.h" />
-    <ClInclude Include="..\src\include\codecs\encoder_interface.h" />
+    <ClInclude Include="..\src\include\codecs\decoder.h" />
+    <ClInclude Include="..\src\include\codecs\encoder.h" />
     <ClInclude Include="..\src\include\codecs\rst_lame.h" />
     <ClInclude Include="..\src\include\codecs\rst_mpg123.h" />
     <ClInclude Include="..\src\include\codecs\rst_sndfile_decoder.h" />

@@ -116,16 +116,16 @@
     <ClInclude Include="..\src\include\core\rst_thread.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\codecs\decoder_interface.h">
-      <Filter>Codecs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\codecs\encoder_interface.h">
-      <Filter>Codecs</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\codecs\samples.h">
       <Filter>Codecs</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\codecs\codec_controller.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\codecs\decoder.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\codecs\encoder.h">
       <Filter>Codecs</Filter>
     </ClInclude>
   </ItemGroup>

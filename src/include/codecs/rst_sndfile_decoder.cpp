@@ -165,8 +165,8 @@ SndFileDecoder<T>::~SndFileDecoder()
 
 SndFileDecoder<void>::SndFileDecoder(const char * const file)
 {
-    DecoderInterface<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
-    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+    Decoder<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
+    Sample::SampleContainer * const _valid_containers = Decoder<void>::valid_containers.get();
     _valid_containers[0] = Sample::SampleContainer::INT_S16;
     _valid_containers[1] = Sample::SampleContainer::INT_S32;
     _valid_containers[2] = Sample::SampleContainer::FLOAT_32;
@@ -202,7 +202,7 @@ Sample::SampleContainer SndFileDecoder<void>::GetPreferableOutputContainer() con
 {
     int subtype = SF_FORMAT_ENDMASK | SF_FORMAT_TYPEMASK | sfinfo.format;
 
-    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+    Sample::SampleContainer * const _valid_containers = Decoder<void>::valid_containers.get();
 
     switch(subtype)
     {

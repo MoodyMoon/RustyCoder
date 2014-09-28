@@ -29,7 +29,7 @@ WAVEX (Microsoft), SD2 (Sound Designer II), CAF (Apple Core Audio File), WVE(Psi
 MPC(Akai MPC 2k), RF64 (RIFF 64).
 */
 template<class T>
-class SndFileDecoder : public DecoderInterface<T>
+class SndFileDecoder : public Decoder<T>
 {
     private:
         SF_INFO sfinfo;
@@ -79,7 +79,7 @@ class SndFileDecoder : public DecoderInterface<T>
 };
 
 template<>
-class SndFileDecoder<void> : public DecoderInterface<void>
+class SndFileDecoder<void> : public Decoder<void>
 {
     private:
         const size_t valid_containers_count = 4;

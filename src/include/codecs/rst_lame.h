@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_RST_LAME_H
 #define CODECS_RST_LAME_H
 
-class LameOptions
+class LameOptions : public EncoderOptions
 {
     public:
         /*!
@@ -122,7 +122,7 @@ class LameOptions
 Encoder for (MPEG-1, MPEG-2, MPEG-2.5) Audio Layer III
 */
 template<class T>
-class Lame : public EncoderInterface<T>
+class Lame : public Encoder<T>
 {
     public:
         enum Tag
@@ -225,7 +225,7 @@ class Lame : public EncoderInterface<T>
 };
 
 template<>
-class Lame<void> : public EncoderInterface<void>
+class Lame<void> : public Encoder<void>
 {
     public:
         const size_t valid_containers_count = 3;

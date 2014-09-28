@@ -80,8 +80,8 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 
 /** Wrappers for third-party libraries */
 #include "codecs/samples.h"
-#include "codecs/decoder_interface.h"
-#include "codecs/encoder_interface.h"
+#include "codecs/decoder.h"
+#include "codecs/encoder.h"
 #include "codecs/rst_mpg123.h"
 #include "codecs/rst_sndfile_decoder.h"
 #include "codecs/rst_sndfile_encoder.h"

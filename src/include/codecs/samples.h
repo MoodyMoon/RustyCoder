@@ -35,7 +35,6 @@ class Sample
         {
             INT_S8,         /*!< char */
             INT_U8,         /*!< unsigned char */
-            INT_U8_AS_BYTE, /*!< char. To store samples which cannot fit into any of the other containers as bytes */
             INT_S16,        /*!< short */
             INT_U16,        /*!< unsigned short */
             INT_S32,        /*!< int */

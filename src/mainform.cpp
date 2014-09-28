@@ -81,25 +81,7 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
         source = ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH);
         destination = L"D:\\abc2.mp3";
 
-        LameOptions options;
-        CodecController codec_controller(WindowsUtilities::UTF8_Encode(source), WindowsUtilities::UTF8_Encode(destination), CodecController::Decoder::MPG123, CodecController::Encoder::LAME, &options);
-
-        /*
-        int64_t frame_offset;
-        int64_t buffer_valid_frames_count;
-        float buffer[2000];
-        Mpg123LifetimeHandler life;
-        Mpg123<void> mpg1(WindowsUtilities::UTF8_Encode(source).c_str(), life);
-        Mpg123<float> mpg2(WindowsUtilities::UTF8_Encode(source).c_str(), buffer, sizeof(buffer), life);
-        //SndFileEncoder<float> snd(TypeConv::utf8_encode(destination).c_str(), mpg1.GetSampleRate(), mpg1.GetChannelCount(), SndFileEncoder<float>::OutputFormat::WAV_PCM_FLOAT_32, buffer, sizeof(buffer));
-        Lame<float> lame(WindowsUtilities::UTF8_Encode(destination).c_str(), mpg1.GetSampleRate(), mpg1.GetChannelCount(), LameOptions::AlgorithmQuality::Q0, LameOptions::Mode::JOINT_STEREO, LameOptions::ReplayGain::ACCURATE, false, true, LameOptions::BitrateEncoding::VARIABLE_NEW, 0, LameOptions::Bitrate::B_224, LameOptions::Bitrate::B_320, buffer, sizeof(buffer));
-        do
-        {
-            buffer_valid_frames_count = mpg2.ReadFrames();
-            frame_offset = mpg2.GetCurrentFrameOffset();
-            lame.WriteFrames(buffer_valid_frames_count);
-        }while(buffer_valid_frames_count == 1000);
-        */
+        
     }
 }
 
@@ -140,6 +122,7 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                             Button2_OnClick();
                             break;
                     }
+                    break;
                 case MAINFRAME_FILE_ADD_FILES:
                     switch(HIWORD(wParam))
                     {

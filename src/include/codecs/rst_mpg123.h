@@ -26,7 +26,7 @@ class Mpg123LifetimeHandler;
 Decoder for (MPEG-1, MPEG-2, MPEG-2.5) Audio Layer (I, II, III)
 */
 template<class T>
-class Mpg123 : DecoderInterface<T>
+class Mpg123 : public Decoder<T>
 {
     private:
         mpg123_handle *mh = nullptr;
@@ -88,7 +88,7 @@ class Mpg123 : DecoderInterface<T>
 };
 
 template<>
-class Mpg123<void> : public DecoderInterface<void>
+class Mpg123<void> : public Decoder<void>
 {
     private:
         const size_t valid_containers_count = 7;

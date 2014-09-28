@@ -316,8 +316,8 @@ Mpg123<T>::~Mpg123()
 
 Mpg123<void>::Mpg123(const char * const file, const Mpg123LifetimeHandler &/*life*/)
 {
-    DecoderInterface<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
-    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+    Decoder<void>::valid_containers.reset(new Sample::SampleContainer[valid_containers_count]);
+    Sample::SampleContainer * const _valid_containers = Decoder<void>::valid_containers.get();
     _valid_containers[0] = Sample::SampleContainer::INT_S8;
     _valid_containers[1] = Sample::SampleContainer::INT_U8;
     _valid_containers[2] = Sample::SampleContainer::INT_S16;
@@ -400,7 +400,7 @@ uint64_t Mpg123<void>::GetFrameCount() const noexcept
 
 Sample::SampleContainer Mpg123<void>::GetPreferableOutputContainer() const noexcept
 {
-    Sample::SampleContainer * const _valid_containers = DecoderInterface<void>::valid_containers.get();
+    Sample::SampleContainer * const _valid_containers = Decoder<void>::valid_containers.get();
     return _valid_containers[6];
 }
 

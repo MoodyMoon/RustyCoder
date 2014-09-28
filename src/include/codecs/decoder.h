@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODECS_DECODER_INTERFACE_H
-#define CODECS_DECODER_INTERFACE_H
+#ifndef CODECS_DECODER_H
+#define CODECS_DECODER_H
 
 #include "stdafx.h"
 
 /*!
-Base for all decoders.
+Base class for all decoders.
 \note All decoders must implement this class to be of use to higher levels classes. All samples 
 obtained from all relevant member functions must return samples which are SCALED
 to the value range of its container. This interface assumes char is 8 bits wide, short 16 bits and int 32 bits.
@@ -31,7 +31,7 @@ The word "frame" refers to the a decoded audio frame and not a encoded audio fra
 A frame may have multiple samples which is number is equal to the number of channels in the audio.
 */
 template<class T>
-class DecoderInterface
+class Decoder
 {
     private:
         /*!
@@ -45,9 +45,9 @@ class DecoderInterface
         virtual void SetFrameBuffer(T * container, uint64_t container_size) = 0;
 
     public:
-        DecoderInterface(void) = default;
-        DecoderInterface(const DecoderInterface &) = delete;
-        DecoderInterface & operator=(const DecoderInterface &) = delete;
+        Decoder(void) = default;
+        Decoder(const Decoder &) = delete;
+        Decoder & operator=(const Decoder &) = delete;
 
         /*!
         Get the current offset of the file in frames.
@@ -71,24 +71,24 @@ class DecoderInterface
         */
         virtual uint64_t ReadFrames(void) = 0;
 
-        virtual ~DecoderInterface(void) {};
+        virtual ~Decoder(void) {};
 };
 
 /*!
-Interface for all decoders. Retrieves information about the audio file.
+Base class for all decoders. Retrieves information about the audio file.
 \note All decoders must implement this interface to be of use to higher levels classes.\n
-<b>All decoders must include \code static const Samples::SampleContainers valid_containers[number_of_supported_container];\endcode.
+<b>All decoders must initialize \c valid_containers with supported sample formats.
 It shows all supported intermediate sample formats.</b>
 */
 template<>
-class DecoderInterface<void>
+class Decoder<void>
 {
     public:
         std::unique_ptr<Sample::SampleContainer> valid_containers;
 
-        DecoderInterface(void) = default;
-        DecoderInterface(const DecoderInterface &) = delete;
-        DecoderInterface & operator=(const DecoderInterface &) = delete;
+        Decoder(void) = default;
+        Decoder(const Decoder &) = delete;
+        Decoder & operator=(const Decoder &) = delete;
 
         /*!
         Get the number of channels in the audio.
@@ -125,7 +125,7 @@ class DecoderInterface<void>
         */
         virtual size_t GetValidContainersCount(void) const noexcept = 0;
 
-        virtual ~DecoderInterface(void) {};
+        virtual ~Decoder(void) {};
 };
 
 #endif

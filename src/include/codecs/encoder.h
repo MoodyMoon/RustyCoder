@@ -17,21 +17,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODECS_ENCODER_INTERFACE_H
-#define CODECS_ENCODER_INTERFACE_H
+#ifndef CODECS_ENCODER_H
+#define CODECS_ENCODER_H
 
 #include "stdafx.h"
 
+class EncoderOptions
+{
+    public:
+        enum For
+        {
+            SNDFILEENCODER,
+            LAME
+        };
+
+        EncoderOptions(void) = default;
+        EncoderOptions(const EncoderOptions &) = delete;
+        EncoderOptions & operator=(const EncoderOptions &) = delete;
+        virtual ~EncoderOptions(void) {};
+};
+
 /*!
-Interface for all encoders.
-\note All encoders must implement this interface to be of use to higher levels classes. All samples
+Base class for all encoders.
+\note All encoders must implement this class to be of use to higher levels classes. All samples
 obtained from all relevant member functions must return samples which are SCALED
 to the value range of its container. This interface assumes char is 8 bits wide, short 16 bits and int 32 bits.
 The word "frame" refers to the a decoded audio frame and not a encoded audio frame like a MPEG frame.
 A frame may have multiple samples which is number is equal to the number of channels in the audio.
 */
 template<class T>
-class EncoderInterface
+class Encoder
 {
     private:
         /*!
@@ -45,9 +60,9 @@ class EncoderInterface
         virtual void SetFrameBuffer(T * container, uint64_t container_size) = 0;
 
     public:
-        EncoderInterface(void) = default;
-        EncoderInterface(const EncoderInterface &) = delete;
-        EncoderInterface & operator=(const EncoderInterface &) = delete;
+        Encoder(void) = default;
+        Encoder(const Encoder &) = delete;
+        Encoder & operator=(const Encoder &) = delete;
 
         /*!
         Get the file extension for the output format.
@@ -62,24 +77,24 @@ class EncoderInterface
         */
         virtual void WriteFrames(uint64_t container_valid_frame_count) = 0;
 
-        virtual ~EncoderInterface(void) {};
+        virtual ~Encoder(void) {};
 };
 
 /*!
-Interface for all encoders.
-\note All encoders must implement this interface to be of use to higher levels classes.\n
-<b>All encoders must include \code static const Samples::SampleContainers valid_containers[number_of_supported_container];\endcode.
+Base class for all encoders.
+\note All encoders must implement this class to be of use to higher levels classes.\n
+<b>All encoders must initialize \c valid_containers with supported sample formats.
 It shows all supported intermediate sample formats.</b>
 */
 template<>
-class EncoderInterface<void>
+class Encoder<void>
 {
     public:
         std::unique_ptr<Sample::SampleContainer> valid_containers;
 
-        EncoderInterface(void) = default;
-        EncoderInterface(const EncoderInterface &) = delete;
-        EncoderInterface & operator=(const EncoderInterface &) = delete;
+        Encoder(void) = default;
+        Encoder(const Encoder &) = delete;
+        Encoder & operator=(const Encoder &) = delete;
 
         /*!
         Get number of valid containers
@@ -87,7 +102,7 @@ class EncoderInterface<void>
         */
         virtual size_t GetValidContainersCount(void) const noexcept = 0;
 
-        virtual ~EncoderInterface(void) {};
+        virtual ~Encoder(void) {};
 };
 
 #endif

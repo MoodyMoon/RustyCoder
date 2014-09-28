@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_RST_SNDFILE_ENCODER_H
 #define CODECS_RST_SNDFILE_ENCODER_H
 
-class SndFileEncoderOptions
+class SndFileEncoderOptions : public EncoderOptions
 {
     public:
         /*!
@@ -203,7 +203,7 @@ WAVEX (Microsoft), SD2 (Sound Designer II), CAF (Apple Core Audio File), WVE(Psi
 MPC(Akai MPC 2k), RF64 (RIFF 64).
 */
 template<class T>
-class SndFileEncoder : public EncoderInterface<T>
+class SndFileEncoder : public Encoder<T>
 {
     private:
         SF_INFO sfinfo;
@@ -248,7 +248,7 @@ class SndFileEncoder : public EncoderInterface<T>
 };
 
 template<>
-class SndFileEncoder<void> : public EncoderInterface<void>
+class SndFileEncoder<void> : public Encoder<void>
 {
     public:
         const size_t valid_containers_count = 4;
