@@ -20,12 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_decoder.h"
 
-template<class T>
-SndFileDecoder<T>::SndFileDecoder(const char * const file, T *container, uint64_t container_size)
-{
-    throw UnimplementedFeatureException("SndFileDecoder");
-}
-
 template<>
 SndFileDecoder<short>::SndFileDecoder(const char * const file, short *container, uint64_t container_size)
 {

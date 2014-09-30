@@ -119,13 +119,13 @@
     <ClInclude Include="..\src\include\codecs\samples.h">
       <Filter>Codecs</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\codecs\codec_controller.h">
-      <Filter>Codecs</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\codecs\decoder.h">
       <Filter>Codecs</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\codecs\encoder.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\codecs\codec_controller.h">
       <Filter>Codecs</Filter>
     </ClInclude>
   </ItemGroup>

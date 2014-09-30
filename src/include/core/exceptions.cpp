@@ -89,5 +89,3 @@ WriteFileException::WriteFileException(const char * const caller_name, int code,
 
 UnsupportedFormatException::UnsupportedFormatException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
 UnsupportedFormatException::UnsupportedFormatException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
-
-UnimplementedFeatureException::UnimplementedFeatureException(const char * const caller_name) : Exception(caller_name, false, 0, message) {}

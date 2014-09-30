@@ -22,12 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 bool Mpg123LifetimeHandler::init = false;
 
-template<class T>
-Mpg123<T>::Mpg123(const char * const file, T *container, uint64_t container_size, const Mpg123LifetimeHandler &/* life */)
-{
-    throw UnimplementedFeatureException("Mpg123");
-}
-
 template<>
 Mpg123<char>::Mpg123(const char * const file, char *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {

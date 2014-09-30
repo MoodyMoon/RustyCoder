@@ -81,7 +81,16 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
         source = ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH);
         destination = L"D:\\abc2.mp3";
 
-        
+        LameOptions options;
+        options.algorithm_quality = LameOptions::AlgorithmQuality::Q0;
+        options.mode = LameOptions::Mode::JOINT_STEREO;
+        options.replaygain_mode = LameOptions::ReplayGain::ACCURATE;
+        options.copyright = false;
+        options.use_naoki_psytune = true;
+        options.bitrate_encoding = LameOptions::BitrateEncoding::CONSTANT;
+        options.vbr_quality = 0.;
+        options.min_or_max_bitrate1 = LameOptions::Bitrate::B_128;
+        CodecController codec(WindowsUtilities::UTF8_Encode(source), WindowsUtilities::UTF8_Encode(destination), CodecController::DecoderID::MPG123, options);
     }
 }
 

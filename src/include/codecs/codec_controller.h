@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class CodecController
 {
-    private:
+    public:
         enum DecoderID
         {
             SNDFILEDECODER,
@@ -35,6 +35,7 @@ class CodecController
             LAME
         };
 
+    private:
         std::string source_file_full_path;
         std::string output_file_full_path;
         DecoderID decoder_id;
@@ -42,8 +43,6 @@ class CodecController
         Sample::SampleContainer chosen_container_type;
         std::unique_ptr<EncoderOptions> encoder_options;
         std::unique_ptr<Mpg123LifetimeHandler> mpg123_lifetime_handler;
-        SndFileEncoderOptions *sndfileencoder_options = nullptr;
-        LameOptions *lame_options = nullptr;
 
         std::unique_ptr<Decoder<char>> decoder_char;
         std::unique_ptr<Decoder<unsigned char>> decoder_u_char;
@@ -72,12 +71,15 @@ class CodecController
         std::unique_ptr<float> sample_buffer_float;
         std::unique_ptr<double> sample_buffer_double;
 
-        uint64_t buffer_valid_frames_count;
-        const unsigned int max_buffer = 5000;
+        const unsigned int min_samples_in_buffer = 2520; /*!< least common multiple of 1-9 channels. Current maximum number of channels in a single track as far as I know. */
+        const unsigned int max_samples_in_buffer = min_samples_in_buffer * 20;
+        unsigned int channel_count;
+        unsigned int sample_rate;
+        uint64_t frame_count;
 
+        void PopulateAudioProperties(void);
         void BeforeConvert(void);
-
-        Sample::SampleContainer GetPreferableOutputContainer();
+        void Convert(void);
 
     public:
         CodecController(const CodecController &) = delete;
@@ -85,8 +87,6 @@ class CodecController
 
         CodecController(std::string source_file_full_path, std::string output_file_full_path, DecoderID decoder_id, SndFileEncoderOptions &options);
         CodecController(std::string source_file_full_path, std::string output_file_full_path, DecoderID decoder_id, LameOptions &options);
-        
-        void Convert(void);
 };
 
 #endif

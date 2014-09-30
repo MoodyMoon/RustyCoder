@@ -96,13 +96,4 @@ class UnsupportedFormatException : public Exception
         UnsupportedFormatException(const char * const caller_name, int code, const char * const message);
 };
 
-class UnimplementedFeatureException : public Exception
-{
-    private:
-        const char * message = "Function is not implemented yet. This normally indicates programming error so please contact the developer for assistance.";
-
-    public:
-        UnimplementedFeatureException(const char * const caller_name);
-};
-
 #endif

@@ -20,12 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_encoder.h"
 
-template<class T>
-SndFileEncoder<T>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, T *container, uint64_t container_size)
-{
-    throw UnimplementedFeatureException("SndFileEncoder");
-}
-
 template<>
 SndFileEncoder<short>::SndFileEncoder(const char * const file, int sample_rate, int channel_count, SndFileEncoderOptions::OutputFormat format, short *container, uint64_t container_size)
 {

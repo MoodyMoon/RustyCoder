@@ -20,25 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_lame.h"
 
-template<class T>
-Lame<T>::Lame(const char * const file,
-              int sample_rate,
-              int channel_count,
-              LameOptions::AlgorithmQuality algorithm_quality,
-              LameOptions::Mode mode,
-              LameOptions::ReplayGain replaygain_mode,
-              bool copyright,
-              bool use_naoki_psytune,
-              LameOptions::BitrateEncoding bitrate_encoding,
-              float vbr_quality,
-              LameOptions::Bitrate min_or_max_bitrate1,
-              LameOptions::Bitrate min_or_max_bitrate2,
-              T *container,
-              uint64_t container_size)
-{
-    throw UnimplementedFeatureException("Lame");
-}
-
 template<>
 Lame<short>::Lame(const char * const file,
                   int sample_rate,
