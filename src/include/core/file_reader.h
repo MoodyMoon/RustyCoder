@@ -28,6 +28,7 @@ A wrapper around STL ifstream. File size larger than 4GB is supported in both x8
 class FileReader
 {
     private:
+        std::string file_path;
         std::ifstream ifs;
         uint64_t file_size;
 
@@ -67,14 +68,14 @@ class FileReader
         
         /*!
         Read some data on the file.
-        \param[out] buffer     Valid data read will be filled here.
-        \param[in]  read_count Size of data to be read.
+        \param[out] buffer           Valid data read will be filled here.
+        \param[in]  valid_byte_count Size of data to be read.
         \return Valid number of bytes read.
         \throw ReadFileException
         \note <tt>read_count == 0</tt> will not cause an exception to be thrown.
-        \note End-of-file will not cause an exception to be thrown.
+        \note End-of-file will cause an exception to be thrown.
         */
-        uint32_t Read(char * const buffer, uint32_t read_count);
+        uint32_t Read(char *buffer, uint32_t valid_byte_count);
 
         /*!
         Close the file.

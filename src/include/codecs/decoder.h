@@ -84,6 +84,12 @@ template<>
 class Decoder<void>
 {
     public:
+        enum DecoderID
+        {
+            SNDFILEDECODER,
+            MPG123
+        };
+
         std::unique_ptr<Sample::SampleContainer> valid_containers;
 
         Decoder(void) = default;

@@ -17,29 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODECS_CODEC_CONTROLLER_H
-#define CODECS_CODEC_CONTROLLER_H
+#ifndef ENGINE_CODEC_CONTROLLER_H
+#define ENGINE_CODEC_CONTROLLER_H
 
 class CodecController
 {
-    public:
-        enum DecoderID
-        {
-            SNDFILEDECODER,
-            MPG123
-        };
-
-        enum EncoderID
-        {
-            SNDFILEENCODER,
-            LAME
-        };
-
     private:
         std::string source_file_full_path;
         std::string output_file_full_path;
-        DecoderID decoder_id;
-        EncoderID encoder_id;
+        Decoder<void>::DecoderID decoder_id;
+        Encoder<void>::EncoderID encoder_id;
         Sample::SampleContainer chosen_container_type;
         std::unique_ptr<EncoderOptions> encoder_options;
         std::unique_ptr<Mpg123LifetimeHandler> mpg123_lifetime_handler;
@@ -85,8 +72,8 @@ class CodecController
         CodecController(const CodecController &) = delete;
         CodecController & operator=(const CodecController &) = delete;
 
-        CodecController(std::string source_file_full_path, std::string output_file_full_path, DecoderID decoder_id, SndFileEncoderOptions &options);
-        CodecController(std::string source_file_full_path, std::string output_file_full_path, DecoderID decoder_id, LameOptions &options);
+        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, SndFileEncoderOptions &options);
+        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, LameOptions &options);
 };
 
 #endif

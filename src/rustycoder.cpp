@@ -22,6 +22,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
 {
+    #ifdef _DEBUG
+    assert(std::numeric_limits<char>::min() == -128);
+    assert(std::numeric_limits<char>::max() == 127);
+    assert(std::numeric_limits<unsigned char>::max() == 255u);
+    assert(std::numeric_limits<short>::min() == -32768);
+    assert(std::numeric_limits<short>::max() == 32767);
+    assert(std::numeric_limits<unsigned short>::max() == 65535u);
+    assert(std::numeric_limits<int>::min() == -2147483647l - 1);
+    assert(std::numeric_limits<int>::max() == 2147483647l);
+    assert(std::numeric_limits<unsigned int>::max() == 4294967295ul);
+    assert(std::numeric_limits<long long>::min() == -9223372036854775807ll - 1);
+    assert(std::numeric_limits<long long>::max() == 9223372036854775807ll);
+    assert(std::numeric_limits<unsigned long long>::max() == 18446744073709551615ull);
+    #endif
+    
     MainForm mainform(hThisInstance, nCmdShow);
     msg_loop_start();
 }

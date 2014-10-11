@@ -28,16 +28,16 @@ class LameOptions : public EncoderOptions
         */
         enum AlgorithmQuality
         {
-            Q0, /*!< <tt>-q 0</tt> (Best quality, slowest) average 245kbps*/
-            Q1, /*!< <tt>-q 1</tt> */
-            Q2, /*!< <tt>-q 2</tt> average 190kbps */
-            Q3, /*!< <tt>-q 3</tt> average 175kbps */
-            Q4, /*!< <tt>-q 4</tt> average 165kbps */
-            Q5, /*!< <tt>-q 5</tt> average 130kbps */
-            Q6, /*!< <tt>-q 6</tt> */
-            Q7, /*!< <tt>-q 7</tt> */
-            Q8, /*!< <tt>-q 8</tt> */
-            Q9  /*!< <tt>-q 9</tt> (Low quality, fastest) */
+            Q0 = 0, /*!< <tt>-q 0</tt> (Best quality, slowest) average 245kbps*/
+            Q1 = 1, /*!< <tt>-q 1</tt> */
+            Q2 = 2, /*!< <tt>-q 2</tt> average 190kbps */
+            Q3 = 3, /*!< <tt>-q 3</tt> average 175kbps */
+            Q4 = 4, /*!< <tt>-q 4</tt> average 165kbps */
+            Q5 = 5, /*!< <tt>-q 5</tt> average 130kbps */
+            Q6 = 6, /*!< <tt>-q 6</tt> */
+            Q7 = 7, /*!< <tt>-q 7</tt> */
+            Q8 = 8, /*!< <tt>-q 8</tt> */
+            Q9 = 9  /*!< <tt>-q 9</tt> (Low quality, fastest) */
         };
 
         /*!
@@ -45,9 +45,9 @@ class LameOptions : public EncoderOptions
         */
         enum Mode
         {
-            STEREO = MPEG_mode::STEREO,             /*!< <tt>-m s</tt> */
-            JOINT_STEREO = MPEG_mode::JOINT_STEREO, /*!< <tt>-m j</tt> */
-            MONO = MPEG_mode::MONO                  /*!< <tt>-m m</tt> */
+            STEREO = 0,       /*!< <tt>-m s</tt> */
+            JOINT_STEREO = 1, /*!< <tt>-m j</tt> */
+            MONO = 2          /*!< <tt>-m m</tt> */
         };
 
         /*!
@@ -55,9 +55,9 @@ class LameOptions : public EncoderOptions
         */
         enum ReplayGain
         {
-            NONE,    /*!< <tt>\--noreplaygain</tt> */
-            FAST,    /*!< <tt>\--replaygain-fast</tt> */
-            ACCURATE /*!< <tt>\--replaygain-accurate</tt> */
+            NONE = 0,    /*!< <tt>\--noreplaygain</tt> */
+            FAST = 1,    /*!< <tt>\--replaygain-fast</tt> */
+            ACCURATE = 2 /*!< <tt>\--replaygain-accurate</tt> */
         };
 
         /*!
@@ -65,10 +65,10 @@ class LameOptions : public EncoderOptions
         */
         enum BitrateEncoding
         {
-            CONSTANT = vbr_mode::vbr_off,      /*!< <tt>\--cbr -b \<bitrate\></tt> */
-            VARIABLE_OLD = vbr_mode::vbr_rh,   /*!< <tt>\--vbr-old</tt> */
-            VARIABLE_NEW = vbr_mode::vbr_mtrh, /*!< <tt>\--vbr-new</tt> */
-            AVERAGE = vbr_mode::vbr_abr        /*!< <tt>\--abr \<bitrate\></tt> */
+            CONSTANT = 0,     /*!< <tt>\--cbr -b \<bitrate\></tt> */
+            VARIABLE_OLD = 1, /*!< <tt>\--vbr-old</tt> */
+            VARIABLE_NEW = 2, /*!< <tt>\--vbr-new</tt> */
+            AVERAGE = 3       /*!< <tt>\--abr \<bitrate\></tt> */
         };
 
         /*!

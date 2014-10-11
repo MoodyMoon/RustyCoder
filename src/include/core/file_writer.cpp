@@ -65,9 +65,9 @@ uint64_t FileWriter::Tell(void)
     return pos;
 }
 
-void FileWriter::Write(const char * const buffer, uint32_t write_count)
+void FileWriter::Write(const char *buffer, uint32_t valid_byte_count)
 {
-    ofs.write(buffer, write_count);
+    ofs.write(buffer, valid_byte_count);
     if(ofs.fail())
         throw WriteFileException("FileWriter", ofs.rdstate(), "Cannot write to file.");
 }

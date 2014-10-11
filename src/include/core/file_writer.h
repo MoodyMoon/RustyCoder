@@ -60,14 +60,14 @@ class FileWriter
         
         /*!
         Write some data to the file.
-        \param[in] buffer       Valid data to be be written.
-        \param[in]  write_count Size of data to be written.
+        \param[in] buffer           Valid data to be be written.
+        \param[in] valid_byte_count Size of data to be written.
         \return Valid number of bytes written.
         \throw WriteFileException
         \note <tt>write_count == 0</tt> will not cause an exception to be thrown.
         \note End-of-file will not cause an exception to be thrown.
         */
-        void Write(const char * const buffer, uint32_t write_count);
+        void Write(const char *buffer, uint32_t valid_byte_count);
 
         /*!
         Close the file.

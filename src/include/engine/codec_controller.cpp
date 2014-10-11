@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "codec_controller.h"
 
-CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, DecoderID decoder_id, SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id)
+CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id)
 {
-    encoder_id = EncoderID::SNDFILEENCODER;
+    encoder_id = Encoder<void>::EncoderID::SNDFILEENCODER;
     encoder_options.reset(new SndFileEncoderOptions());
     SndFileEncoderOptions *_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
     _options->format = options.format;
@@ -31,9 +31,9 @@ CodecController::CodecController(std::string source_file_full_path, std::string 
     Convert();
 }
 
-CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, DecoderID decoder_id, LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id)
+CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id)
 {
-    encoder_id = EncoderID::LAME;
+    encoder_id = Encoder<void>::EncoderID::LAME;
     encoder_options.reset(new LameOptions());
     LameOptions *_options = static_cast<LameOptions *>(encoder_options.get());
     _options->algorithm_quality = options.algorithm_quality;
@@ -56,7 +56,7 @@ void CodecController::PopulateAudioProperties()
 
     switch(decoder_id)
     {
-        case DecoderID::SNDFILEDECODER:
+        case Decoder<void>::DecoderID::SNDFILEDECODER:
         {
             decoder_void.reset(new SndFileDecoder<void>(source_file_full_path.c_str()));
             break;
@@ -80,7 +80,7 @@ void CodecController::PopulateAudioProperties()
 
     switch(encoder_id)
     {
-        case EncoderID::SNDFILEENCODER:
+        case Encoder<void>::EncoderID::SNDFILEENCODER:
             encoder_void.reset(new SndFileEncoder<void>());
             break;
         default: /*!< MPG123 */
@@ -182,7 +182,7 @@ void CodecController::BeforeConvert()
     
     switch(decoder_id)
     {
-        case SNDFILEDECODER:
+        case Decoder<void>::DecoderID::SNDFILEDECODER:
         {
             switch(chosen_container_type)
             {
@@ -231,7 +231,7 @@ void CodecController::BeforeConvert()
 
     switch(encoder_id)
     {
-        case SNDFILEENCODER:
+        case Encoder<void>::EncoderID::SNDFILEENCODER:
         {
             SndFileEncoderOptions *options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
 

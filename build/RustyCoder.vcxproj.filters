@@ -24,6 +24,9 @@
     <Filter Include="Codecs">
       <UniqueIdentifier>{3c03d73e-bf92-4472-a306-1db7978b8831}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{11bb25a8-f190-498b-aa36-d9041ea6a1eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\libsndfile\sndfile.h">
@@ -125,8 +128,11 @@
     <ClInclude Include="..\src\include\codecs\encoder.h">
       <Filter>Codecs</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\codecs\codec_controller.h">
-      <Filter>Codecs</Filter>
+    <ClInclude Include="..\src\include\engine\codec_controller.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\engine\settings_manager.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -196,8 +202,11 @@
     <ClCompile Include="..\src\include\codecs\samples.cpp">
       <Filter>Codecs</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\include\codecs\codec_controller.cpp">
-      <Filter>Codecs</Filter>
+    <ClCompile Include="..\src\include\engine\codec_controller.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\engine\settings_manager.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

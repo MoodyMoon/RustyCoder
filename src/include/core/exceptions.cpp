@@ -30,7 +30,12 @@ Exception::Exception(const char * const caller_name, bool has_code, int code, co
     this->code = code;
     this->message = message;
     
-    what_message.append(caller_name);
+    CreateWhatMessage();
+}
+
+void Exception::CreateWhatMessage(void)
+{
+    what_message = caller_name;
 
     if(has_code)
     {
@@ -47,6 +52,12 @@ const char * Exception::GetCallerName(void) const noexcept
     return caller_name.c_str();
 }
 
+void Exception::SetCallerName(std::string &caller_name)
+{
+    this->caller_name = caller_name;
+    CreateWhatMessage();
+}
+
 bool Exception::HasCode(void) const noexcept
 {
     return has_code;
@@ -56,10 +67,21 @@ int Exception::GetErrorCode(void) const noexcept
 {
     return code;
 }
+void Exception::SetErrorCode(int code)
+{
+    this->code = code;
+    CreateWhatMessage();
+}
 
 const char * Exception::GetErrorMessage(void) const noexcept
 {
     return message.c_str();
+}
+
+void Exception::SetErrorMessage(std::string &message)
+{
+    this->message = message;
+    CreateWhatMessage();
 }
 
 const char * Exception::what() const noexcept

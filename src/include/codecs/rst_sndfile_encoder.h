@@ -139,7 +139,7 @@ class SndFileEncoderOptions : public EncoderOptions
             /*! HTK (HMM Tool Kit) */
             HTK_PCM_INT_S16 = SF_FORMAT_HTK | SF_FORMAT_PCM_16,
 
-            /*! SDS(Midi Sample Dump Standard) */
+            /*! SDS (Midi Sample Dump Standard) */
             SDS_PCM_INT_S8 = SF_FORMAT_SDS | SF_FORMAT_PCM_S8,
             SDS_PCM_INT_S16 = SF_FORMAT_SDS | SF_FORMAT_PCM_16,
             SDS_PCM_INT_S24 = SF_FORMAT_SDS | SF_FORMAT_PCM_24,
@@ -174,10 +174,10 @@ class SndFileEncoderOptions : public EncoderOptions
             CAF_ULAW = SF_FORMAT_CAF | SF_FORMAT_ULAW,
             CAF_ALAW = SF_FORMAT_CAF | SF_FORMAT_ALAW,
 
-            /*! WVE(Psion Series 3) */
+            /*! WVE (Psion Series 3) */
             WVE_ALAW = SF_FORMAT_WVE | SF_FORMAT_ALAW,
 
-            /*! MPC(Akai MPC 2k) */
+            /*! MPC (Akai MPC 2k) */
             MPC2K_PCM_INT_S16 = SF_FORMAT_MPC2K | SF_FORMAT_PCM_16,
 
             /*! RF64 (RIFF 64) */

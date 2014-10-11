@@ -25,12 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class EncoderOptions
 {
     public:
-        enum For
-        {
-            SNDFILEENCODER,
-            LAME
-        };
-
         EncoderOptions(void) = default;
         EncoderOptions(const EncoderOptions &) = delete;
         EncoderOptions & operator=(const EncoderOptions &) = delete;
@@ -90,6 +84,12 @@ template<>
 class Encoder<void>
 {
     public:
+        enum EncoderID
+        {
+            SNDFILEENCODER,
+            LAME
+        };
+
         std::unique_ptr<Sample::SampleContainer> valid_containers;
 
         Encoder(void) = default;

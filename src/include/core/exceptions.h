@@ -29,12 +29,17 @@ class Exception : public std::exception
         std::string message;
         std::string what_message;
 
+        void CreateWhatMessage(void);
+
     public:
         Exception(const char * const caller_name, bool has_code, int code, const char * const message);
         const char * GetCallerName(void) const noexcept;
+        void SetCallerName(std::string &caller_name);
         bool HasCode(void) const noexcept;
         int GetErrorCode(void) const noexcept;
+        void SetErrorCode(int code);
         const char * GetErrorMessage(void) const noexcept;
+        void SetErrorMessage(std::string &message);
         virtual const char * what() const noexcept;
 };
 

@@ -35,15 +35,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /** C++ standard headers */
+#include <array>
 #include <cassert>
 #include <exception>
 #include <functional>
-#include <iostream>
-#include <limits>
 #include <memory>
 #include <string>
 #include <thread>
 #include <typeinfo>
+#include <vector>
+#ifdef _DEBUG
+#include <limits>
+#endif
 
 /** Windows headers */
 #include <Windows.h>
@@ -86,7 +89,10 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "codecs/rst_sndfile_decoder.h"
 #include "codecs/rst_sndfile_encoder.h"
 #include "codecs/rst_lame.h"
-#include "codecs/codec_controller.h"
+
+/* RustyCoder engine */
+#include "engine/codec_controller.h"
+#include "engine/settings_manager.h"
 
 /** Win32 control wrappers */
 #include "controls/handle.h"
