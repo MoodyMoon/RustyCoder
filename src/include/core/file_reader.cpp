@@ -20,10 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "file_reader.h"
 
-FileReader::FileReader(const char * const file, bool seek_to_end)
+FileReader::FileReader(const char * const file, bool seek_to_end) : file_path(file)
 {
-    file_path = file;
-
     std::ifstream::openmode openmode = std::ifstream::in | std::ifstream::binary | std::ifstream::ate;
 
     ifs.open(file, openmode);
@@ -66,6 +64,7 @@ uint64_t FileReader::GetFileLength() const noexcept
 uint64_t FileReader::Seek(SeekPosition position, int64_t offset)
 {
     std::ifstream::seekdir way;
+
     switch(position)
     {
         case START:

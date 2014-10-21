@@ -52,7 +52,7 @@ void SndFileEncoder<T>::SndFileEncoder2(const char * const file, int sample_rate
     sfinfo.format = format;
 
     if(!sf_format_check(&sfinfo))
-        throw UnsupportedFormatException("SndFileEncoder", sf_error(sndfile), sf_strerror(sndfile));
+        throw WriteFileException("SndFileEncoder", sf_error(sndfile), sf_strerror(sndfile));
 
     sndfile = sf_open(file, SFM_WRITE, &sfinfo);
 

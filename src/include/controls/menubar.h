@@ -31,10 +31,10 @@ class MenuBar
 
         MenuBar(void);
 
-        MenuHandle CreateSubMenu(const wchar_t * const lpNewItem, MenuHandle * const parent_menu);
-        void CreateMenuItem(const wchar_t * const lpNewItem, unsigned int uIDNewItem, MenuHandle &parent_menu);
+        HMENU CreateSubMenu(const wchar_t * const lpNewItem, HMENU parent_menu);
+        void CreateMenuItem(const wchar_t * const lpNewItem, unsigned int uIDNewItem, HMENU parent_menu);
         void Attach(HWND hWnd);
-        std::wstring GetMenuText(MenuHandle &menu, unsigned int uItem);
+        std::wstring GetMenuText(HMENU menu, unsigned int uItem);
 
         ~MenuBar(void);
 };

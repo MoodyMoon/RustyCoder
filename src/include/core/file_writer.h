@@ -20,14 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CORE_FILE_WRITER_H
 #define CORE_FILE_WRITER_H
 
-#include <fstream>
-
 /*!
 A wrapper around STL ifstream. File size larger than 4GB is supported in both x86 and x64 build using MSVC
 */
 class FileWriter
 {
     private:
+        std::string file_path;
         std::ofstream ofs;
         uint64_t file_size;
 

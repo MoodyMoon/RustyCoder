@@ -95,9 +95,6 @@ DecoderConfigurationException::DecoderConfigurationException(const char * const 
 EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
 EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
 
-GuiGenericException::GuiGenericException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
-GuiGenericException::GuiGenericException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
-
 MemoryAllocationException::MemoryAllocationException(const char * const caller_name) : Exception(caller_name, false, 0, message) {}
 
 SeekException::SeekException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
@@ -108,6 +105,3 @@ ReadFileException::ReadFileException(const char * const caller_name, int code, c
 
 WriteFileException::WriteFileException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
 WriteFileException::WriteFileException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
-
-UnsupportedFormatException::UnsupportedFormatException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
-UnsupportedFormatException::UnsupportedFormatException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}

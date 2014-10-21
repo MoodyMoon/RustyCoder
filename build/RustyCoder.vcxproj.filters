@@ -41,9 +41,6 @@
     <ClInclude Include="..\src\include\controls\button.h">
       <Filter>Controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\controls\filedialog.h">
-      <Filter>Controls</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\controls\menubar.h">
       <Filter>Controls</Filter>
     </ClInclude>
@@ -98,9 +95,6 @@
     <ClInclude Include="..\src\mainform.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\controls\handle.h">
-      <Filter>Controls</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\codecs\rst_lame.h">
       <Filter>Codecs</Filter>
     </ClInclude>
@@ -134,12 +128,18 @@
     <ClInclude Include="..\src\include\engine\settings_manager.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\include\controls\open_file_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\save_file_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\list_view.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\include\controls\button.cpp">
-      <Filter>Controls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\include\controls\filedialog.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\src\rustycoder.cpp">
@@ -207,6 +207,15 @@
     </ClCompile>
     <ClCompile Include="..\src\include\engine\settings_manager.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\open_file_dialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\save_file_dialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\list_view.cpp">
+      <Filter>Controls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

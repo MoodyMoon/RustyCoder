@@ -57,13 +57,6 @@ class EncoderConfigurationException : public Exception
         EncoderConfigurationException(const char * const caller_name, int code, const char * const message);
 };
 
-class GuiGenericException : public Exception
-{
-    public:
-        GuiGenericException(const char * const caller_name, const char * const message);
-        GuiGenericException(const char * const caller_name, int code, const char * const message);
-};
-
 class MemoryAllocationException : public Exception
 {
     private:
@@ -92,13 +85,6 @@ class WriteFileException : public Exception
     public:
         WriteFileException(const char * const caller_name, const char * const message);
         WriteFileException(const char * const caller_name, int code, const char * const message);
-};
-
-class UnsupportedFormatException : public Exception
-{
-    public:
-        UnsupportedFormatException(const char * const caller_name, const char * const message);
-        UnsupportedFormatException(const char * const caller_name, int code, const char * const message);
 };
 
 #endif

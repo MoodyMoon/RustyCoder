@@ -20,17 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "Button.h"
 
-Button::Button(HINSTANCE hInstance, ControlHandle *parent_handle, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, HFONT hFont, DWORD dwExStyle, DWORD dwStyle) : Window(hInstance, L"BUTTON", lpWindowName, parent_handle, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle)
-{
-    Button2(hFont);
-}
-
 Button::Button(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, HFONT hFont, DWORD dwExStyle, DWORD dwStyle) : Window(hInstance, L"BUTTON", lpWindowName, hWndParent, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle)
-{
-    Button2(hFont);
-}
-
-void Button::Button2(HFONT hFont)
 {
     if(hFont != nullptr) SetFont(hFont);
 }

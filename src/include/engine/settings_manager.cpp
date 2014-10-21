@@ -423,6 +423,53 @@ void SettingsManager<LameOptions>::Write(std::string file_path)
         uint32_t settings_specification_revision_number = 1u;
         Write(writer, settings_specification_revision_number);
     }
+
+    {
+        uint8_t algorithm_quality = static_cast<uint8_t>(profile.algorithm_quality);
+        Write(writer, algorithm_quality);
+    }
+
+    {
+        uint8_t mode = static_cast<uint8_t>(profile.mode);
+        Write(writer, mode);
+    }
+
+    {
+        uint8_t replaygain_mode = static_cast<uint8_t>(profile.replaygain_mode);
+        Write(writer, replaygain_mode);
+    }
+
+    {
+        uint8_t copyright = profile.copyright ? 1u : 0u;
+        Write(writer, copyright);
+    }
+
+    {
+        uint8_t use_naoki_psytune = profile.use_naoki_psytune ? 1u : 0u;
+        Write(writer, use_naoki_psytune);
+    }
+
+    {
+        uint8_t bitrate_encoding = static_cast<uint8_t>(profile.bitrate_encoding);
+        Write(writer, bitrate_encoding);
+    }
+
+    {
+        if(profile.vbr_quality >= 0.f && profile.vbr_quality <= 9.999f)
+            Write(writer, profile.vbr_quality);
+        else
+            CorruptedFileThrow();
+    }
+
+    {
+        uint16_t min_or_max_bitrate1 = static_cast<uint16_t>(profile.min_or_max_bitrate1);
+        Write(writer, min_or_max_bitrate1);
+    }
+
+    {
+        uint16_t min_or_max_bitrate2 = static_cast<uint16_t>(profile.min_or_max_bitrate2);
+        Write(writer, min_or_max_bitrate2);
+    }
     
     {
         Write(writer, magic);
@@ -443,6 +490,11 @@ void SettingsManager<SndFileEncoderOptions>::Write(std::string file_path)
     {
         uint32_t settings_specification_revision_number = 1u;
         Write(writer, settings_specification_revision_number);
+    }
+
+    {
+        uint32_t format = static_cast<uint32_t>(profile.format);
+        Write(writer, format);
     }
 
     {
@@ -643,7 +695,23 @@ void SettingsManager<T>::Write(FileWriter &writer, bool &value)
 template<class T>
 void SettingsManager<T>::Write(FileWriter &writer, std::string &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    size_t string_length = value.length();
+    if(string_length < std::numeric_limits<uint8_t>::max())
+    {
+        uint8_t data_type_identifier = DataTypeIdentifier::INT_U8;
+        uint8_t _string_length = static_cast<uint8_t>(string_length);
+        Write(writer, data_type_identifier);
+        Write(writer, _string_length);
+        writer.Write(value.c_str(), _string_length);
+    }
+    else if(string_length < std::numeric_limits<uint16_t>::max())
+    {
+        uint16_t data_type_identifier = DataTypeIdentifier::INT_U16;
+        uint16_t _string_length = static_cast<uint16_t>(string_length);
+        Write(writer, data_type_identifier);
+        Write(writer, _string_length);
+        writer.Write(value.c_str(), _string_length);
+    }
 }
 
 template<class T>

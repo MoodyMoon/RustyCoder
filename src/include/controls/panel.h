@@ -26,7 +26,6 @@ class Panel : public Window
         Panel(const Panel &) = delete;
         Panel & operator=(const Panel &) = delete;
 
-        Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, ControlHandle *parent_handle, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE, bool set_cursor = true);
         Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, HWND hWndParent, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE, bool set_cursor = true);
 };
 

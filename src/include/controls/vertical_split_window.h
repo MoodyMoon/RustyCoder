@@ -24,6 +24,13 @@ class VerticalSplitWindow;
 
 class VerticalSplitWindowEventHandler : public EventHandlerInterface
 {
+    public:
+        enum MinWidthPanel
+        {
+            LEFT,
+            RIGHT
+        };
+
     protected:
         VerticalSplitWindow *split_window = nullptr;
         Panel *left_panel = nullptr;
@@ -33,14 +40,17 @@ class VerticalSplitWindowEventHandler : public EventHandlerInterface
         RECT splitter;
         HCURSOR normal_cursor = reinterpret_cast<HCURSOR>(LoadImage(nullptr, MAKEINTRESOURCE(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR | LR_SHARED));
         HCURSOR size_cursor = reinterpret_cast<HCURSOR>(LoadImage(nullptr, MAKEINTRESOURCE(OCR_SIZEWE), IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR | LR_SHARED));
-        TRACKMOUSEEVENT track_mouse;
 
         unsigned int old_splitter_x;
         unsigned int old_mouse_x;
-        unsigned int splitter_temp_x;
+        int splitter_temp_x;
+        unsigned int splitter_boundary[2];
 
         const unsigned int splitter_width = 5u;
         bool left_mouse_down = false;
+        unsigned int min_width;
+        MinWidthPanel panel_set_min_width;
+        unsigned int length_from_splitter_x_to_window_right;
 
         virtual LRESULT HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -55,7 +65,7 @@ class VerticalSplitWindow : public VerticalSplitWindowEventHandler, public Panel
     friend class VerticalSplitWindowEventHandler;
 
     private:
-        void VerticalSplitWindow2(unsigned long splitter_position_x);
+        void UpdatePanelsPositions(void);
         void SetLeftPanelToFit(Panel *panel);
         void SetRightPanelToFit(Panel *panel);
 
@@ -63,11 +73,12 @@ class VerticalSplitWindow : public VerticalSplitWindowEventHandler, public Panel
         VerticalSplitWindow(const VerticalSplitWindow &) = delete;
         VerticalSplitWindow & operator=(const VerticalSplitWindow &) = delete;
 
-        VerticalSplitWindow(HINSTANCE hInstance, ControlHandle *parent_handle, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long splitter_position_x, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE);
-        VerticalSplitWindow(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long splitter_position_x, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE);
+        VerticalSplitWindow(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long splitter_position_x, unsigned int min_width, MinWidthPanel panel_set_min_width, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE);
 
-        void SetLeftPanel(Panel *panel);
-        void SetRightPanel(Panel *panel);
+        void SetLeftPanel(Panel *panel, bool fit_to_client_area);
+        void SetRightPanel(Panel *panel, bool fit_to_client_area);
+        void GetLeftPanelClientRectangle(RECT &rectangle);
+        void GetRightPanelClientRectangle(RECT &rectangle);
 };
 
 #endif

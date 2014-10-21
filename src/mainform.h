@@ -27,18 +27,19 @@ class MainFormPanel2Events;
 class MainForm
 {
     friend class MainFormEvents;
+    friend class MainFormPanel1Events;
+    friend class MainFormPanel2Events;
 
     private:
         HINSTANCE hInstance = nullptr;
         const wchar_t * const class_name = L"RustyCoder";
 
         std::unique_ptr<Window> window;
+        std::unique_ptr<MenuBar> menu;
         std::unique_ptr<VerticalSplitWindow> vertical_split_window1;
         std::unique_ptr<Panel> panel1;
         std::unique_ptr<Panel> panel2;
-        std::unique_ptr<Button> button1;
-        std::unique_ptr<Button> button2;
-        std::unique_ptr<MenuBar> menu;
+        std::unique_ptr<ListView> list_view1;
 
         std::unique_ptr<MainFormEvents> events;
         std::unique_ptr<MainFormPanel1Events> panel1_events;
@@ -54,14 +55,15 @@ class MainForm
 class MainFormEvents : public EventHandlerInterface
 {
     private:
+        bool form_loaded = false;
+
         MainForm * const mf;
         void OnLoad(HWND hWnd);
+        void OnSize(HWND hWnd);
         void OnGetMinMaxInfo(MINMAXINFO * const min_max_info);
         void Menu_File_AddFiles_OnClick(HWND hWnd);
         void Menu_File_Exit_OnClick(void);
-        void Button1_OnClick(void);
-        void Button2_OnClick(void);
-
+        
     public:
         MainFormEvents(const MainFormEvents &) = delete;
         MainFormEvents & operator=(const MainFormEvents &) = delete;
@@ -74,7 +76,11 @@ class MainFormEvents : public EventHandlerInterface
 class MainFormPanel1Events : public EventHandlerInterface
 {
     private:
+        bool form_loaded = false;
+
         MainForm * const mf;
+        void OnCreate(HWND hWnd);
+        void OnSize(HWND hWnd);
 
     public:
         MainFormPanel1Events(const MainFormPanel1Events &) = delete;

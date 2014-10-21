@@ -22,36 +22,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, int icon_id, int x, int y, int nWidth, int nHeight, int nCmdShow, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor)
 {
+    //Create main window
     this->hInstance = hInstance;
     this->lpClassName = lpClassName;
 
     Window2(icon_id, set_cursor);
 
     hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, HWND_DESKTOP, nullptr, hInstance, event_handler);
-    if(hWnd == nullptr)
-        throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    assert(hWnd != nullptr);
 
     ShowWindow(hWnd, nCmdShow);
 }
 
-Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, ControlHandle *parent_handle, int hMenu, int icon_id, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor)
-{
-    CreateChildWindow(hInstance, event_handler, lpClassName, lpWindowName, parent_handle->handle, hMenu, icon_id, x, y, nWidth, nHeight, dwExStyle, dwStyle, set_cursor);
-}
-
 Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int icon_id, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor)
 {
-    CreateChildWindow(hInstance, event_handler, lpClassName, lpWindowName, hWndParent, hMenu, icon_id, x, y, nWidth, nHeight, dwExStyle, dwStyle, set_cursor);
-}
+    //Create panel
+    this->hInstance = hInstance;
+    this->lpClassName = lpClassName;
 
-Window::Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, ControlHandle *parent_handle, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle)
-{
-    CreateControl(hInstance, lpClassName, lpWindowName, parent_handle->handle, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle);
+    Window2(icon_id, set_cursor);
+
+    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, reinterpret_cast<HMENU>(hMenu), hInstance, event_handler);
+    assert(hWnd != nullptr);
 }
 
 Window::Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle)
 {
-    CreateControl(hInstance, lpClassName, lpWindowName, hWndParent, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle);
+    //Create control
+    this->hInstance = hInstance;
+    this->lpClassName = lpClassName;
+
+    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, reinterpret_cast<HMENU>(hMenu), hInstance, nullptr);
+    assert(hWnd != nullptr);
 }
 
 void Window::Window2(int icon_id, bool set_cursor)
@@ -67,8 +69,7 @@ void Window::Window2(int icon_id, bool set_cursor)
     if(icon_id != -1)
     {
         wincl.hIcon = reinterpret_cast<HICON>(LoadImage(hInstance, MAKEINTRESOURCE(icon_id), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_SHARED));
-        if(wincl.hIcon == nullptr)
-            throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+        assert(wincl.hIcon != nullptr);
         wincl.hIconSm = wincl.hIcon;
     }
     else
@@ -82,8 +83,7 @@ void Window::Window2(int icon_id, bool set_cursor)
     if(set_cursor)
     {
         wincl.hCursor = reinterpret_cast<HCURSOR>(LoadImage(nullptr, MAKEINTRESOURCE(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR | LR_SHARED));
-        if(wincl.hCursor == nullptr)
-            throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+        assert(wincl.hCursor != nullptr);
     }
     
     wincl.lpszMenuName = nullptr;
@@ -92,30 +92,7 @@ void Window::Window2(int icon_id, bool set_cursor)
 
     wincl.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_BTNFACE + 1);
 
-    if(RegisterClassEx(&wincl) == 0)
-        throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
-}
-
-void Window::CreateChildWindow(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int icon_id, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor)
-{
-    this->hInstance = hInstance;
-    this->lpClassName = lpClassName;
-
-    Window2(icon_id, set_cursor);
-
-    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, reinterpret_cast<HMENU>(hMenu), hInstance, event_handler);
-    if(hWnd == nullptr)
-        throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
-}
-
-void Window::CreateControl(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle)
-{
-    this->hInstance = hInstance;
-    this->lpClassName = lpClassName;
-
-    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, reinterpret_cast<HMENU>(hMenu), hInstance, nullptr);
-    if(hWnd == nullptr)
-        throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(RegisterClassEx(&wincl), !=, 0);
 }
 
 HFONT Window::GetDefaultFont(void) const
@@ -127,12 +104,10 @@ HFONT Window::GetDefaultFont(void) const
         NONCLIENTMETRICS pvParam;
         pvParam.cbSize = sizeof(NONCLIENTMETRICS);
 
-        if(SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &pvParam, 0) == 0)
-            throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+        METHOD_ASSERT(SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &pvParam, 0), != , 0);
 
         hFont = CreateFontIndirect(&pvParam.lfMessageFont);
-        if(hFont == nullptr)
-            throw GuiGenericException(WindowsUtilities::UTF8_Encode(lpClassName).c_str(), GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+        assert(hFont != nullptr);
     }
 
     return hFont;
@@ -140,7 +115,11 @@ HFONT Window::GetDefaultFont(void) const
 
 void Window::GetWindowRectangle(RECT &rectangle) const
 {
+    HWND parent = GetAncestor(hWnd, GA_PARENT);
+
     METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+
+    MapWindowPoints(HWND_DESKTOP, parent, reinterpret_cast<POINT *>(&rectangle), 2);
 }
 
 void Window::GetClientRectangle(RECT &rectangle) const
@@ -151,28 +130,28 @@ void Window::GetClientRectangle(RECT &rectangle) const
 long Window::GetWindowLeft(void) const
 {
     RECT rectangle;
-    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    GetWindowRectangle(rectangle);
     return rectangle.left;
 }
 
 long Window::GetWindowTop(void) const
 {
     RECT rectangle;
-    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    GetWindowRectangle(rectangle);
     return rectangle.top;
 }
 
 long Window::GetWindowRight(void) const
 {
     RECT rectangle;
-    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    GetWindowRectangle(rectangle);
     return rectangle.right - 1l;
 }
 
 long Window::GetWindowBottom(void) const
 {
     RECT rectangle;
-    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    GetWindowRectangle(rectangle);
     return rectangle.bottom - 1l;
 }
 
@@ -232,28 +211,143 @@ long Window::GetClientHeight(void) const
     return rectangle.bottom - rectangle.top;
 }
 
-ControlHandle Window::GetHandle()
-{
-    ControlHandle handle;
-    handle.handle = hWnd;
-    return handle;
-}
-
 void Window::MoveTo(int x, int y, bool bRepaint)
 {
     RECT rectangle;
-    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    GetWindowRectangle(rectangle);
     METHOD_ASSERT(MoveWindow(hWnd, x, y, rectangle.right - rectangle.left, rectangle.bottom - rectangle.top, bRepaint ? TRUE : FALSE), !=, 0);
 }
 
 void Window::ResizeTo(int nWidth, int nHeight, bool bRepaint)
 {
     RECT rectangle;
-    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    GetWindowRectangle(rectangle);
     METHOD_ASSERT(MoveWindow(hWnd, rectangle.left, rectangle.top, nWidth, nHeight, bRepaint ? TRUE : FALSE), !=, 0);
 }
 
 void Window::MoveAndResizeTo(int x, int y, int nWidth, int nHeight, bool bRepaint)
+{
+    METHOD_ASSERT(MoveWindow(hWnd, x, y, nWidth, nHeight, bRepaint ? TRUE : FALSE), !=, 0);
+}
+
+HWND Window::GetHandle(void)
+{
+    return hWnd;
+}
+
+void Window::GetWindowRectangle(HWND hWnd, RECT &rectangle)
+{
+    HWND parent = GetAncestor(hWnd, GA_PARENT);
+
+    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+
+    MapWindowPoints(HWND_DESKTOP, parent, reinterpret_cast<POINT *>(&rectangle), 2);
+}
+
+void Window::GetClientRectangle(HWND hWnd, RECT &rectangle)
+{
+    METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
+}
+
+long Window::GetWindowLeft(HWND hWnd)
+{
+    RECT rectangle;
+    GetWindowRectangle(hWnd, rectangle);
+    return rectangle.left;
+}
+
+long Window::GetWindowTop(HWND hWnd)
+{
+    RECT rectangle;
+    GetWindowRectangle(hWnd, rectangle);
+    return rectangle.top;
+}
+
+long Window::GetWindowRight(HWND hWnd)
+{
+    RECT rectangle;
+    GetWindowRectangle(hWnd, rectangle);
+    return rectangle.right - 1l;
+}
+
+long Window::GetWindowBottom(HWND hWnd)
+{
+    RECT rectangle;
+    GetWindowRectangle(hWnd, rectangle);
+    return rectangle.bottom - 1l;
+}
+
+long Window::GetWindowWidth(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.right - rectangle.left;
+}
+
+long Window::GetWindowHeight(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.bottom - rectangle.top;
+}
+
+long Window::GetClientLeft(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.left;
+}
+
+long Window::GetClientTop(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.top;
+}
+
+long Window::GetClientRight(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.right - 1l;
+}
+
+long Window::GetClientBottom(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.bottom - 1l;
+}
+
+long Window::GetClientWidth(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.right - rectangle.left;
+}
+
+long Window::GetClientHeight(HWND hWnd)
+{
+    RECT rectangle;
+    METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
+    return rectangle.bottom - rectangle.top;
+}
+
+void Window::MoveTo(HWND hWnd, int x, int y, bool bRepaint)
+{
+    RECT rectangle;
+    GetWindowRectangle(hWnd, rectangle);
+    METHOD_ASSERT(MoveWindow(hWnd, x, y, rectangle.right - rectangle.left, rectangle.bottom - rectangle.top, bRepaint ? TRUE : FALSE), !=, 0);
+}
+
+void Window::ResizeTo(HWND hWnd, int nWidth, int nHeight, bool bRepaint)
+{
+    RECT rectangle;
+    GetWindowRectangle(hWnd, rectangle);
+    METHOD_ASSERT(MoveWindow(hWnd, rectangle.left, rectangle.top, nWidth, nHeight, bRepaint ? TRUE : FALSE), !=, 0);
+}
+
+void Window::MoveAndResizeTo(HWND hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint)
 {
     METHOD_ASSERT(MoveWindow(hWnd, x, y, nWidth, nHeight, bRepaint ? TRUE : FALSE), !=, 0);
 }

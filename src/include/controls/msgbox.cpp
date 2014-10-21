@@ -20,26 +20,67 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "msgbox.h"
 
+void MsgBox::Show(const int value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const long value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const long long value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const unsigned value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const unsigned long value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const unsigned long long value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const float value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const double value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
+void MsgBox::Show(const long double value, HWND hWnd, const char * const lpCaption, unsigned int uType)
+{
+    METHOD_ASSERT(MessageBoxA(hWnd, std::to_string(value).c_str(), lpCaption, uType), != , 0);
+}
+
 void MsgBox::Show(const std::string lpText, HWND hWnd, const char * const lpCaption, unsigned int uType)
 {
-    if(MessageBoxA(hWnd, lpText.c_str(), lpCaption, uType) == 0)
-        throw GuiGenericException("MsgBox", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(MessageBoxA(hWnd, lpText.c_str(), lpCaption, uType), !=, 0);
 }
 
 void MsgBox::Show(const std::wstring lpText, HWND hWnd, const wchar_t * const lpCaption, unsigned int uType)
 {
-    if(MessageBoxW(hWnd, lpText.c_str(), lpCaption, uType) == 0)
-        throw GuiGenericException("MsgBox", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(MessageBoxW(hWnd, lpText.c_str(), lpCaption, uType), !=, 0);
 }
 
 void MsgBox::Show(const char * const lpText, HWND hWnd, const char * const lpCaption, unsigned int uType)
 {
-    if(MessageBoxA(hWnd, lpText, lpCaption, uType) == 0)
-        throw GuiGenericException("MsgBox", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(MessageBoxA(hWnd, lpText, lpCaption, uType), != , 0);
 }
 
 void MsgBox::Show(const wchar_t * const lpText, HWND hWnd, const wchar_t * const lpCaption, unsigned int uType)
 {
-    if(MessageBoxW(hWnd, lpText, lpCaption, uType) == 0)
-        throw GuiGenericException("MsgBox", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(MessageBoxW(hWnd, lpText, lpCaption, uType), !=, 0);
 }

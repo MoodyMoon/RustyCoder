@@ -22,13 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Button : public Window
 {
-    private:
-        void Button2(HFONT hFont);
-
     public:
         Button(const Button &) = delete;
+        Button & operator=(const Button &) = delete;
 
-        Button(HINSTANCE hInstance, ControlHandle *parent_handle, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, HFONT hFont = nullptr, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON);
         Button(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, HFONT hFont = nullptr, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON);
 
         void SetFont(HFONT hFont, BOOL redraw = FALSE);

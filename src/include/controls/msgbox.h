@@ -26,6 +26,15 @@ class MsgBox
         MsgBox(const MsgBox &) = delete;
         MsgBox & operator=(const MsgBox &) = delete;
 
+        static void Show(const int value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const long value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const long long value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const unsigned value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const unsigned long value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const unsigned long long value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const float value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const double value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
+        static void Show(const long double value, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
         static void Show(const std::string lpText, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);
         static void Show(const std::wstring lpText, HWND hWnd = nullptr, const wchar_t * const lpCaption = L"RustyCoder", unsigned int uType = MB_OK);
         static void Show(const char * const lpText, HWND hWnd = nullptr, const char * const lpCaption = "RustyCoder", unsigned int uType = MB_OK);

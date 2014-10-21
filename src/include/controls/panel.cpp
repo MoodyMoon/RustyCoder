@@ -20,6 +20,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "panel.h"
 
-Panel::Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, ControlHandle *parent_handle, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, DWORD dwExStyle, DWORD dwStyle, bool set_cursor) : Window(hInstance, event_handler, lpClassName, nullptr, parent_handle, hMenu, -1, x, y, nWidth, nHeight, dwExStyle, dwStyle, set_cursor) {}
-
 Panel::Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, HWND hWndParent, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, DWORD dwExStyle, DWORD dwStyle, bool set_cursor) : Window(hInstance, event_handler, lpClassName, nullptr, hWndParent, hMenu, -1, x, y, nWidth, nHeight, dwExStyle, dwStyle, set_cursor) {}

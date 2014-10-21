@@ -38,26 +38,37 @@ void MainFormEvents::OnLoad(HWND hWnd)
 {
     HFONT hFont = mf->window->GetDefaultFont();
     
-    mf->button1.reset(new Button(mf->hInstance, hWnd, L"Click me!", 10, 10, 100, 30, MAINFRAME_BUTTON1, hFont));
-    mf->button2.reset(new Button(mf->hInstance, hWnd, L"Bite me!", 120, 10, 100, 30, MAINFRAME_BUTTON2, hFont));
-    
     mf->menu.reset(new MenuBar());
-    MenuHandle sub_menu = mf->menu->CreateSubMenu(L"File", nullptr);
-    mf->menu->CreateMenuItem(L"&Add files", MAINFRAME_FILE_ADD_FILES, sub_menu);
-    mf->menu->CreateMenuItem(L"&Exit", MAINFRAME_FILE_EXIT, sub_menu);
+    HMENU sub_menu = mf->menu->CreateSubMenu(L"File", nullptr);
+    mf->menu->CreateMenuItem(L"&Add files", MAINFORM_FILE_ADD_FILES, sub_menu);
+    mf->menu->CreateMenuItem(L"&Exit", MAINFORM_FILE_EXIT, sub_menu);
     mf->menu->Attach(hWnd);
 
-    mf->vertical_split_window1.reset(new VerticalSplitWindow(mf->hInstance, hWnd, L"VerticalSplitWindow1", MAINFRAME_VERTICAL_SPLIT_WINDOW1, 20, 45, 200, 200, 20, 0ul, WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE));
+    mf->vertical_split_window1.reset(new VerticalSplitWindow(mf->hInstance, hWnd, L"VerticalSplitWindow1", MAINFORM_VERTICAL_SPLIT_WINDOW1, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd), 550, 100, VerticalSplitWindow::MinWidthPanel::RIGHT, 0ul, WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE));
 
-    ControlHandle handle = mf->vertical_split_window1->GetHandle();
+    HWND vertical_split_window1_handle = mf->vertical_split_window1->GetHandle();
 
     mf->panel1_events.reset(new MainFormPanel1Events(mf));
-    mf->panel1.reset(new Panel(mf->hInstance, mf->panel1_events.get(), &handle, L"Panel1", MAINFRAME_PANEL1, 0, 0, 2, 2, WS_EX_CLIENTEDGE, WS_CHILD | WS_VISIBLE));
-    
-    mf->panel2.reset(new Panel(mf->hInstance, mf->panel2_events.get(), &handle, L"Panel2", MAINFRAME_PANEL2, 10, 0, 2, 2, WS_EX_CLIENTEDGE, WS_CHILD | WS_VISIBLE));
 
-    mf->vertical_split_window1->SetLeftPanel(mf->panel1.get());
-    mf->vertical_split_window1->SetRightPanel(mf->panel2.get());
+    RECT panel_rectangle;
+    mf->vertical_split_window1->GetLeftPanelClientRectangle(panel_rectangle);
+    mf->panel1.reset(new Panel(mf->hInstance, mf->panel1_events.get(), vertical_split_window1_handle, L"Panel1", MAINFORM_PANEL1, panel_rectangle.left, panel_rectangle.top, panel_rectangle.right + 1, panel_rectangle.bottom + 1, WS_EX_LEFT, WS_CHILD | WS_VISIBLE));
+    
+    mf->vertical_split_window1->GetRightPanelClientRectangle(panel_rectangle);
+    mf->panel2.reset(new Panel(mf->hInstance, mf->panel2_events.get(), vertical_split_window1_handle, L"Panel2", MAINFORM_PANEL2, panel_rectangle.left, panel_rectangle.top, panel_rectangle.right + 1, panel_rectangle.bottom + 1, WS_EX_LEFT, WS_BORDER | WS_CHILD | WS_VISIBLE));
+
+    mf->vertical_split_window1->SetLeftPanel(mf->panel1.get(), false);
+    mf->vertical_split_window1->SetRightPanel(mf->panel2.get(), false);
+
+    form_loaded = true;
+}
+
+void MainFormEvents::OnSize(HWND hWnd)
+{
+    if(form_loaded)
+    {
+        mf->vertical_split_window1->ResizeTo(Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd));
+    }
 }
 
 void MainFormEvents::OnGetMinMaxInfo(MINMAXINFO *min_max_info)
@@ -78,6 +89,7 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
     if(ofd.HasResult())
     {
         MsgBox::Show(ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH));
+        /*
         source = ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH);
         destination = L"D:\\abc2.mp3";
 
@@ -91,22 +103,13 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
         options.vbr_quality = 0.;
         options.min_or_max_bitrate1 = LameOptions::Bitrate::B_128;
         CodecController codec(WindowsUtilities::UTF8_Encode(source), WindowsUtilities::UTF8_Encode(destination), Decoder<void>::DecoderID::MPG123, options);
+        */
     }
 }
 
 void MainFormEvents::Menu_File_Exit_OnClick(void)
 {
     mf->window.reset();
-}
-
-void MainFormEvents::Button1_OnClick(void)
-{
-    mf->window->ResizeTo(0, 0);
-}
-
-void MainFormEvents::Button2_OnClick(void)
-{
-    
 }
 
 LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -116,23 +119,7 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
         case WM_COMMAND:
             switch(LOWORD(wParam))
             {
-                case MAINFRAME_BUTTON1:
-                    switch(HIWORD(wParam))
-                    {
-                        case BN_CLICKED:
-                            Button1_OnClick();
-                            break;
-                    }
-                    break;
-                case MAINFRAME_BUTTON2:
-                    switch(HIWORD(wParam))
-                    {
-                        case BN_CLICKED:
-                            Button2_OnClick();
-                            break;
-                    }
-                    break;
-                case MAINFRAME_FILE_ADD_FILES:
+                case MAINFORM_FILE_ADD_FILES:
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
@@ -140,7 +127,7 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                             break;
                     }
                     break;
-                case MAINFRAME_FILE_EXIT:
+                case MAINFORM_FILE_EXIT:
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
@@ -150,6 +137,11 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                     break;
             }
             break;
+        case WM_SIZE:
+        {
+            OnSize(hWnd);
+            return 0;
+        }
         case WM_GETMINMAXINFO:
             OnGetMinMaxInfo(reinterpret_cast<MINMAXINFO *>(lParam));
             break;
@@ -165,12 +157,36 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
     return 0ll;
 }
 
+void MainFormPanel1Events::OnCreate(HWND hWnd)
+{
+    mf->list_view1.reset(new ListView(mf->hInstance, hWnd, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 100, MAINFORM_PANEL1_LIST_VIEW1));
+
+    std::wstring column_title(L"File name");
+    mf->list_view1->InsertColumn(100u, 0u, const_cast<wchar_t *>(column_title.c_str()), column_title.length() + 1);
+
+    column_title = L"Output format";
+    mf->list_view1->InsertColumn(100u, 1u, const_cast<wchar_t *>(column_title.c_str()), column_title.length() + 1);
+
+    form_loaded = true;
+}
+
+void MainFormPanel1Events::OnSize(HWND hWnd)
+{
+    if(form_loaded)
+    {
+        mf->list_view1->ResizeTo(Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 100);
+    }
+}
+
 LRESULT MainFormPanel1Events::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
-        case WM_LBUTTONDOWN:
-            MsgBox::Show(L"Hello1");
+        case WM_SIZE:
+            OnSize(hWnd);
+            break;
+        case WM_CREATE:
+            OnCreate(hWnd);
             break;
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -182,9 +198,6 @@ LRESULT MainFormPanel2Events::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, L
 {
     switch(uMsg)
     {
-        case WM_LBUTTONDOWN:
-            MsgBox::Show(L"Hello2");
-            break;
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }

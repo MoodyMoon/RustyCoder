@@ -17,22 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_FILEDIALOG_H
-#define CONTROLS_FILEDIALOG_H
+#ifndef CONTROLS_SAVE_FILE_DIALOG
+#define CONTROLS_SAVE_FILE_DIALOG
 
-class OpenFileDialog
+class SaveFileDialog
 {
     private:
-        IFileOpenDialog *pfd = nullptr;
-        IShellItemArray *ppenum = nullptr;
+        IFileSaveDialog *pfd = nullptr;
+        std::wstring output_file_full_path;
+        std::wstring output_file_name_extension;
 
         bool got_result = false;
-        unsigned long ref_count;
-
-        void GetResult(IShellItem **ppsi, int dwIndex);
-        void DestroyResult(IShellItem *ppsi);
-        void GetFileNameExtension(IShellItem *ppsi, wchar_t **ppsz_name);
-        void GetFullPath(IShellItem *ppsi, wchar_t **ppszName);
 
     public:
         enum File
@@ -45,12 +40,13 @@ class OpenFileDialog
             EXTENSION
         };
 
-        OpenFileDialog(const OpenFileDialog &) = delete;
-        OpenFileDialog & operator=(const OpenFileDialog &) = delete;
+        SaveFileDialog(const SaveFileDialog &) = delete;
+        SaveFileDialog & operator=(const SaveFileDialog &) = delete;
 
-        OpenFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes);
+        SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes);
         bool HasResult(void);
-        std::wstring GetFile(unsigned long dwIndex, File flag);
-        ~OpenFileDialog(void);
+        std::wstring GetFile(File flag);
+        ~SaveFileDialog(void);
 };
+
 #endif

@@ -23,53 +23,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 MenuBar::MenuBar(void)
 {
     root_menu = CreateMenu();
-    if(root_menu == FALSE)
-        throw GuiGenericException("MenuBar", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    assert(root_menu != nullptr);
 }
 
-MenuHandle MenuBar::CreateSubMenu(const wchar_t * const lpNewItem, MenuHandle * const parent_menu)
+HMENU MenuBar::CreateSubMenu(const wchar_t * const lpNewItem, HMENU parent_menu)
 {
-    MenuHandle sub_menu;
-    sub_menu.handle = CreatePopupMenu();
-    if(sub_menu.handle == nullptr)
-        throw GuiGenericException("MenuBar", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    HMENU sub_menu;
+    sub_menu = CreatePopupMenu();
+    assert(sub_menu != nullptr);
     
-    MenuHandle menu;
+    HMENU menu;
     if(parent_menu == nullptr)
-        menu.handle = root_menu;
+        menu = root_menu;
     else
-        menu.handle = parent_menu->handle;
+        menu = parent_menu;
 
-    if(AppendMenu(menu.handle, MF_STRING | MF_POPUP, reinterpret_cast<unsigned int>(sub_menu.handle), lpNewItem) == 0)
-        throw GuiGenericException("MenuBar", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(AppendMenu(menu, MF_STRING | MF_POPUP, reinterpret_cast<unsigned int>(sub_menu), lpNewItem), !=, 0);
 
     return sub_menu;
 }
 
-void MenuBar::CreateMenuItem(const wchar_t * const lpNewItem, unsigned int uIDNewItem, MenuHandle &parent_menu)
+void MenuBar::CreateMenuItem(const wchar_t * const lpNewItem, unsigned int uIDNewItem, HMENU parent_menu)
 {
-    if(parent_menu.handle == nullptr)
-        parent_menu.handle = root_menu;
+    if(parent_menu == nullptr)
+        parent_menu = root_menu;
 
-    if(AppendMenu(parent_menu.handle, MF_STRING, uIDNewItem, lpNewItem) == 0)
-        throw GuiGenericException("MenuBar", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(AppendMenu(parent_menu, MF_STRING, uIDNewItem, lpNewItem), != , 0);
 }
 
 void MenuBar::Attach(HWND hWnd)
 {
-    if(SetMenu(hWnd, root_menu) == 0)
-        throw GuiGenericException("MenuBar", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(SetMenu(hWnd, root_menu), !=, 0);
 }
 
-std::wstring MenuBar::GetMenuText(MenuHandle &menu, unsigned int uItem)
+std::wstring MenuBar::GetMenuText(HMENU menu, unsigned int uItem)
 {
     MENUITEMINFO info;
     info.cbSize = sizeof(MENUITEMINFO);
     info.fMask = MIIM_STRING;
     info.dwTypeData = nullptr;
 
-    if(GetMenuItemInfo(menu.handle, uItem, TRUE, &info) == 0)
-        throw GuiGenericException("MenuBar", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(GetMenuItemInfo(menu, uItem, TRUE, &info), !=, 0);
 
     unsigned int buffer_size = ++info.cch;
     wchar_t *buffer = new (std::nothrow) wchar_t[buffer_size];
@@ -78,8 +72,7 @@ std::wstring MenuBar::GetMenuText(MenuHandle &menu, unsigned int uItem)
 
     info.dwTypeData = buffer;
 
-    if(GetMenuItemInfo(menu.handle, uItem, TRUE, &info) == 0)
-        throw GuiGenericException("MenuBar", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(GetMenuItemInfo(menu, uItem, TRUE, &info), != , 0);
 
     std::wstring menu_text(buffer);
     delete[] buffer;

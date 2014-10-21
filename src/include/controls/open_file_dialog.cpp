@@ -18,31 +18,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "FileDialog.h"
+#include "open_file_dialog.h"
 
 OpenFileDialog::OpenFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes)
 {
     assert(hWndParent != nullptr); //owner cannot be null. Dialog must block.
 
-    if(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)) < 0)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)), >=, 0);
 
     unsigned long flags;
 
-    if(pfd->GetOptions(&flags) < 0)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(pfd->GetOptions(&flags), >=, 0);
 
-    if(pfd->SetOptions(flags | FOS_FORCEFILESYSTEM | FOS_ALLOWMULTISELECT | FOS_FILEMUSTEXIST | FOS_DONTADDTORECENT) < 0)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(pfd->SetOptions(flags | FOS_FORCEFILESYSTEM | FOS_ALLOWMULTISELECT | FOS_FILEMUSTEXIST | FOS_DONTADDTORECENT), >=, 0);
 
-    if(pfd->SetFileTypes(cFileTypes, rgFilterSpec) < 0)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(pfd->SetFileTypes(cFileTypes, rgFilterSpec), >= , 0);
 
     if((pfd->Show(hWndParent)) == S_OK)
     {
         got_result = (SUCCEEDED((pfd->GetResults(&ppenum))) == TRUE);
-        if(!got_result)
-            throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+        assert(got_result);
     }
 }
 
@@ -53,7 +48,8 @@ bool OpenFileDialog::HasResult(void)
 
 std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
 {
-    //Original ref_count of IShellItem is 1
+    assert(got_result);
+
     IShellItem *ppsi = nullptr;
 
     std::wstring display_name;
@@ -64,7 +60,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
     {
         case FULL_PATH:
         {
-            wchar_t *ppszName = nullptr;
+            wchar_t *ppszName;
             GetFullPath(ppsi, &ppszName);
             display_name = ppszName;
             CoTaskMemFree(ppszName);
@@ -72,7 +68,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
         }
         case NAME_AND_EXTENSION:
         {
-            wchar_t *ppszName = nullptr;
+            wchar_t *ppszName;
             GetFileNameExtension(ppsi, &ppszName);
             display_name = ppszName;
             CoTaskMemFree(ppszName);
@@ -80,7 +76,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
         }
         case PATH_AND_NAME:
         {
-            wchar_t *ppszName = nullptr;
+            wchar_t *ppszName;
             GetFullPath(ppsi, &ppszName);
             display_name = ppszName;
             CoTaskMemFree(ppszName);
@@ -100,7 +96,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
         }
         case PATH:
         {
-            wchar_t *ppszName = nullptr;
+            wchar_t *ppszName;
             GetFullPath(ppsi, &ppszName);
             display_name = ppszName;
             CoTaskMemFree(ppszName);
@@ -109,7 +105,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
         }
         case NAME:
         {
-            wchar_t *ppszName = nullptr;
+            wchar_t *ppszName;
             GetFullPath(ppsi, &ppszName);
             display_name = ppszName;
             CoTaskMemFree(ppszName);
@@ -126,7 +122,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
         }
         case EXTENSION:
         {
-            wchar_t *ppszName = nullptr;
+            wchar_t *ppszName;
             GetFullPath(ppsi, &ppszName);
             display_name = ppszName;
             CoTaskMemFree(ppszName);
@@ -152,38 +148,39 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
     return display_name;
 }
 
+unsigned long OpenFileDialog::GetResultCount(void)
+{
+    assert(got_result);
+
+    unsigned long result_count;
+    METHOD_ASSERT(ppenum->GetCount(&result_count), == , S_OK);
+    return result_count;
+}
+
 OpenFileDialog::~OpenFileDialog(void)
 {
     if(got_result)
-    {
-        ref_count = ppenum->Release();
-        ppenum = nullptr;
-    }
+        ppenum->Release();
 
     METHOD_ASSERT(pfd->Release(), ==, 0ul);
-    pfd = nullptr;
 }
 
 void OpenFileDialog::GetResult(IShellItem **ppsi, int dwIndex)
 {
-    if(ppenum->GetItemAt(dwIndex, ppsi) < 0)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(ppenum->GetItemAt(dwIndex, ppsi), >=, 0);
 }
 
 void OpenFileDialog::DestroyResult(IShellItem *ppsi)
 {
-    if(ppsi->Release() != 0ul)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(ppsi->Release(), ==, 0ul);
 }
 
 void OpenFileDialog::GetFileNameExtension(IShellItem *ppsi, wchar_t **ppszName)
 {
-    if(ppsi->GetDisplayName(SIGDN_NORMALDISPLAY, ppszName) < 0)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(ppsi->GetDisplayName(SIGDN_NORMALDISPLAY, ppszName), >= , 0);
 }
 
 void OpenFileDialog::GetFullPath(IShellItem *ppsi, wchar_t **ppszName)
 {
-    if(ppsi->GetDisplayName(SIGDN_DESKTOPABSOLUTEEDITING, ppszName) < 0)
-        throw GuiGenericException("OpenFileDialog", GetLastError(), WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(GetLastError())).c_str());
+    METHOD_ASSERT(ppsi->GetDisplayName(SIGDN_DESKTOPABSOLUTEEDITING, ppszName), >=, 0);
 }
