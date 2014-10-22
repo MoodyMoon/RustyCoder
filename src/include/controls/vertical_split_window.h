@@ -77,8 +77,10 @@ class VerticalSplitWindow : public VerticalSplitWindowEventHandler, public Panel
 
         void SetLeftPanel(Panel *panel, bool fit_to_client_area);
         void SetRightPanel(Panel *panel, bool fit_to_client_area);
-        void GetLeftPanelClientRectangle(RECT &rectangle);
-        void GetRightPanelClientRectangle(RECT &rectangle);
+        void GetSplitterLeftRectangle(RECT &rectangle);
+        void GetSplitterRightRectangle(RECT &rectangle);
+        unsigned int GetSplitterLeftWidth(void);
+        unsigned int GetSplitterRightWidth(void);
 };
 
 #endif

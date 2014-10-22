@@ -99,13 +99,15 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "controls/event_handler_interface.h"
 #include "controls/global_window_procedure.h"
 #include "controls/window.h"
-#include "controls/msgbox.h" /** include this before any headers which uses MsgBox */
+#include "controls/msgbox.h"
 #include "controls/button.h"
-#include "controls/open_file_dialog.h"
-#include "controls/save_file_dialog.h"
 #include "controls/menubar.h"
-#include "controls/list_view.h"
+#include "controls/open_file_dialog.h"
+#include "controls/open_folder_dialog.h"
 #include "controls/panel.h"
+#include "controls/report_list_view.h"
+#include "controls/save_file_dialog.h"
+#include "controls/single_line_text_box.h"
 #include "controls/vertical_split_window.h"
 
 /** Misc */

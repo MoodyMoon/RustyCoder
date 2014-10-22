@@ -17,28 +17,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_LIST_VIEW_H
-#define CONTROLS_LIST_VIEW_H
+#ifndef CONTROLS_REPORT_LIST_VIEW_H
+#define CONTROLS_REPORT_LIST_VIEW_H
 
-class ListView : public Window
+class ReportListView : public Window
 {
     public:
-        ListView(const ListView &) = delete;
-        ListView & operator=(const ListView &) = delete;
+        ReportListView(const ReportListView &) = delete;
+        ReportListView & operator=(const ReportListView &) = delete;
 
-        ListView(HINSTANCE hInstance, HWND hWndParent, int x, int y, int nWidth, int nHeight, int hMenu, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE | LVS_REPORT);
+        ReportListView(HINSTANCE hInstance, HWND hWndParent, int x, int y, int nWidth, int nHeight, int hMenu, bool grid_lines = false, bool sort_column = true, bool single_select = false, bool double_buffer = true, bool full_row_select = true, bool column_reorder = false);
 
         void GetColumnText(unsigned int index, wchar_t *text, size_t text_size);
-        void EditColumnText(unsigned int index, wchar_t *text, size_t text_size);
-        void InsertColumn(unsigned int column_width, unsigned int index, wchar_t *text, size_t text_size);
+        void EditColumnText(unsigned int index, const wchar_t *text, size_t text_size);
+        void InsertColumn(unsigned int column_width, unsigned int index, const wchar_t *text, size_t text_size);
         void RemoveColumn(unsigned int index);
 
         unsigned int GetRowCount(void);
         void InsertRow(unsigned int index);
         void GetCellText(unsigned int column_index, unsigned int row_index, wchar_t **text, size_t text_size);
-        void EditCellText(unsigned int column_index, unsigned int row_index, wchar_t *text, size_t text_size);
+        void EditCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text, size_t text_size);
         void RemoveRow(unsigned int index);
         void RemoveAllRows(void);
+
+        unsigned int GetSelectedItemsCount(void);
+        int GetNextSelectedItem(int iStart);
 };
 
 #endif

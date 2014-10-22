@@ -134,7 +134,13 @@
     <ClInclude Include="..\src\include\controls\save_file_dialog.h">
       <Filter>Controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\controls\list_view.h">
+    <ClInclude Include="..\src\include\controls\report_list_view.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\open_folder_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\single_line_text_box.h">
       <Filter>Controls</Filter>
     </ClInclude>
   </ItemGroup>
@@ -214,7 +220,13 @@
     <ClCompile Include="..\src\include\controls\save_file_dialog.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\include\controls\list_view.cpp">
+    <ClCompile Include="..\src\include\controls\report_list_view.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\open_folder_dialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\single_line_text_box.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
   </ItemGroup>

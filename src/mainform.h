@@ -39,7 +39,7 @@ class MainForm
         std::unique_ptr<VerticalSplitWindow> vertical_split_window1;
         std::unique_ptr<Panel> panel1;
         std::unique_ptr<Panel> panel2;
-        std::unique_ptr<ListView> list_view1;
+        std::unique_ptr<ReportListView> report_list_view1;
 
         std::unique_ptr<MainFormEvents> events;
         std::unique_ptr<MainFormPanel1Events> panel1_events;

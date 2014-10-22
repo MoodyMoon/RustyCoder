@@ -118,31 +118,41 @@ void VerticalSplitWindow::UpdatePanelsPositions(void)
 void VerticalSplitWindow::SetLeftPanelToFit(Panel *panel)
 {
     RECT rectangle;
-    GetLeftPanelClientRectangle(rectangle);
+    GetSplitterLeftRectangle(rectangle);
     panel->MoveAndResizeTo(rectangle.left, rectangle.top, rectangle.right + 1, rectangle.bottom + 1);
 }
 
 void VerticalSplitWindow::SetRightPanelToFit(Panel *panel)
 {
     RECT rectangle;
-    GetRightPanelClientRectangle(rectangle);
-    panel->MoveAndResizeTo(splitter.right + 1, 0, rectangle.right - splitter.right, rectangle.bottom + 1);
+    GetSplitterRightRectangle(rectangle);
+    panel->MoveAndResizeTo(rectangle.left, rectangle.top, rectangle.right - splitter.right, rectangle.bottom + 1);
 }
 
-void VerticalSplitWindow::GetLeftPanelClientRectangle(RECT &rectangle)
+void VerticalSplitWindow::GetSplitterLeftRectangle(RECT &rectangle)
 {
     rectangle.left = 0;
     rectangle.top = 0;
     rectangle.right = splitter.left - 1;
-    rectangle.bottom = Window::GetClientHeight() - 1;
+    rectangle.bottom = Window::GetClientBottom();
 }
 
-void VerticalSplitWindow::GetRightPanelClientRectangle(RECT &rectangle)
+void VerticalSplitWindow::GetSplitterRightRectangle(RECT &rectangle)
 {
     rectangle.left = splitter.right + 1;
     rectangle.top = 0;
     rectangle.right = Window::GetClientRight();
-    rectangle.bottom = Window::GetClientHeight() - 1;
+    rectangle.bottom = Window::GetClientBottom();
+}
+
+unsigned int VerticalSplitWindow::GetSplitterLeftWidth(void)
+{
+    return splitter.left;
+}
+
+unsigned int VerticalSplitWindow::GetSplitterRightWidth(void)
+{
+    return Window::GetClientRight() - splitter.right;
 }
 
 LRESULT VerticalSplitWindowEventHandler::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

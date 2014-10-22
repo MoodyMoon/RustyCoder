@@ -44,18 +44,18 @@ void MainFormEvents::OnLoad(HWND hWnd)
     mf->menu->CreateMenuItem(L"&Exit", MAINFORM_FILE_EXIT, sub_menu);
     mf->menu->Attach(hWnd);
 
-    mf->vertical_split_window1.reset(new VerticalSplitWindow(mf->hInstance, hWnd, L"VerticalSplitWindow1", MAINFORM_VERTICAL_SPLIT_WINDOW1, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd), 550, 100, VerticalSplitWindow::MinWidthPanel::RIGHT, 0ul, WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE));
+    mf->vertical_split_window1.reset(new VerticalSplitWindow(mf->hInstance, hWnd, L"VerticalSplitWindow1", MAINFORM_VERTICAL_SPLIT_WINDOW1, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd), 550, 100, VerticalSplitWindow::MinWidthPanel::RIGHT, 0ul, WS_CHILD | WS_VISIBLE));
 
     HWND vertical_split_window1_handle = mf->vertical_split_window1->GetHandle();
 
     mf->panel1_events.reset(new MainFormPanel1Events(mf));
 
     RECT panel_rectangle;
-    mf->vertical_split_window1->GetLeftPanelClientRectangle(panel_rectangle);
+    mf->vertical_split_window1->GetSplitterLeftRectangle(panel_rectangle);
     mf->panel1.reset(new Panel(mf->hInstance, mf->panel1_events.get(), vertical_split_window1_handle, L"Panel1", MAINFORM_PANEL1, panel_rectangle.left, panel_rectangle.top, panel_rectangle.right + 1, panel_rectangle.bottom + 1, WS_EX_LEFT, WS_CHILD | WS_VISIBLE));
     
-    mf->vertical_split_window1->GetRightPanelClientRectangle(panel_rectangle);
-    mf->panel2.reset(new Panel(mf->hInstance, mf->panel2_events.get(), vertical_split_window1_handle, L"Panel2", MAINFORM_PANEL2, panel_rectangle.left, panel_rectangle.top, panel_rectangle.right + 1, panel_rectangle.bottom + 1, WS_EX_LEFT, WS_BORDER | WS_CHILD | WS_VISIBLE));
+    mf->vertical_split_window1->GetSplitterRightRectangle(panel_rectangle);
+    mf->panel2.reset(new Panel(mf->hInstance, mf->panel2_events.get(), vertical_split_window1_handle, L"Panel2", MAINFORM_PANEL2, panel_rectangle.left, panel_rectangle.top, panel_rectangle.right - panel_rectangle.left + 1, panel_rectangle.bottom + 1, WS_EX_LEFT, WS_BORDER | WS_CHILD | WS_VISIBLE));
 
     mf->vertical_split_window1->SetLeftPanel(mf->panel1.get(), false);
     mf->vertical_split_window1->SetRightPanel(mf->panel2.get(), false);
@@ -159,13 +159,28 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 void MainFormPanel1Events::OnCreate(HWND hWnd)
 {
-    mf->list_view1.reset(new ListView(mf->hInstance, hWnd, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 100, MAINFORM_PANEL1_LIST_VIEW1));
+    mf->report_list_view1.reset(new ReportListView(mf->hInstance, hWnd, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 70, MAINFORM_PANEL1_REPORT_LIST_VIEW1));
+    
+    std::wstring text(L"File name");
+    mf->report_list_view1->InsertColumn(250u, 0u, text.c_str(), text.length() + 1);
 
-    std::wstring column_title(L"File name");
-    mf->list_view1->InsertColumn(100u, 0u, const_cast<wchar_t *>(column_title.c_str()), column_title.length() + 1);
+    text = L"Output format";
+    mf->report_list_view1->InsertColumn(50u, 1u, text.c_str(), text.length() + 1);
 
-    column_title = L"Output format";
-    mf->list_view1->InsertColumn(100u, 1u, const_cast<wchar_t *>(column_title.c_str()), column_title.length() + 1);
+    text = L"Profile";
+    mf->report_list_view1->InsertColumn(100u, 2u, text.c_str(), text.length() + 1);
+
+    text = L"Save to";
+    mf->report_list_view1->InsertColumn(150u, 3u, text.c_str(), text.length() + 1);
+
+    text = L"Hello";
+
+    for(unsigned int i = 0u; i < 5u; ++i)
+    {
+        mf->report_list_view1->InsertRow(i);
+        mf->report_list_view1->EditCellText(0u, i, text.c_str(), text.length() + 1);
+        mf->report_list_view1->EditCellText(1u, i, text.c_str(), text.length() + 1);
+    }
 
     form_loaded = true;
 }
@@ -174,7 +189,7 @@ void MainFormPanel1Events::OnSize(HWND hWnd)
 {
     if(form_loaded)
     {
-        mf->list_view1->ResizeTo(Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 100);
+        mf->report_list_view1->ResizeTo(Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 70);
     }
 }
 
@@ -198,6 +213,9 @@ LRESULT MainFormPanel2Events::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, L
 {
     switch(uMsg)
     {
+        case WM_LBUTTONUP:
+            MsgBox::Show(L"Hello");
+            break;
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
