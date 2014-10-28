@@ -53,7 +53,6 @@ class SndFileDecoder : public Decoder<T>
         \param[out] container      Pointer to the buffer which contains audio samples.
         \param[in]  container_size sizeof(\c container)
         \throw ReadFileException
-        \throw UnimplementedFeatureException
         \warning \c container must not be null.
         \warning \c container_size must be > 0.
         \warning \c container_size must be multiple of the number of audio channels.

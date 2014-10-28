@@ -37,13 +37,23 @@ class MainForm
         std::unique_ptr<Window> window;
         std::unique_ptr<MenuBar> menu;
         std::unique_ptr<VerticalSplitWindow> vertical_split_window1;
+        
         std::unique_ptr<Panel> panel1;
-        std::unique_ptr<Panel> panel2;
         std::unique_ptr<ReportListView> report_list_view1;
+        std::unique_ptr<Label> label1;
+        std::unique_ptr<SingleLineTextBox> text_box1;
+        std::unique_ptr<Button> button1;
+        std::unique_ptr<Button> button2;
+        std::unique_ptr<Button> button3;
+        std::unique_ptr<Button> button4;
+
+        std::unique_ptr<Panel> panel2;
 
         std::unique_ptr<MainFormEvents> events;
         std::unique_ptr<MainFormPanel1Events> panel1_events;
         std::unique_ptr<MainFormPanel2Events> panel2_events;
+
+        std::unique_ptr<Job> job;
 
     public:
         MainForm(const MainForm &) = delete;
@@ -59,7 +69,7 @@ class MainFormEvents : public EventHandlerInterface
 
         MainForm * const mf;
         void OnLoad(HWND hWnd);
-        void OnSize(HWND hWnd);
+        void OnSize(HWND hWnd, WPARAM wParam);
         void OnGetMinMaxInfo(MINMAXINFO * const min_max_info);
         void Menu_File_AddFiles_OnClick(HWND hWnd);
         void Menu_File_Exit_OnClick(void);

@@ -46,7 +46,7 @@ Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const 
     assert(hWnd != nullptr);
 }
 
-Window::Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle)
+Window::Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_default_font)
 {
     //Create control
     this->hInstance = hInstance;
@@ -54,6 +54,9 @@ Window::Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wch
 
     hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, reinterpret_cast<HMENU>(hMenu), hInstance, nullptr);
     assert(hWnd != nullptr);
+
+    if(set_default_font)
+        SetFont(GetDefaultFont());
 }
 
 void Window::Window2(int icon_id, bool set_cursor)
@@ -95,7 +98,7 @@ void Window::Window2(int icon_id, bool set_cursor)
     METHOD_ASSERT(RegisterClassEx(&wincl), !=, 0);
 }
 
-HFONT Window::GetDefaultFont(void) const
+HFONT Window::GetDefaultFont(void)
 {
     static HFONT hFont = nullptr;
 
@@ -111,6 +114,11 @@ HFONT Window::GetDefaultFont(void) const
     }
 
     return hFont;
+}
+
+void Window::SetFont(HFONT hFont, BOOL redraw)
+{
+    SendMessage(hWnd, WM_SETFONT, reinterpret_cast<WPARAM>(hFont), MAKELPARAM(redraw, 0));
 }
 
 void Window::GetWindowRectangle(RECT &rectangle) const

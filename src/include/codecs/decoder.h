@@ -84,7 +84,7 @@ template<>
 class Decoder<void>
 {
     public:
-        enum DecoderID
+        enum ID
         {
             SNDFILEDECODER,
             MPG123

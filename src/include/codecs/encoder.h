@@ -24,8 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class EncoderOptions
 {
-    public:
+    protected:
         EncoderOptions(void) = default;
+
+    public:
         EncoderOptions(const EncoderOptions &) = delete;
         EncoderOptions & operator=(const EncoderOptions &) = delete;
         virtual ~EncoderOptions(void) {};
@@ -84,7 +86,7 @@ template<>
 class Encoder<void>
 {
     public:
-        enum EncoderID
+        enum ID
         {
             SNDFILEENCODER,
             LAME

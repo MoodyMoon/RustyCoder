@@ -204,38 +204,49 @@ LRESULT VerticalSplitWindowEventHandler::HandleEvent(HWND hWnd, UINT uMsg, WPARA
             break;
         case WM_SIZE:
         {
-            if(split_window != nullptr)
+            switch(wParam)
             {
-                splitter_boundary[1] = static_cast<unsigned int>(split_window->GetClientRight()) - splitter_width + 1 - min_width;
-
-                if(splitter.left >= static_cast<int>(splitter_boundary[0]) && splitter.left <= static_cast<int>(splitter_boundary[1]))
+                case SIZE_MAXIMIZED:
+                case SIZE_MAXSHOW:
+                case SIZE_RESTORED:
                 {
-                    if(panel_set_min_width == MinWidthPanel::RIGHT)
+                    if(split_window != nullptr)
                     {
-                        splitter.left = split_window->GetClientRight() - static_cast<long>(length_from_splitter_x_to_window_right);
-                        if(splitter.left < static_cast<int>(splitter_boundary[0]))
-                            splitter.left = static_cast<int>(splitter_boundary[0]);
+                        splitter_boundary[1] = static_cast<unsigned int>(split_window->GetClientRight()) - splitter_width + 1 - min_width;
+
+                        if(splitter.left >= static_cast<int>(splitter_boundary[0]) && splitter.left <= static_cast<int>(splitter_boundary[1]))
+                        {
+                            if(panel_set_min_width == MinWidthPanel::RIGHT)
+                            {
+                                splitter.left = split_window->GetClientRight() - static_cast<long>(length_from_splitter_x_to_window_right);
+                                if(splitter.left < static_cast<int>(splitter_boundary[0]))
+                                    splitter.left = static_cast<int>(splitter_boundary[0]);
+                            }
+
+                            splitter.right = splitter.left + splitter_width - 1;
+                        }
+                        else if(splitter.left < static_cast<int>(splitter_boundary[0]))
+                        {
+                            splitter.left = splitter_boundary[0];
+                            splitter.right = splitter.left + splitter_width - 1;
+                        }
+                        else
+                        {
+                            if(panel_set_min_width == MinWidthPanel::RIGHT)
+                            {
+                                splitter.left = Window::GetClientWidth(hWnd) - static_cast<long>(length_from_splitter_x_to_window_right);
+                            }
+                            else
+                                splitter.left = static_cast<long>(splitter_boundary[1]);
+                            splitter.right = splitter.left + splitter_width - 1;
+                        }
+
+                        split_window->UpdatePanelsPositions();
                     }
-                    
-                    splitter.right = splitter.left + splitter_width - 1;
+                    break;
                 }
-                else if(splitter.left < static_cast<int>(splitter_boundary[0]))
-                {
-                    splitter.left = splitter_boundary[0];
-                    splitter.right = splitter.left + splitter_width - 1;
-                }
-                else
-                {
-                    if(panel_set_min_width == MinWidthPanel::RIGHT)
-                        splitter.left = split_window->GetClientRight() - static_cast<long>(length_from_splitter_x_to_window_right);
-                    else
-                        splitter.left = static_cast<long>(splitter_boundary[1]);
-                    splitter.right = splitter.left + splitter_width - 1;
-                }
-                
-                split_window->UpdatePanelsPositions();
             }
-            break;
+            return 0;
         }
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);

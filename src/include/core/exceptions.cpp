@@ -19,8 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "stdafx.h"
 #include "exceptions.h"
-
-Exception::Exception(const char * const caller_name, bool has_code, int code, const char * const message)
+Exception::Exception(const char * const caller_name, bool has_code, int code, const char * const message, ID exception_id) : exception_id(exception_id)
 {
     assert(caller_name != nullptr);
     assert(message != nullptr);
@@ -78,6 +77,11 @@ const char * Exception::GetErrorMessage(void) const noexcept
     return message.c_str();
 }
 
+Exception::ID Exception::GetExceptionID(void) const noexcept
+{
+    return exception_id;
+}
+
 void Exception::SetErrorMessage(std::string &message)
 {
     this->message = message;
@@ -89,19 +93,19 @@ const char * Exception::what() const noexcept
     return what_message.c_str();
 }
 
-DecoderConfigurationException::DecoderConfigurationException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
-DecoderConfigurationException::DecoderConfigurationException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
+DecoderConfigurationException::DecoderConfigurationException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::DECODER_CONFIGURATION_EXCEPTION) {}
+DecoderConfigurationException::DecoderConfigurationException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::DECODER_CONFIGURATION_EXCEPTION) {}
 
-EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
-EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
+EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::ENCODER_CONFIGURATION_EXCEPTION) {}
+EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::ENCODER_CONFIGURATION_EXCEPTION) {}
 
-MemoryAllocationException::MemoryAllocationException(const char * const caller_name) : Exception(caller_name, false, 0, message) {}
+MemoryAllocationException::MemoryAllocationException(const char * const caller_name) : Exception(caller_name, false, 0, message, Exception::ID::MEMORY_ALLOCATION_EXCEPTION) {}
 
-SeekException::SeekException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
-SeekException::SeekException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
+SeekException::SeekException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::SEEK_EXCEPTION) {}
+SeekException::SeekException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::SEEK_EXCEPTION) {}
 
-ReadFileException::ReadFileException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
-ReadFileException::ReadFileException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
+ReadFileException::ReadFileException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::READ_FILE_EXCEPTION) {}
+ReadFileException::ReadFileException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::READ_FILE_EXCEPTION) {}
 
-WriteFileException::WriteFileException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message) {}
-WriteFileException::WriteFileException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message) {}
+WriteFileException::WriteFileException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::WRITE_FILE_EXCEPTION) {}
+WriteFileException::WriteFileException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::WRITE_FILE_EXCEPTION) {}

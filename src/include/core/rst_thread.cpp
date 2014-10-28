@@ -20,12 +20,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_thread.h"
 
-RustyThread::RustyThread(std::function<void(void)> func)
+RustyThread::RustyThread(RustyThreadCallbackInterface *object, void *parameters, Priority priority) : object(object), parameters(parameters)
 {
-    thread.reset(new std::thread(func));
+    thread = CreateThread(nullptr, 0u, Run, this, 0u, &id);
+    assert(thread != NULL);
+
+    switch(priority)
+    {
+        case NORMAL:
+            break;
+        default:
+            METHOD_ASSERT(SetThreadPriority(thread, priority), !=, 0);
+    }
 }
 
-RustyThread::~RustyThread()
+DWORD WINAPI RustyThread::Run(void *rusty_thread)
 {
-    thread->join();
+    RustyThread *_rusty_thread = static_cast<RustyThread *>(rusty_thread);
+    return (_rusty_thread->object)->DoSync(_rusty_thread->parameters);
+}
+
+unsigned long RustyThread::GetId(void)
+{
+    return id;
+}
+
+void RustyThread::SetPriority(Priority priority)
+{
+    METHOD_ASSERT(SetThreadPriority(thread, priority), != , 0);
+}
+
+void RustyThread::SetBackground(bool background)
+{
+    METHOD_ASSERT(SetThreadPriority(GetCurrentThread(), background ? THREAD_MODE_BACKGROUND_BEGIN : THREAD_MODE_BACKGROUND_END), != , 0);
+}
+
+RustyThread::~RustyThread(void)
+{
+    METHOD_ASSERT(WaitForSingleObject(thread, INFINITE), != , WAIT_FAILED);
 }

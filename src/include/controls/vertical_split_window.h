@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_VERTICAL_SPLIT_WINDOW
-#define CONTROLS_VERTICAL_SPLIT_WINDOW
+#ifndef CONTROLS_VERTICAL_SPLIT_WINDOW_H
+#define CONTROLS_VERTICAL_SPLIT_WINDOW_H
 
 class VerticalSplitWindow;
 

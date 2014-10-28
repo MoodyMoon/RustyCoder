@@ -60,7 +60,6 @@ class Mpg123 : public Decoder<T>
         \param[in]  life           Reference to an instance of Mpg123LifetimeHandler
         \throw DecoderConfigurationException
         \throw ReadFileException
-        \throw UnimplementedFeatureException
         \warning \c container must not be null.
         \warning \c container_size must be > 0.
         \warning \c container_size must be <= max value of <tt>size_t</tt> because mpg123 cannot handle > 4GB per read for x86. Mpg123 can handle unsigned 64-bit value per read.

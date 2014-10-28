@@ -26,7 +26,7 @@ class ReportListView : public Window
         ReportListView(const ReportListView &) = delete;
         ReportListView & operator=(const ReportListView &) = delete;
 
-        ReportListView(HINSTANCE hInstance, HWND hWndParent, int x, int y, int nWidth, int nHeight, int hMenu, bool grid_lines = false, bool sort_column = true, bool single_select = false, bool double_buffer = true, bool full_row_select = true, bool column_reorder = false);
+        ReportListView(HINSTANCE hInstance, HWND hWndParent, int x, int y, int nWidth, int nHeight, int hMenu, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_CHILD | WS_VISIBLE, bool grid_lines = false, bool sort_column = true, bool single_select = false, bool double_buffer = true, bool full_row_select = true, bool column_reorder = false);
 
         void GetColumnText(unsigned int index, wchar_t *text, size_t text_size);
         void EditColumnText(unsigned int index, const wchar_t *text, size_t text_size);

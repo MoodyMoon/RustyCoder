@@ -25,10 +25,10 @@ class CodecController
     private:
         std::string source_file_full_path;
         std::string output_file_full_path;
-        Decoder<void>::DecoderID decoder_id;
-        Encoder<void>::EncoderID encoder_id;
+        Decoder<void>::ID decoder_id;
+        Encoder<void>::ID encoder_id;
         Sample::SampleContainer chosen_container_type;
-        std::unique_ptr<EncoderOptions> encoder_options;
+        EncoderOptions *encoder_options;
         std::unique_ptr<Mpg123LifetimeHandler> mpg123_lifetime_handler;
 
         std::unique_ptr<Decoder<char>> decoder_char;
@@ -58,22 +58,49 @@ class CodecController
         std::unique_ptr<float> sample_buffer_float;
         std::unique_ptr<double> sample_buffer_double;
 
+        Decoder<char> *_decoder_char = nullptr;
+        Decoder<unsigned char> *_decoder_u_char = nullptr;
+        Decoder<short> *_decoder_short = nullptr;
+        Decoder<unsigned short> *_decoder_u_short = nullptr;
+        Decoder<int> *_decoder_int = nullptr;
+        Decoder<unsigned int> *_decoder_u_int = nullptr;
+        Decoder<float> *_decoder_float = nullptr;
+        Decoder<double> *_decoder_double = nullptr;
+
+        Encoder<char> *_encoder_char = nullptr;
+        Encoder<unsigned char> *_encoder_u_char = nullptr;
+        Encoder<short> *_encoder_short = nullptr;
+        Encoder<unsigned short> *_encoder_u_short = nullptr;
+        Encoder<int> *_encoder_int = nullptr;
+        Encoder<unsigned int> *_encoder_u_int = nullptr;
+        Encoder<float> *_encoder_float = nullptr;
+        Encoder<double> *_encoder_double = nullptr;
+
         const unsigned int min_samples_in_buffer = 2520; /*!< least common multiple of 1-9 channels. Current maximum number of channels in a single track as far as I know. */
         const unsigned int max_samples_in_buffer = min_samples_in_buffer * 20;
         unsigned int channel_count;
         unsigned int sample_rate;
         uint64_t frame_count;
+        bool can_convert = true;
+
+        uint64_t buffer_valid_frames_count;
+        uint64_t max_buffer_valid_frames_count;
 
         void PopulateAudioProperties(void);
         void BeforeConvert(void);
-        void Convert(void);
 
     public:
         CodecController(const CodecController &) = delete;
         CodecController & operator=(const CodecController &) = delete;
 
-        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, SndFileEncoderOptions &options);
-        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, LameOptions &options);
+        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
+        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
+
+        uint64_t Convert(void);
+        unsigned int GetChannelCount(void);
+        unsigned int GetSampleRate(void);
+        uint64_t GetFrameCount(void);
+        bool CanConvert(void);
 };
 
 #endif

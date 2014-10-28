@@ -20,36 +20,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_lock.h"
 
-RustyLock::RustyLock(bool auto_lock_and_unlock) : auto_lock_and_unlock(auto_lock_and_unlock)
+RustyLock::RustyLock()
 {
     InitializeCriticalSection(&lock);
-    if(auto_lock_and_unlock)
-        Lock();
 }
 
 void RustyLock::Lock()
 {
-    assert(!locked);
-    if(!locked)
-    {
-        EnterCriticalSection(&lock);
-        locked = true;
-    }
+    EnterCriticalSection(&lock);
 }
 
 void RustyLock::Unlock()
 {
-    assert(locked);
-    if(locked)
-    {
-        LeaveCriticalSection(&lock);
-        locked = false;
-    }
+    LeaveCriticalSection(&lock);
 }
 
 RustyLock::~RustyLock()
 {
-    if(!auto_lock_and_unlock)
-        Unlock();
     DeleteCriticalSection(&lock);
 }

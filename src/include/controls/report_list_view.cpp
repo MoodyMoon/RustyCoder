@@ -20,7 +20,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "report_list_view.h"
 
-ReportListView::ReportListView(HINSTANCE hInstance, HWND hWndParent, int x, int y, int nWidth, int nHeight, int hMenu, bool grid_lines, bool sort_column, bool single_select, bool double_buffer, bool full_row_select, bool column_reorder) : Window(hInstance, WC_LISTVIEW, nullptr, hWndParent, hMenu, x, y, nWidth, nHeight, (double_buffer ? LVS_EX_DOUBLEBUFFER : 0x0) | (full_row_select ? LVS_EX_FULLROWSELECT : 0x0) | (grid_lines ? LVS_EX_GRIDLINES : 0x0) | (column_reorder ? LVS_EX_HEADERDRAGDROP : 0x0), (sort_column ? 0x0 : LVS_NOSORTHEADER) | LVS_REPORT | (single_select ? LVS_SINGLESEL : 0x0) | WS_BORDER | WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE) {}
+ReportListView::ReportListView(HINSTANCE hInstance, HWND hWndParent, int x, int y, int nWidth, int nHeight, int hMenu, DWORD dwExStyle, DWORD dwStyle, bool grid_lines, bool sort_column, bool single_select, bool double_buffer, bool full_row_select, bool column_reorder) : Window(hInstance, WC_LISTVIEW, nullptr, hWndParent, hMenu, x, y, nWidth, nHeight, dwExStyle, (sort_column ? 0x0 : LVS_NOSORTHEADER) | LVS_REPORT | (single_select ? LVS_SINGLESEL : 0x0) | dwStyle, false)
+{
+    if(double_buffer)
+        ListView_SetExtendedListViewStyleEx(hWnd, LVS_EX_DOUBLEBUFFER, LVS_EX_DOUBLEBUFFER);
+
+    if(full_row_select)
+        ListView_SetExtendedListViewStyleEx(hWnd, LVS_EX_FULLROWSELECT, LVS_EX_FULLROWSELECT);
+
+    if(grid_lines)
+        ListView_SetExtendedListViewStyleEx(hWnd, LVS_EX_GRIDLINES, LVS_EX_GRIDLINES);
+
+    if(column_reorder)
+        ListView_SetExtendedListViewStyleEx(hWnd, LVS_EX_HEADERDRAGDROP, LVS_EX_HEADERDRAGDROP);
+}
 
 void ReportListView::GetColumnText(unsigned int index, wchar_t *text, size_t text_size)
 {

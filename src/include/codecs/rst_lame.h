@@ -191,8 +191,6 @@ class Lame : public Encoder<T>
         \param[in] container_size      sizeof(\c container)
         \throw EncoderConfigurationException
         \throw MemoryAllocationException
-        \throw UnimplementedFeatureException
-        \throw UnsupportedFormatException
         \throw WriteFileException
         \warning \c container must not be null.
         \warning \c container_size must be > 0.

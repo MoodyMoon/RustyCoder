@@ -22,23 +22,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Exception : public std::exception
 {
+    public:
+        enum ID
+        {
+            DECODER_CONFIGURATION_EXCEPTION,
+            ENCODER_CONFIGURATION_EXCEPTION,
+            MEMORY_ALLOCATION_EXCEPTION,
+            SEEK_EXCEPTION,
+            READ_FILE_EXCEPTION,
+            WRITE_FILE_EXCEPTION
+        };
+
     private:
         std::string caller_name;
         bool has_code;
         int code;
         std::string message;
         std::string what_message;
+        ID exception_id;
 
         void CreateWhatMessage(void);
 
+    protected:
+        Exception(const char * const caller_name, bool has_code, int code, const char * const message, ID exception_id);
+    
     public:
-        Exception(const char * const caller_name, bool has_code, int code, const char * const message);
         const char * GetCallerName(void) const noexcept;
         void SetCallerName(std::string &caller_name);
         bool HasCode(void) const noexcept;
         int GetErrorCode(void) const noexcept;
         void SetErrorCode(int code);
         const char * GetErrorMessage(void) const noexcept;
+        ID GetExceptionID(void) const noexcept;
         void SetErrorMessage(std::string &message);
         virtual const char * what() const noexcept;
 };

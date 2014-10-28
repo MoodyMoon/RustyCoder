@@ -17,12 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_SINGLE_LINE_TEXT_BOX
-#define CONTROLS_SINGLE_LINE_TEXT_BOX
+#ifndef CONTROLS_SINGLE_LINE_TEXT_BOX_H
+#define CONTROLS_SINGLE_LINE_TEXT_BOX_H
 
-class SingleLineTextBox
+class SingleLineTextBox : public Window
 {
+    public:
+        SingleLineTextBox(const SingleLineTextBox &) = delete;
+        SingleLineTextBox & operator=(const SingleLineTextBox &) = delete;
 
+        SingleLineTextBox(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_VISIBLE | WS_CHILD | ES_AUTOHSCROLL);
 };
 
 #endif

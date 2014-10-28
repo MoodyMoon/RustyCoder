@@ -36,8 +36,6 @@ MainFormPanel2Events::MainFormPanel2Events(MainForm * const mf) : mf(mf) {}
 //InitCommonControlsEx is not needed to enabled new theme
 void MainFormEvents::OnLoad(HWND hWnd)
 {
-    HFONT hFont = mf->window->GetDefaultFont();
-    
     mf->menu.reset(new MenuBar());
     HMENU sub_menu = mf->menu->CreateSubMenu(L"File", nullptr);
     mf->menu->CreateMenuItem(L"&Add files", MAINFORM_FILE_ADD_FILES, sub_menu);
@@ -63,11 +61,20 @@ void MainFormEvents::OnLoad(HWND hWnd)
     form_loaded = true;
 }
 
-void MainFormEvents::OnSize(HWND hWnd)
+void MainFormEvents::OnSize(HWND hWnd, WPARAM wParam)
 {
-    if(form_loaded)
+    switch(wParam)
     {
-        mf->vertical_split_window1->ResizeTo(Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd));
+        case SIZE_MAXIMIZED:
+        case SIZE_MAXSHOW:
+        case SIZE_RESTORED:
+        {
+            if(form_loaded)
+            {
+                mf->vertical_split_window1->ResizeTo(Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd));
+            }
+            break;
+        }
     }
 }
 
@@ -89,7 +96,7 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
     if(ofd.HasResult())
     {
         MsgBox::Show(ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH));
-        /*
+        
         source = ofd.GetFile(0ul, OpenFileDialog::File::FULL_PATH);
         destination = L"D:\\abc2.mp3";
 
@@ -102,8 +109,13 @@ void MainFormEvents::Menu_File_AddFiles_OnClick(HWND hWnd)
         options.bitrate_encoding = LameOptions::BitrateEncoding::CONSTANT;
         options.vbr_quality = 0.;
         options.min_or_max_bitrate1 = LameOptions::Bitrate::B_128;
-        CodecController codec(WindowsUtilities::UTF8_Encode(source), WindowsUtilities::UTF8_Encode(destination), Decoder<void>::DecoderID::MPG123, options);
-        */
+        /* CodecController codec(WindowsUtilities::UTF8_Encode(source), WindowsUtilities::UTF8_Encode(destination), Decoder<void>::ID::MPG123, options);
+        do
+        {
+            codec.Convert();
+        } while(codec.CanConvert());*/
+        mf->job.reset(new Job(source, destination, Decoder<void>::ID::MPG123, options));
+        mf->job->StartAsync();
     }
 }
 
@@ -139,7 +151,7 @@ LRESULT MainFormEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
             break;
         case WM_SIZE:
         {
-            OnSize(hWnd);
+            OnSize(hWnd, wParam);
             return 0;
         }
         case WM_GETMINMAXINFO:
@@ -181,6 +193,18 @@ void MainFormPanel1Events::OnCreate(HWND hWnd)
         mf->report_list_view1->EditCellText(0u, i, text.c_str(), text.length() + 1);
         mf->report_list_view1->EditCellText(1u, i, text.c_str(), text.length() + 1);
     }
+    
+    mf->label1.reset(new Label(mf->hInstance, hWnd, L"File destination", 5, Window::GetClientHeight(hWnd) - 57, 83, 18, MAINFORM_PANEL1_LABEL1, 0ul, WS_VISIBLE | WS_CHILD | SS_LEFT | SS_LEFTNOWORDWRAP));
+
+    mf->text_box1.reset(new SingleLineTextBox(mf->hInstance, hWnd, nullptr, 110, Window::GetClientHeight(hWnd) - 60, Window::GetClientWidth(hWnd) - 145, 22, MAINFORM_PANEL1_TEXT_BOX1, WS_EX_CLIENTEDGE));
+
+    mf->button1.reset(new Button(mf->hInstance, hWnd, L"...", Window::GetClientWidth(hWnd) - 30, Window::GetClientHeight(hWnd) - 60, 30, 22, MAINFORM_PANEL1_BUTTON1));
+
+    mf->button2.reset(new Button(mf->hInstance, hWnd, L"Load profile", 5, Window::GetClientHeight(hWnd) - 30, 90, 25, MAINFORM_PANEL1_BUTTON1));
+
+    mf->button3.reset(new Button(mf->hInstance, hWnd, L"Create profile", 100, Window::GetClientHeight(hWnd) - 30, 90, 25, MAINFORM_PANEL1_BUTTON1));
+
+    mf->button4.reset(new Button(mf->hInstance, hWnd, L"Convert", Window::GetClientWidth(hWnd) - 90, Window::GetClientHeight(hWnd) - 30, 90, 25, MAINFORM_PANEL1_BUTTON1));
 
     form_loaded = true;
 }
@@ -190,6 +214,18 @@ void MainFormPanel1Events::OnSize(HWND hWnd)
     if(form_loaded)
     {
         mf->report_list_view1->ResizeTo(Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 70);
+
+        mf->label1->MoveTo(5, Window::GetClientHeight(hWnd) - 57);
+
+        mf->text_box1->MoveAndResizeTo(110, Window::GetClientHeight(hWnd) - 60, Window::GetClientWidth(hWnd) - 145, 22);
+
+        mf->button1->MoveTo(Window::GetClientWidth(hWnd) - 30, Window::GetClientHeight(hWnd) - 60);
+
+        mf->button2->MoveTo(5, Window::GetClientHeight(hWnd) - 30);
+
+        mf->button3->MoveTo(100, Window::GetClientHeight(hWnd) - 30);
+
+        mf->button4->MoveTo(Window::GetClientWidth(hWnd) - 90, Window::GetClientHeight(hWnd) - 30);
     }
 }
 
@@ -214,7 +250,7 @@ LRESULT MainFormPanel2Events::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, L
     switch(uMsg)
     {
         case WM_LBUTTONUP:
-            MsgBox::Show(L"Hello");
+            mf->job.reset();
             break;
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);

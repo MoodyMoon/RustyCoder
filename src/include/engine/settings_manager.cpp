@@ -20,19 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "settings_manager.h"
 
-template<>
-void SettingsManager<LameOptions>::Read(std::string file_path)
+void SettingsManager::Read(LameOptions &profile, std::string file_path)
 {
-    this->input_file_path = file_path;
     FileReader reader(file_path.c_str(), false);
 
     std::string valid_magic("RUSTYCODER-LAME");
     std::string read_magic;
 
     {
-        Read(reader, read_magic);
+        Read(reader, read_magic, file_path);
         if(!IsEqual(read_magic, valid_magic))
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
     
     {
@@ -42,7 +40,7 @@ void SettingsManager<LameOptions>::Read(std::string file_path)
         switch(settings_specification_revision_number)
         {
             case 1u:
-                Rev1Read(reader);
+                Rev1Read(profile, reader, file_path);
                 break;
             default:
             {
@@ -55,25 +53,23 @@ void SettingsManager<LameOptions>::Read(std::string file_path)
     }
     
     {
-        Read(reader, read_magic);
+        Read(reader, read_magic, file_path);
         if(!IsEqual(read_magic, valid_magic))
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 }
 
-template<>
-void SettingsManager<SndFileEncoderOptions>::Read(std::string file_path)
+void SettingsManager::Read(SndFileEncoderOptions &profile, std::string file_path)
 {
-    this->input_file_path = file_path;
     FileReader reader(file_path.c_str(), false);
 
     std::string valid_magic("RUSTYCODER-SNDFILEENCODER");
     std::string read_magic;
 
     {
-        Read(reader, read_magic);
+        Read(reader, read_magic, file_path);
         if(!IsEqual(read_magic, valid_magic))
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 
     {
@@ -83,7 +79,7 @@ void SettingsManager<SndFileEncoderOptions>::Read(std::string file_path)
         switch(settings_specification_revision_number)
         {
             case 1u:
-                Rev1Read(reader);
+                Rev1Read(profile, reader, file_path);
                 break;
             default:
             {
@@ -96,14 +92,13 @@ void SettingsManager<SndFileEncoderOptions>::Read(std::string file_path)
     }
 
     {
-        Read(reader, read_magic);
+        Read(reader, read_magic, file_path);
         if(!IsEqual(read_magic, valid_magic))
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 }
 
-template<>
-void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
+void SettingsManager::Rev1Read(LameOptions &profile, FileReader &reader, std::string &file_path)
 {
     {
         const size_t array_size = 10;
@@ -127,7 +122,7 @@ void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
         if(element_position != 0)
             profile.algorithm_quality = static_cast<LameOptions::AlgorithmQuality>(valid_algorithm_qualities[element_position - 1u]);
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
     
     {
@@ -145,7 +140,7 @@ void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
         if(element_position != 0)
             profile.mode = static_cast<LameOptions::Mode>(valid_modes[element_position - 1u]);
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 
     {
@@ -163,15 +158,15 @@ void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
         if(element_position != 0)
             profile.replaygain_mode = static_cast<LameOptions::ReplayGain>(valid_replaygain_modes[element_position - 1u]);
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
     
     {
-        Read(reader, profile.copyright);
+        Read(reader, profile.copyright, file_path);
     }
     
     {
-        Read(reader, profile.use_naoki_psytune);
+        Read(reader, profile.use_naoki_psytune, file_path);
     }
 
     {
@@ -190,7 +185,7 @@ void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
         if(element_position != 0)
             profile.bitrate_encoding = static_cast<LameOptions::BitrateEncoding>(valid_bitrate_encodings[element_position - 1u]);
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
     
     {
@@ -200,7 +195,7 @@ void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
         if(vbr_quality >= 0.f && vbr_quality <= 9.999f)
             profile.vbr_quality = vbr_quality;
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 
     
@@ -234,7 +229,7 @@ void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
         if(element_position != 0)
             profile.min_or_max_bitrate1 = static_cast<LameOptions::Bitrate>(valid_bitrates[element_position - 1u]);
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 
     {
@@ -246,12 +241,11 @@ void SettingsManager<LameOptions>::Rev1Read(FileReader &reader)
         if(element_position != 0)
             profile.min_or_max_bitrate2 = static_cast<LameOptions::Bitrate>(valid_bitrates[element_position - 1u]);
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 }
 
-template<>
-void SettingsManager<SndFileEncoderOptions>::Rev1Read(FileReader &reader)
+void SettingsManager::Rev1Read(SndFileEncoderOptions &profile, FileReader &reader, std::string &file_path)
 {
     {
         const size_t array_size = 118;
@@ -404,13 +398,17 @@ void SettingsManager<SndFileEncoderOptions>::Rev1Read(FileReader &reader)
         if(element_position != 0)
             profile.format = static_cast<SndFileEncoderOptions::OutputFormat>(valid_formats[element_position - 1u]);
         else
-            CorruptedFileThrow();
+            CorruptedFileThrow(file_path);
     }
 }
 
-template<>
-void SettingsManager<LameOptions>::Write(std::string file_path)
+void SettingsManager::Write(LameOptions &profile, std::string file_path)
 {
+    //Check ALL options for invalid values before ANY writing
+
+    if(profile.vbr_quality < 0.f || profile.vbr_quality > 9.999f)
+        CorruptedFileThrow(file_path);
+
     FileWriter writer(file_path.c_str());
 
     std::string magic("RUSTYCODER-LAME");
@@ -455,10 +453,7 @@ void SettingsManager<LameOptions>::Write(std::string file_path)
     }
 
     {
-        if(profile.vbr_quality >= 0.f && profile.vbr_quality <= 9.999f)
-            Write(writer, profile.vbr_quality);
-        else
-            CorruptedFileThrow();
+        Write(writer, profile.vbr_quality);
     }
 
     {
@@ -476,9 +471,10 @@ void SettingsManager<LameOptions>::Write(std::string file_path)
     }
 }
 
-template<>
-void SettingsManager<SndFileEncoderOptions>::Write(std::string file_path)
+void SettingsManager::Write(SndFileEncoderOptions &profile, std::string file_path)
 {
+    //Check ALL options for invalid values before ANY writing
+
     FileWriter writer(file_path.c_str());
 
     std::string magic("RUSTYCODER-SNDFILEENCODER");
@@ -502,77 +498,65 @@ void SettingsManager<SndFileEncoderOptions>::Write(std::string file_path)
     }
 }
 
-template<class T>
-void SettingsManager<T>::CorruptedFileThrow()
+void SettingsManager::CorruptedFileThrow(std::string &file_path)
 {
     std::string error_message("Corrupted profile in \"");
-    error_message.append(input_file_path);
+    error_message.append(file_path);
     error_message.append("\".");
     throw ReadFileException("SettingsManager", error_message.c_str());
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, int8_t &value)
+void SettingsManager::Read(FileReader &reader, int8_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, uint8_t &value)
+void SettingsManager::Read(FileReader &reader, uint8_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, int16_t &value)
+void SettingsManager::Read(FileReader &reader, int16_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, uint16_t &value)
+void SettingsManager::Read(FileReader &reader, uint16_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, int32_t &value)
+void SettingsManager::Read(FileReader &reader, int32_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, uint32_t &value)
+void SettingsManager::Read(FileReader &reader, uint32_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, int64_t &value)
+void SettingsManager::Read(FileReader &reader, int64_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, uint64_t &value)
+void SettingsManager::Read(FileReader &reader, uint64_t &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, float &value)
+void SettingsManager::Read(FileReader &reader, float &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, double &value)
+void SettingsManager::Read(FileReader &reader, double &value)
 {
     reader.Read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, bool &value)
+void SettingsManager::Read(FileReader &reader, bool &value, std::string &file_path)
 {
     uint8_t temp;
     Read(reader, temp);
@@ -583,14 +567,13 @@ void SettingsManager<T>::Read(FileReader &reader, bool &value)
     else
     {
         std::string error_message("Invalid boolean value in \"");
-        error_message.append(input_file_path);
+        error_message.append(file_path);
         error_message.append("\".");
         throw ReadFileException("SettingsManager", error_message.c_str());
     }
 }
 
-template<class T>
-void SettingsManager<T>::Read(FileReader &reader, std::string &value)
+void SettingsManager::Read(FileReader &reader, std::string &value, std::string &file_path)
 {
     uint8_t data_type_identifier;
     Read(reader, data_type_identifier);
@@ -620,80 +603,69 @@ void SettingsManager<T>::Read(FileReader &reader, std::string &value)
         default:
         {
             std::string error_message("Invalid string length in \"");
-            error_message.append(input_file_path);
+            error_message.append(file_path);
             error_message.append("\".");
             throw ReadFileException("SettingsManager", error_message.c_str());
         }
     }
 }
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, int8_t &value)
+
+void SettingsManager::Write(FileWriter &writer, int8_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, uint8_t &value)
+void SettingsManager::Write(FileWriter &writer, uint8_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, int16_t &value)
+void SettingsManager::Write(FileWriter &writer, int16_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, uint16_t &value)
+void SettingsManager::Write(FileWriter &writer, uint16_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, int32_t &value)
+void SettingsManager::Write(FileWriter &writer, int32_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, uint32_t &value)
+void SettingsManager::Write(FileWriter &writer, uint32_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, int64_t &value)
+void SettingsManager::Write(FileWriter &writer, int64_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, uint64_t &value)
+void SettingsManager::Write(FileWriter &writer, uint64_t &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, float &value)
+void SettingsManager::Write(FileWriter &writer, float &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, double &value)
+void SettingsManager::Write(FileWriter &writer, double &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, bool &value)
+void SettingsManager::Write(FileWriter &writer, bool &value)
 {
     writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-template<class T>
-void SettingsManager<T>::Write(FileWriter &writer, std::string &value)
+void SettingsManager::Write(FileWriter &writer, std::string &value)
 {
     size_t string_length = value.length();
     if(string_length < std::numeric_limits<uint8_t>::max())
@@ -714,8 +686,7 @@ void SettingsManager<T>::Write(FileWriter &writer, std::string &value)
     }
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(int8_t &value, int8_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(int8_t &value, int8_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -725,8 +696,7 @@ size_t SettingsManager<T>::HasElement(int8_t &value, int8_t value_array[], size_
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(uint8_t &value, uint8_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(uint8_t &value, uint8_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -736,8 +706,7 @@ size_t SettingsManager<T>::HasElement(uint8_t &value, uint8_t value_array[], siz
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(int16_t &value, int16_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(int16_t &value, int16_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -747,8 +716,7 @@ size_t SettingsManager<T>::HasElement(int16_t &value, int16_t value_array[], siz
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(uint16_t &value, uint16_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(uint16_t &value, uint16_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -758,8 +726,7 @@ size_t SettingsManager<T>::HasElement(uint16_t &value, uint16_t value_array[], s
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(int32_t &value, int32_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(int32_t &value, int32_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -769,8 +736,7 @@ size_t SettingsManager<T>::HasElement(int32_t &value, int32_t value_array[], siz
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(uint32_t &value, uint32_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(uint32_t &value, uint32_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -780,8 +746,7 @@ size_t SettingsManager<T>::HasElement(uint32_t &value, uint32_t value_array[], s
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(int64_t &value, int64_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(int64_t &value, int64_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -791,8 +756,7 @@ size_t SettingsManager<T>::HasElement(int64_t &value, int64_t value_array[], siz
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(uint64_t &value, uint64_t value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(uint64_t &value, uint64_t value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -802,8 +766,7 @@ size_t SettingsManager<T>::HasElement(uint64_t &value, uint64_t value_array[], s
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(bool &value, bool value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(bool &value, bool value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -813,8 +776,7 @@ size_t SettingsManager<T>::HasElement(bool &value, bool value_array[], size_t va
     return 0u;
 }
 
-template<class T>
-size_t SettingsManager<T>::HasElement(std::string &value, std::string value_array[], size_t value_array_size)
+size_t SettingsManager::HasElement(std::string &value, std::string value_array[], size_t value_array_size)
 {
     for(size_t i = 0u; i < value_array_size; ++i)
     {
@@ -824,62 +786,52 @@ size_t SettingsManager<T>::HasElement(std::string &value, std::string value_arra
     return 0u;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(int8_t &value1, int8_t &value2)
+bool SettingsManager::IsEqual(int8_t &value1, int8_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(uint8_t &value1, uint8_t &value2)
+bool SettingsManager::IsEqual(uint8_t &value1, uint8_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(int16_t &value1, int16_t &value2)
+bool SettingsManager::IsEqual(int16_t &value1, int16_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(uint16_t &value1, uint16_t &value2)
+bool SettingsManager::IsEqual(uint16_t &value1, uint16_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(int32_t &value1, int32_t &value2)
+bool SettingsManager::IsEqual(int32_t &value1, int32_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(uint32_t &value1, uint32_t &value2)
+bool SettingsManager::IsEqual(uint32_t &value1, uint32_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(int64_t &value1, int64_t &value2)
+bool SettingsManager::IsEqual(int64_t &value1, int64_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(uint64_t &value1, uint64_t &value2)
+bool SettingsManager::IsEqual(uint64_t &value1, uint64_t &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(bool &value1, bool &value2)
+bool SettingsManager::IsEqual(bool &value1, bool &value2)
 {
     return value1 == value2;
 }
 
-template<class T>
-bool SettingsManager<T>::IsEqual(std::string &value1, std::string &value2)
+bool SettingsManager::IsEqual(std::string &value1, std::string &value2)
 {
     return value1.compare(value2) == 0;
 }

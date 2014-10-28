@@ -228,8 +228,6 @@ class SndFileEncoder : public Encoder<T>
         \param[in] format         Output file format.
         \param[in] container      Pointer to the buffer which contains audio samples.
         \param[in] container_size sizeof(\c container)
-        \throw UnimplementedFeatureException
-        \throw UnsupportedFormatException
         \throw WriteFileException
         \warning \c container must not be null.
         \warning \c container_size must be > 0.

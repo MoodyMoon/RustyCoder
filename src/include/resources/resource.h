@@ -4,15 +4,18 @@
 //
 
 #define RUSTYCODER_ICON                   100
-#define MAINFORM_BUTTON1                  101
-#define MAINFORM_BUTTON2                  102
-#define MAINFORM_FILE_ADD_FILES           103
-#define MAINFORM_FILE_EXIT                104
-#define MAINFORM_PANEL1                   105
-#define MAINFORM_PANEL1_REPORT_LIST_VIEW1 106
-#define MAINFORM_PANEL2                   107
-#define MAINFORM_VERTICAL_SPLIT_WINDOW1   108
-
+#define MAINFORM_FILE_ADD_FILES           101
+#define MAINFORM_FILE_EXIT                102
+#define MAINFORM_VERTICAL_SPLIT_WINDOW1   103
+#define MAINFORM_PANEL1                   104
+#define MAINFORM_PANEL1_REPORT_LIST_VIEW1 105
+#define MAINFORM_PANEL1_LABEL1            106
+#define MAINFORM_PANEL1_TEXT_BOX1         107
+#define MAINFORM_PANEL1_BUTTON1           108
+#define MAINFORM_PANEL1_BUTTON2           109
+#define MAINFORM_PANEL1_BUTTON3           110
+#define MAINFORM_PANEL1_BUTTON4           111
+#define MAINFORM_PANEL2                   112
 
 // Next default values for new objects
 //

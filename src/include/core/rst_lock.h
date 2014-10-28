@@ -26,12 +26,10 @@ Windows synchronization objects do not ensure threads FIFO behaviour
 class RustyLock
 {
     private:
-        bool auto_lock_and_unlock = false;
-        bool locked = false;
         CRITICAL_SECTION lock;
 
     public:
-        RustyLock(bool auto_lock_and_unlock);
+        RustyLock(void);
         void Lock(void);
         void Unlock(void);
         ~RustyLock(void);

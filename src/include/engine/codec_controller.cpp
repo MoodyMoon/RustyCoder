@@ -20,33 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "codec_controller.h"
 
-CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id)
+CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
 {
-    encoder_id = Encoder<void>::EncoderID::SNDFILEENCODER;
-    encoder_options.reset(new SndFileEncoderOptions());
-    SndFileEncoderOptions *_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
-    _options->format = options.format;
+    encoder_id = Encoder<void>::ID::SNDFILEENCODER;
     PopulateAudioProperties();
     BeforeConvert();
-    Convert();
 }
 
-CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::DecoderID decoder_id, LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id)
+CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
 {
-    encoder_id = Encoder<void>::EncoderID::LAME;
-    encoder_options.reset(new LameOptions());
-    LameOptions *_options = static_cast<LameOptions *>(encoder_options.get());
-    _options->algorithm_quality = options.algorithm_quality;
-    _options->mode = options.mode;
-    _options->replaygain_mode = options.replaygain_mode;
-    _options->copyright = options.copyright;
-    _options->use_naoki_psytune = options.use_naoki_psytune;
-    _options->bitrate_encoding = options.bitrate_encoding;
-    _options->min_or_max_bitrate1 = options.min_or_max_bitrate1;
-    _options->min_or_max_bitrate2 = options.min_or_max_bitrate2;
+    encoder_id = Encoder<void>::ID::LAME;
     PopulateAudioProperties();
     BeforeConvert();
-    Convert();
 }
 
 void CodecController::PopulateAudioProperties()
@@ -56,7 +41,7 @@ void CodecController::PopulateAudioProperties()
 
     switch(decoder_id)
     {
-        case Decoder<void>::DecoderID::SNDFILEDECODER:
+        case Decoder<void>::ID::SNDFILEDECODER:
         {
             decoder_void.reset(new SndFileDecoder<void>(source_file_full_path.c_str()));
             break;
@@ -80,7 +65,7 @@ void CodecController::PopulateAudioProperties()
 
     switch(encoder_id)
     {
-        case Encoder<void>::EncoderID::SNDFILEENCODER:
+        case Encoder<void>::ID::SNDFILEENCODER:
             encoder_void.reset(new SndFileEncoder<void>());
             break;
         default: /*!< MPG123 */
@@ -182,7 +167,7 @@ void CodecController::BeforeConvert()
     
     switch(decoder_id)
     {
-        case Decoder<void>::DecoderID::SNDFILEDECODER:
+        case Decoder<void>::ID::SNDFILEDECODER:
         {
             switch(chosen_container_type)
             {
@@ -231,9 +216,9 @@ void CodecController::BeforeConvert()
 
     switch(encoder_id)
     {
-        case Encoder<void>::EncoderID::SNDFILEENCODER:
+        case Encoder<void>::ID::SNDFILEENCODER:
         {
-            SndFileEncoderOptions *options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
+            SndFileEncoderOptions *options = static_cast<SndFileEncoderOptions *>(encoder_options);
 
             switch(chosen_container_type)
             {
@@ -253,7 +238,7 @@ void CodecController::BeforeConvert()
         }
         default: /*!< LAME */
         {
-            LameOptions *options = static_cast<LameOptions *>(encoder_options.get());
+            LameOptions *options = static_cast<LameOptions *>(encoder_options);
 
             switch(chosen_container_type)
             {
@@ -268,30 +253,8 @@ void CodecController::BeforeConvert()
             }
         }
     }
-}
 
-void CodecController::Convert()
-{
-    uint64_t buffer_valid_frames_count;
-    const uint64_t max_buffer_valid_frames_count = max_samples_in_buffer / channel_count;
-
-    Decoder<char> *_decoder_char = nullptr;
-    Decoder<unsigned char> *_decoder_u_char = nullptr;
-    Decoder<short> *_decoder_short = nullptr;
-    Decoder<unsigned short> *_decoder_u_short = nullptr;
-    Decoder<int> *_decoder_int = nullptr;
-    Decoder<unsigned int> *_decoder_u_int = nullptr;
-    Decoder<float> *_decoder_float = nullptr;
-    Decoder<double> *_decoder_double = nullptr;
-
-    Encoder<char> *_encoder_char = nullptr;
-    Encoder<unsigned char> *_encoder_u_char = nullptr;
-    Encoder<short> *_encoder_short = nullptr;
-    Encoder<unsigned short> *_encoder_u_short = nullptr;
-    Encoder<int> *_encoder_int = nullptr;
-    Encoder<unsigned int> *_encoder_u_int = nullptr;
-    Encoder<float> *_encoder_float = nullptr;
-    Encoder<double> *_encoder_double = nullptr;
+    max_buffer_valid_frames_count = max_samples_in_buffer / channel_count;
 
     switch(chosen_container_type)
     {
@@ -343,58 +306,88 @@ void CodecController::Convert()
             _encoder_double = encoder_double.get();
         }
     }
+}
 
-    do
+uint64_t CodecController::Convert()
+{
+    assert(can_convert);
+
+    if(!can_convert)
+        return 0u;
+
+    switch(chosen_container_type)
     {
-        switch(chosen_container_type)
+        case Sample::SampleContainer::INT_S8:
         {
-            case Sample::SampleContainer::INT_S8:
-            {
-                buffer_valid_frames_count = _decoder_char->ReadFrames();
-                _encoder_char->WriteFrames(buffer_valid_frames_count);
-                break;
-            }
-            case Sample::SampleContainer::INT_U8:
-            {
-                buffer_valid_frames_count = _decoder_u_char->ReadFrames();
-                _encoder_u_char->WriteFrames(buffer_valid_frames_count);
-                break;
-            }
-            case Sample::SampleContainer::INT_S16:
-            {
-                buffer_valid_frames_count = _decoder_short->ReadFrames();
-                _encoder_short->WriteFrames(buffer_valid_frames_count);
-                break;
-            }
-            case Sample::SampleContainer::INT_U16:
-            {
-                buffer_valid_frames_count = _decoder_u_short->ReadFrames();
-                _encoder_u_short->WriteFrames(buffer_valid_frames_count);
-                break;
-            }
-            case Sample::SampleContainer::INT_S32:
-            {
-                buffer_valid_frames_count = _decoder_int->ReadFrames();
-                _encoder_int->WriteFrames(buffer_valid_frames_count);
-                break;
-            }
-            case Sample::SampleContainer::INT_U32:
-            {
-                buffer_valid_frames_count = _decoder_u_int->ReadFrames();
-                _encoder_u_int->WriteFrames(buffer_valid_frames_count);
-                break;
-            }
-            case Sample::SampleContainer::FLOAT_32:
-            {
-                buffer_valid_frames_count = _decoder_float->ReadFrames();
-                _encoder_float->WriteFrames(buffer_valid_frames_count);
-                break;
-            }
-            default: /*!< Sample::SampleContainer::FLOAT_64 */
-            {
-                buffer_valid_frames_count = _decoder_double->ReadFrames();
-                _encoder_double->WriteFrames(buffer_valid_frames_count);
-            }
+            buffer_valid_frames_count = _decoder_char->ReadFrames();
+            _encoder_char->WriteFrames(buffer_valid_frames_count);
+            break;
         }
-    }while(buffer_valid_frames_count == max_buffer_valid_frames_count);
+        case Sample::SampleContainer::INT_U8:
+        {
+            buffer_valid_frames_count = _decoder_u_char->ReadFrames();
+            _encoder_u_char->WriteFrames(buffer_valid_frames_count);
+            break;
+        }
+        case Sample::SampleContainer::INT_S16:
+        {
+            buffer_valid_frames_count = _decoder_short->ReadFrames();
+            _encoder_short->WriteFrames(buffer_valid_frames_count);
+            break;
+        }
+        case Sample::SampleContainer::INT_U16:
+        {
+            buffer_valid_frames_count = _decoder_u_short->ReadFrames();
+            _encoder_u_short->WriteFrames(buffer_valid_frames_count);
+            break;
+        }
+        case Sample::SampleContainer::INT_S32:
+        {
+            buffer_valid_frames_count = _decoder_int->ReadFrames();
+            _encoder_int->WriteFrames(buffer_valid_frames_count);
+            break;
+        }
+        case Sample::SampleContainer::INT_U32:
+        {
+            buffer_valid_frames_count = _decoder_u_int->ReadFrames();
+            _encoder_u_int->WriteFrames(buffer_valid_frames_count);
+            break;
+        }
+        case Sample::SampleContainer::FLOAT_32:
+        {
+            buffer_valid_frames_count = _decoder_float->ReadFrames();
+            _encoder_float->WriteFrames(buffer_valid_frames_count);
+            break;
+        }
+        default: /*!< Sample::SampleContainer::FLOAT_64 */
+        {
+            buffer_valid_frames_count = _decoder_double->ReadFrames();
+            _encoder_double->WriteFrames(buffer_valid_frames_count);
+        }
+    }
+
+    if(buffer_valid_frames_count < max_buffer_valid_frames_count)
+        can_convert = false;
+
+    return buffer_valid_frames_count;
+}
+
+unsigned int CodecController::GetChannelCount(void)
+{
+    return channel_count;
+}
+
+unsigned int CodecController::GetSampleRate(void)
+{
+    return sample_rate;
+}
+
+uint64_t CodecController::GetFrameCount(void)
+{
+    return frame_count;
+}
+
+bool CodecController::CanConvert(void)
+{
+    return can_convert;
 }

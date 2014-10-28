@@ -143,6 +143,15 @@
     <ClInclude Include="..\src\include\controls\single_line_text_box.h">
       <Filter>Controls</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\include\controls\label.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\engine\job.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\timer.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\include\controls\button.cpp">
@@ -227,6 +236,15 @@
       <Filter>Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\src\include\controls\single_line_text_box.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\label.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\engine\job.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\timer.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
   </ItemGroup>

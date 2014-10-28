@@ -35,16 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /** C++ standard headers */
-#include <array>
 #include <cassert>
 #include <exception>
 #include <fstream>
-#include <functional>
 #include <memory>
 #include <string>
-#include <thread>
 #include <typeinfo>
-#include <vector>
 #ifdef _DEBUG
 #include <limits>
 #endif
@@ -94,6 +90,7 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 /* RustyCoder engine */
 #include "engine/codec_controller.h"
 #include "engine/settings_manager.h"
+#include "engine/job.h"
 
 /** Win32 control wrappers */
 #include "controls/event_handler_interface.h"
@@ -101,6 +98,7 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "controls/window.h"
 #include "controls/msgbox.h"
 #include "controls/button.h"
+#include "controls/label.h"
 #include "controls/menubar.h"
 #include "controls/open_file_dialog.h"
 #include "controls/open_folder_dialog.h"
@@ -108,6 +106,7 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "controls/report_list_view.h"
 #include "controls/save_file_dialog.h"
 #include "controls/single_line_text_box.h"
+#include "controls/timer.h"
 #include "controls/vertical_split_window.h"
 
 /** Misc */
