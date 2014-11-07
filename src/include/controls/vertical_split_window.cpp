@@ -155,7 +155,7 @@ unsigned int VerticalSplitWindow::GetSplitterRightWidth(void)
     return Window::GetClientRight() - splitter.right;
 }
 
-LRESULT VerticalSplitWindowEventHandler::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT VerticalSplitWindowEvent::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {

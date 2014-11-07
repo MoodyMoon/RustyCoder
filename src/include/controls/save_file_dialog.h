@@ -46,7 +46,7 @@ class SaveFileDialog
         SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes);
         bool HasResult(void);
         std::wstring GetFile(File flag);
-        ~SaveFileDialog(void);
+        virtual ~SaveFileDialog(void);
 };
 
 #endif

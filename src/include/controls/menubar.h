@@ -36,7 +36,7 @@ class MenuBar
         void Attach(HWND hWnd);
         std::wstring GetMenuText(HMENU menu, unsigned int uItem);
 
-        ~MenuBar(void);
+        virtual ~MenuBar(void);
 };
 
 #endif

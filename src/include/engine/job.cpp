@@ -20,24 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "job.h"
 
-Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options)
+Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : decoder_id(decoder_id)
 {
     encoder_options.reset(new SndFileEncoderOptions());
     SndFileEncoderOptions *_encoder_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
     _encoder_options->format = options.format;
 
-    try
-    {
-        codec_controller.reset(new CodecController(WindowsUtilities::UTF8_Encode(source_file_full_path), WindowsUtilities::UTF8_Encode(output_file_full_path), decoder_id, *_encoder_options));
-    }
-    catch(Exception &ex)
-    {
-        error_occured = true;
-        error.reset(new Exception(ex));
-    }
+    std::string utf8_source_file_full_path(WindowsUtilities::UTF8_Encode(source_file_full_path));
+    std::string utf8_output_file_full_path(WindowsUtilities::UTF8_Encode(output_file_full_path));
+    codec_controller.reset(new CodecController(utf8_source_file_full_path, utf8_output_file_full_path, decoder_id, *_encoder_options));
 }
 
-Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options)
+Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : decoder_id(decoder_id)
 {
     encoder_options.reset(new LameOptions());
     LameOptions *_encoder_options = static_cast<LameOptions *>(encoder_options.get());
@@ -51,15 +45,9 @@ Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_pat
     _encoder_options->min_or_max_bitrate1 = options.min_or_max_bitrate1;
     _encoder_options->min_or_max_bitrate2 = options.min_or_max_bitrate2;
 
-    try
-    {
-        codec_controller.reset(new CodecController(WindowsUtilities::UTF8_Encode(source_file_full_path), WindowsUtilities::UTF8_Encode(output_file_full_path), decoder_id, *_encoder_options));
-    }
-    catch(Exception &ex)
-    {
-        error_occured = true;
-        error.reset(new Exception(ex));
-    }
+    std::string utf8_source_file_full_path(WindowsUtilities::UTF8_Encode(source_file_full_path));
+    std::string utf8_output_file_full_path(WindowsUtilities::UTF8_Encode(output_file_full_path));
+    codec_controller.reset(new CodecController(utf8_source_file_full_path, utf8_output_file_full_path, decoder_id, *_encoder_options));
 }
 
 void Job::StartAsync(void)
@@ -81,9 +69,13 @@ void Job::StartAsync(void)
 void Job::StopSync(void)
 {
     progress_lock.Lock();
-    started = false;
-    thread.reset();
+    if(started)
+        started = false;
+    bool _started = started;
     progress_lock.Unlock();
+
+    if(!_started)
+        thread.reset();
 }
 
 bool Job::IsStartedSync(void)
@@ -126,15 +118,16 @@ DWORD Job::DoSync(void *)
     {
         do
         {
+            progress_lock.Lock();
             if(_codec_controller->CanConvert())
                 _codec_controller->Convert();
             else
             {
-                progress_lock.Lock();
                 finished = true;
                 started = false;
-                progress_lock.Unlock();
+                codec_controller.reset();
             }
+            progress_lock.Unlock();
         }while(IsStartedSync());
     }
     catch(Exception &ex)

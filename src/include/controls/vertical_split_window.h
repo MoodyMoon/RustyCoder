@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class VerticalSplitWindow;
 
-class VerticalSplitWindowEventHandler : public EventHandlerInterface
+class VerticalSplitWindowEvent : public EventHandlerInterface
 {
     public:
         enum MinWidthPanel
@@ -55,14 +55,14 @@ class VerticalSplitWindowEventHandler : public EventHandlerInterface
         virtual LRESULT HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     public:
-        VerticalSplitWindowEventHandler() = default;
-        VerticalSplitWindowEventHandler(const VerticalSplitWindowEventHandler &) = delete;
-        VerticalSplitWindowEventHandler & operator=(const VerticalSplitWindowEventHandler &) = delete;
+        VerticalSplitWindowEvent() = default;
+        VerticalSplitWindowEvent(const VerticalSplitWindowEvent &) = delete;
+        VerticalSplitWindowEvent & operator=(const VerticalSplitWindowEvent &) = delete;
 };
 
-class VerticalSplitWindow : public VerticalSplitWindowEventHandler, public Panel
+class VerticalSplitWindow : public VerticalSplitWindowEvent, public Panel
 {
-    friend class VerticalSplitWindowEventHandler;
+    friend class VerticalSplitWindowEvent;
 
     private:
         void UpdatePanelsPositions(void);
@@ -81,6 +81,8 @@ class VerticalSplitWindow : public VerticalSplitWindowEventHandler, public Panel
         void GetSplitterRightRectangle(RECT &rectangle);
         unsigned int GetSplitterLeftWidth(void);
         unsigned int GetSplitterRightWidth(void);
+
+        virtual ~VerticalSplitWindow(void) {}
 };
 
 #endif

@@ -51,6 +51,6 @@ class OpenFileDialog
         bool HasResult(void);
         std::wstring GetFile(unsigned long dwIndex, File flag);
         unsigned long GetResultCount(void);
-        ~OpenFileDialog(void);
+        virtual ~OpenFileDialog(void);
 };
 #endif

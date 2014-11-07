@@ -36,7 +36,6 @@ LRESULT CALLBACK GlobalWindowProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
                 #endif
             }
             return DefWindowProc(hWnd, uMsg, wParam, lParam); /*!< Must return this to to properly setup the window */
-            break;
         }
         default:
         {

@@ -27,6 +27,8 @@ class SingleLineTextBox : public Window
         SingleLineTextBox & operator=(const SingleLineTextBox &) = delete;
 
         SingleLineTextBox(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_VISIBLE | WS_CHILD | ES_AUTOHSCROLL);
+
+        virtual ~SingleLineTextBox(void) {}
 };
 
 #endif

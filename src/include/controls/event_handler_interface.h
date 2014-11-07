@@ -24,8 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class EventHandlerInterface
 {
-    public:
+    protected:
         EventHandlerInterface(void) = default;
+
+    public:
         EventHandlerInterface(const EventHandlerInterface &) = delete;
         EventHandlerInterface & operator=(const EventHandlerInterface &) = delete;
 

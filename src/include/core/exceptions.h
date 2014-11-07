@@ -56,6 +56,8 @@ class Exception : public std::exception
         ID GetExceptionID(void) const noexcept;
         void SetErrorMessage(std::string &message);
         virtual const char * what() const noexcept;
+
+        virtual ~Exception(void) {}
 };
 
 class DecoderConfigurationException : public Exception

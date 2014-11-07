@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_RUSTYCODER_H
 #define GUI_RUSTYCODER_H
 
-#include "MainForm.h"
+#include "main_form.h"
 
 MSG lpMsg;
 

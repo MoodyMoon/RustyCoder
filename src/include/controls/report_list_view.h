@@ -42,6 +42,8 @@ class ReportListView : public Window
 
         unsigned int GetSelectedItemsCount(void);
         int GetNextSelectedItem(int iStart);
+
+        virtual ~ReportListView(void) {}
 };
 
 #endif

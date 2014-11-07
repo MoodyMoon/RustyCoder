@@ -58,7 +58,7 @@
     <ClInclude Include="..\src\include\resources\resource.h" />
     <ClInclude Include="..\src\include\stdafx.h" />
     <ClInclude Include="..\src\include\targetver.h" />
-    <ClInclude Include="..\src\mainform.h" />
+    <ClInclude Include="..\src\main_form.h" />
     <ClInclude Include="..\src\rustycoder.h" />
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +96,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\mainform.cpp" />
+    <ClCompile Include="..\src\main_form.cpp" />
     <ClCompile Include="..\src\rustycoder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -192,7 +192,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>..\obj\$(IntDir)</ObjectFileName>
+      <ObjectFileName>..\obj\$(IntDir)*\%(RelativeDir)\</ObjectFileName>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
@@ -213,7 +213,7 @@
       <PreprocessorDefinitions>WIN32;X64;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>..\obj\$(IntDir)</ObjectFileName>
+      <ObjectFileName>..\obj\$(IntDir)*\%(RelativeDir)\</ObjectFileName>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -237,7 +237,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>..\obj\$(IntDir)</ObjectFileName>
+      <ObjectFileName>..\obj\$(IntDir)*\%(RelativeDir)\</ObjectFileName>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -261,7 +261,7 @@
       <PreprocessorDefinitions>WIN32;X64;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>..\obj\$(IntDir)</ObjectFileName>
+      <ObjectFileName>..\obj\$(IntDir)*\%(RelativeDir)\</ObjectFileName>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>

@@ -57,5 +57,6 @@ void RustyThread::SetBackground(bool background)
 
 RustyThread::~RustyThread(void)
 {
-    METHOD_ASSERT(WaitForSingleObject(thread, INFINITE), != , WAIT_FAILED);
+    METHOD_ASSERT(WaitForSingleObject(thread, INFINITE), !=, WAIT_FAILED);
+    METHOD_ASSERT(CloseHandle(thread), !=, 0);
 }

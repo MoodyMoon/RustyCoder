@@ -23,8 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Job : public RustyThreadCallbackInterface
 {
     private:
-        std::wstring source_file_full_path;
-        std::wstring output_file_full_path;
+        Decoder<void>::ID decoder_id;
 
         std::unique_ptr<EncoderOptions> encoder_options;
         std::unique_ptr<CodecController> codec_controller;

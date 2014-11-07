@@ -3,19 +3,19 @@
 // Used by RustyCoder.rc
 //
 
-#define RUSTYCODER_ICON                   100
-#define MAINFORM_FILE_ADD_FILES           101
-#define MAINFORM_FILE_EXIT                102
-#define MAINFORM_VERTICAL_SPLIT_WINDOW1   103
-#define MAINFORM_PANEL1                   104
-#define MAINFORM_PANEL1_REPORT_LIST_VIEW1 105
-#define MAINFORM_PANEL1_LABEL1            106
-#define MAINFORM_PANEL1_TEXT_BOX1         107
-#define MAINFORM_PANEL1_BUTTON1           108
-#define MAINFORM_PANEL1_BUTTON2           109
-#define MAINFORM_PANEL1_BUTTON3           110
-#define MAINFORM_PANEL1_BUTTON4           111
-#define MAINFORM_PANEL2                   112
+#define RUSTYCODER_ICON                          100
+#define MAINFORM_MENUBAR_FILE_ADDFILES           101
+#define MAINFORM_MENUBAR_FILE_EXIT               102
+#define MAINFORM_VERTICAL_SPLIT_WINDOW1          103
+#define MAINFORM_PANEL1                          104
+#define MAINFORM_PANEL1_JOB_REPORT_LIST_VIEW     105
+#define MAINFORM_PANEL1_LBL_FILE_DESTINATION     106
+#define MAINFORM_PANEL1_SLTXTBX_FILE_DESTINATION 107
+#define MAINFORM_PANEL1_BTN_BROWSE               108
+#define MAINFORM_PANEL1_BTN_LOAD_PROFILE         109
+#define MAINFORM_PANEL1_BTN_CREATE_PROFILE       110
+#define MAINFORM_PANEL1_BTN_CONVERT              111
+#define MAINFORM_PANEL2                          112
 
 // Next default values for new objects
 //

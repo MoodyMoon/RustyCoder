@@ -20,14 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "codec_controller.h"
 
-CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
+CodecController::CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
 {
     encoder_id = Encoder<void>::ID::SNDFILEENCODER;
     PopulateAudioProperties();
     BeforeConvert();
 }
 
-CodecController::CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
+CodecController::CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
 {
     encoder_id = Encoder<void>::ID::LAME;
     PopulateAudioProperties();

@@ -92,9 +92,6 @@
     <ClInclude Include="..\src\include\controls\event_handler_interface.h">
       <Filter>Controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\mainform.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\codecs\rst_lame.h">
       <Filter>Codecs</Filter>
     </ClInclude>
@@ -152,6 +149,9 @@
     <ClInclude Include="..\src\include\controls\timer.h">
       <Filter>Controls</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\main_form.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\include\controls\button.cpp">
@@ -192,9 +192,6 @@
     </ClCompile>
     <ClCompile Include="..\src\include\controls\global_window_procedure.cpp">
       <Filter>Controls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\mainform.cpp">
-      <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\src\include\codecs\rst_lame.cpp">
       <Filter>Codecs</Filter>
@@ -246,6 +243,9 @@
     </ClCompile>
     <ClCompile Include="..\src\include\controls\timer.cpp">
       <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main_form.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

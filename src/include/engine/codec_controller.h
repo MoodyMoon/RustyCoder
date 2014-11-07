@@ -77,7 +77,7 @@ class CodecController
         Encoder<double> *_encoder_double = nullptr;
 
         const unsigned int min_samples_in_buffer = 2520; /*!< least common multiple of 1-9 channels. Current maximum number of channels in a single track as far as I know. */
-        const unsigned int max_samples_in_buffer = min_samples_in_buffer * 20;
+        const unsigned int max_samples_in_buffer = min_samples_in_buffer * 13;
         unsigned int channel_count;
         unsigned int sample_rate;
         uint64_t frame_count;
@@ -93,8 +93,8 @@ class CodecController
         CodecController(const CodecController &) = delete;
         CodecController & operator=(const CodecController &) = delete;
 
-        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
-        CodecController(std::string source_file_full_path, std::string output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
+        CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
+        CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
 
         uint64_t Convert(void);
         unsigned int GetChannelCount(void);

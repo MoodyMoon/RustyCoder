@@ -35,7 +35,7 @@ class OpenFolderDialog
         OpenFolderDialog(HWND hWndParent);
         bool HasResult(void);
         std::wstring GetFolder();
-        ~OpenFolderDialog(void);
+        virtual ~OpenFolderDialog(void);
 };
 
 #endif
