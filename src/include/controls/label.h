@@ -26,7 +26,7 @@ class Label : public Window
         Label(const Label &) = delete;
         Label & operator=(const Label &) = delete;
 
-        Label(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, DWORD dwExStyle = WS_EX_LEFT, DWORD dwStyle = WS_VISIBLE | WS_CHILD | SS_LEFT | SS_LEFTNOWORDWRAP);
+        Label(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_VISIBLE | WS_CHILD | SS_LEFT | SS_LEFTNOWORDWRAP);
 
         virtual ~Label(void) {}
 };

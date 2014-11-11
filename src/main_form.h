@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_MAIN_FORM_H
 #define GUI_MAIN_FORM_H
 
+#include "profile_form.h"
+
 class MainForm : public EventHandlerInterface
 {
     private:
@@ -27,15 +29,14 @@ class MainForm : public EventHandlerInterface
         class VerticalSplitWindow1Events;
         class Panel1Events;
         class JobReportListViewEvents;
+        class BtnLoadProfileEvents;
         class Panel2Events;
         
         HINSTANCE hInstance = nullptr;
 
-        const wchar_t * const class_name = L"RustyCoder";
-
         bool form_loaded = false;
 
-        std::unique_ptr<Window> main_form;
+        std::unique_ptr<Window> window;
         std::unique_ptr<MenuBar> menu_bar;
         std::unique_ptr<MenuBarEvents> menu_bar_events;
         std::unique_ptr<VerticalSplitWindow> vertical_split_window1;
@@ -48,6 +49,7 @@ class MainForm : public EventHandlerInterface
         std::unique_ptr<SingleLineTextBox> sltxtbx_file_destination;
         std::unique_ptr<Button> btn_browse;
         std::unique_ptr<Button> btn_load_profile;
+        std::unique_ptr<BtnLoadProfileEvents> btn_load_profile_events;
         std::unique_ptr<Button> btn_create_profile;
         std::unique_ptr<Button> btn_convert;
         std::unique_ptr<Panel> panel2;
@@ -74,8 +76,8 @@ class MainForm::MenuBarEvents
     private:
         MainForm * const main_form = nullptr;
 
-        void File_AddFiles_OnClick(HWND hWnd);
-        void File_Exit_OnClick(void);
+        void File_AddFiles_OnClicked(void);
+        void File_Exit_OnClicked(void);
 
     public:
         MenuBarEvents(const MenuBarEvents &) = delete;
@@ -122,12 +124,33 @@ class MainForm::JobReportListViewEvents
 
     private:
         MainForm * const main_form = nullptr;
+        std::vector<std::string> source_file_full_paths;
+        std::vector<std::string> output_file_full_paths;
+        std::unique_ptr<ProfileForm> profile_form;
 
     public:
+        void AddJobs(HWND hWnd);
+        void LoadProfile(void);
+
         JobReportListViewEvents(const JobReportListViewEvents &) = delete;
         JobReportListViewEvents & operator=(const JobReportListViewEvents &) = delete;
 
         JobReportListViewEvents(MainForm * const main_form);
+};
+
+class MainForm::BtnLoadProfileEvents
+{
+    friend class Panel1Events;
+
+    private:
+        MainForm * const main_form = nullptr;
+        void OnClicked(void);
+
+    public:
+        BtnLoadProfileEvents(const BtnLoadProfileEvents &) = delete;
+        BtnLoadProfileEvents & operator=(const BtnLoadProfileEvents &) = delete;
+
+        BtnLoadProfileEvents(MainForm * const main_form) : main_form(main_form) {}
 };
 
 class MainForm::Panel2Events : public EventHandlerInterface

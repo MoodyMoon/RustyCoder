@@ -20,46 +20,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "window.h"
 
-Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, int icon_id, int x, int y, int nWidth, int nHeight, int nCmdShow, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor)
+Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, int nCmdShow, int icon_id, int x, int y, int nWidth, int nHeight, bool set_default_cursor) : hInstance(hInstance), lpClassName(lpClassName)
 {
-    //Create main window
-    this->hInstance = hInstance;
-    this->lpClassName = lpClassName;
+    //Create main windows or child windows
+    Window2(icon_id, set_default_cursor);
 
-    Window2(icon_id, set_cursor);
-
-    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, HWND_DESKTOP, nullptr, hInstance, event_handler);
+    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, nullptr, hInstance, event_handler);
     assert(hWnd != nullptr);
 
-    ShowWindow(hWnd, nCmdShow);
+    if(nCmdShow != -1)
+        ShowWindow(hWnd, nCmdShow);
 }
 
-Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int icon_id, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor)
+Window::Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, HMENU hMenu, int icon_id, int x, int y, int nWidth, int nHeight, bool set_default_cursor) : hInstance(hInstance), lpClassName(lpClassName)
 {
-    //Create panel
-    this->hInstance = hInstance;
-    this->lpClassName = lpClassName;
+    //Create panels
+    Window2(icon_id, set_default_cursor);
 
-    Window2(icon_id, set_cursor);
-
-    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, reinterpret_cast<HMENU>(hMenu), hInstance, event_handler);
+    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, event_handler);
     assert(hWnd != nullptr);
 }
 
-Window::Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_default_font)
+Window::Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, HMENU hMenu, int x, int y, int nWidth, int nHeight, bool set_default_font) : hInstance(hInstance), lpClassName(lpClassName)
 {
-    //Create control
-    this->hInstance = hInstance;
-    this->lpClassName = lpClassName;
-
-    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, reinterpret_cast<HMENU>(hMenu), hInstance, nullptr);
+    //Create controls
+    hWnd = CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, nullptr);
     assert(hWnd != nullptr);
 
     if(set_default_font)
         SetFont(GetDefaultFont());
 }
 
-void Window::Window2(int icon_id, bool set_cursor)
+void Window::Window2(int icon_id, bool set_default_cursor)
 {
     WNDCLASSEX wincl;
 
@@ -83,7 +75,7 @@ void Window::Window2(int icon_id, bool set_cursor)
 
     wincl.hCursor = nullptr;
 
-    if(set_cursor)
+    if(set_default_cursor)
     {
         wincl.hCursor = reinterpret_cast<HCURSOR>(LoadImage(nullptr, MAKEINTRESOURCE(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR | LR_SHARED));
         assert(wincl.hCursor != nullptr);
@@ -96,6 +88,7 @@ void Window::Window2(int icon_id, bool set_cursor)
     wincl.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_BTNFACE + 1);
 
     METHOD_ASSERT(RegisterClassEx(&wincl), !=, 0);
+    has_registered_class = true;
 }
 
 HFONT Window::GetDefaultFont(void)
@@ -364,4 +357,7 @@ Window::~Window(void)
 {
     if(IsWindow(hWnd))
         METHOD_ASSERT(DestroyWindow(hWnd), == , TRUE);
+
+    if(has_registered_class)
+        METHOD_ASSERT(UnregisterClass(lpClassName, hInstance), !=, 0);
 }

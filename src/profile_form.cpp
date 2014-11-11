@@ -18,6 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "panel.h"
+#include "profile_form.h"
 
-Panel::Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor) : Window(hInstance, event_handler, lpClassName, nullptr, hWndParent, dwExStyle, dwStyle, reinterpret_cast<HMENU>(hMenu), -1, x, y, nWidth, nHeight, set_cursor) {}
+ProfileForm::ProfileForm(HINSTANCE hInstance, HWND hWndParent, std::unique_ptr<ProfileForm> &me) : hInstance(hInstance), me(&me)
+{
+    window.reset(new Window(hInstance, this, L"ProfileForm", L"Profile", hWndParent, WS_EX_DLGMODALFRAME, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_VISIBLE, -1, -1, CW_USEDEFAULT, CW_USEDEFAULT, 450, 550, true));
+}
+
+LRESULT ProfileForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch(uMsg)
+    {
+        case WM_NCDESTROY:
+            me->reset();
+            break;
+        default:
+            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+    }
+    return 0ull;
+}

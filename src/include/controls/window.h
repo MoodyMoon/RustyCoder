@@ -25,8 +25,10 @@ class Window
     private:
         HINSTANCE hInstance = nullptr;
         
+        bool has_registered_class = false;
         const wchar_t * lpClassName = nullptr;
-        void Window2(int icon_id, bool set_cursor);
+
+        void Window2(int icon_id, bool set_default_cursor);
 
     protected:
         HWND hWnd = nullptr;
@@ -35,9 +37,9 @@ class Window
         Window(const Window &) = delete;
         Window & operator=(const Window &) = delete;
 
-        Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, int icon_id = -1, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int nWidth = CW_USEDEFAULT, int nHeight = CW_USEDEFAULT, int nCmdShow = SW_SHOWDEFAULT, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_OVERLAPPEDWINDOW, bool set_cursor = true);
-        Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int icon_id = -1, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int nWidth = CW_USEDEFAULT, int nHeight = CW_USEDEFAULT, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_OVERLAPPEDWINDOW | WS_CHILD, bool set_cursor = true);
-        Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_default_font);
+        Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, int nCmdShow = -1, int icon_id = -1, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int nWidth = CW_USEDEFAULT, int nHeight = CW_USEDEFAULT, bool set_default_cursor = true);
+        Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, HMENU hMenu, int icon_id = -1, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int nWidth = CW_USEDEFAULT, int nHeight = CW_USEDEFAULT, bool set_default_cursor = true);
+        Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, HMENU hMenu, int x, int y, int nWidth, int nHeight, bool set_default_font);
 
         static HFONT GetDefaultFont(void);
         void SetFont(HFONT hFont, BOOL redraw = FALSE);

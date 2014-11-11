@@ -42,8 +42,8 @@ class Job : public RustyThreadCallbackInterface
         Job(const Job &) = delete;
         Job & operator=(const Job &) = delete;
         
-        Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
-        Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
+        Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
+        Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
 
         void StartAsync(void);
         void StopSync(void);

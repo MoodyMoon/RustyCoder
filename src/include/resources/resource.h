@@ -16,6 +16,7 @@
 #define MAINFORM_PANEL1_BTN_CREATE_PROFILE       110
 #define MAINFORM_PANEL1_BTN_CONVERT              111
 #define MAINFORM_PANEL2                          112
+#define PROFILE_FORM                             113
 
 // Next default values for new objects
 //

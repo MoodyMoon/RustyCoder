@@ -59,6 +59,7 @@
     <ClInclude Include="..\src\include\stdafx.h" />
     <ClInclude Include="..\src\include\targetver.h" />
     <ClInclude Include="..\src\main_form.h" />
+    <ClInclude Include="..\src\profile_form.h" />
     <ClInclude Include="..\src\rustycoder.h" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +98,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\main_form.cpp" />
+    <ClCompile Include="..\src\profile_form.cpp" />
     <ClCompile Include="..\src\rustycoder.cpp" />
   </ItemGroup>
   <ItemGroup>

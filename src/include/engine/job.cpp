@@ -20,18 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "job.h"
 
-Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : decoder_id(decoder_id)
+Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : decoder_id(decoder_id)
 {
     encoder_options.reset(new SndFileEncoderOptions());
     SndFileEncoderOptions *_encoder_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
     _encoder_options->format = options.format;
 
-    std::string utf8_source_file_full_path(WindowsUtilities::UTF8_Encode(source_file_full_path));
-    std::string utf8_output_file_full_path(WindowsUtilities::UTF8_Encode(output_file_full_path));
-    codec_controller.reset(new CodecController(utf8_source_file_full_path, utf8_output_file_full_path, decoder_id, *_encoder_options));
+    codec_controller.reset(new CodecController(source_file_full_path, output_file_full_path, decoder_id, *_encoder_options));
 }
 
-Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : decoder_id(decoder_id)
+Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : decoder_id(decoder_id)
 {
     encoder_options.reset(new LameOptions());
     LameOptions *_encoder_options = static_cast<LameOptions *>(encoder_options.get());
@@ -45,9 +43,7 @@ Job::Job(std::wstring &source_file_full_path, std::wstring &output_file_full_pat
     _encoder_options->min_or_max_bitrate1 = options.min_or_max_bitrate1;
     _encoder_options->min_or_max_bitrate2 = options.min_or_max_bitrate2;
 
-    std::string utf8_source_file_full_path(WindowsUtilities::UTF8_Encode(source_file_full_path));
-    std::string utf8_output_file_full_path(WindowsUtilities::UTF8_Encode(output_file_full_path));
-    codec_controller.reset(new CodecController(utf8_source_file_full_path, utf8_output_file_full_path, decoder_id, *_encoder_options));
+    codec_controller.reset(new CodecController(source_file_full_path, output_file_full_path, decoder_id, *_encoder_options));
 }
 
 void Job::StartAsync(void)

@@ -17,16 +17,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_BUTTON_H
-#define CONTROLS_BUTTON_H
+#ifndef GUI_PROFILE_FORM_H
+#define GUI_PROFILE_FORM_H
 
-class Button : public Window
+class ProfileForm : public EventHandlerInterface
 {
-    public:
-        Button(const Button &) = delete;
-        Button & operator=(const Button &) = delete;
+    private:
+        HINSTANCE hInstance = nullptr;
 
-        Button(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON);
+        std::unique_ptr<Window> window;
+        std::unique_ptr<ProfileForm> *me;
+
+    public:
+        ProfileForm(const ProfileForm &) = delete;
+        ProfileForm & operator=(const ProfileForm &) = delete;
+
+        ProfileForm(HINSTANCE hInstance, HWND hWndParent, std::unique_ptr<ProfileForm> &me);
+
+        virtual LRESULT HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 #endif

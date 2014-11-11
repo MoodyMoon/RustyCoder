@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "vertical_split_window.h"
 
-VerticalSplitWindow::VerticalSplitWindow(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpClassName, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long splitter_position_x, unsigned int min_width, MinWidthPanel panel_set_min_width, DWORD dwExStyle, DWORD dwStyle) : Panel(hInstance, this, hWndParent, lpClassName, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle, false)
+VerticalSplitWindow::VerticalSplitWindow(HINSTANCE hInstance, const wchar_t * const lpClassName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long splitter_position_x, unsigned int min_width, MinWidthPanel panel_set_min_width, unsigned long dwExStyle, unsigned long dwStyle) : Panel(hInstance, this, lpClassName, hWndParent, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle, false)
 {
     assert(nWidth >= 10 && nHeight >= 10);
     assert((splitter_position_x + splitter_width - 1) <= static_cast<unsigned long>(Window::GetClientRight()));
@@ -155,7 +155,7 @@ unsigned int VerticalSplitWindow::GetSplitterRightWidth(void)
     return Window::GetClientRight() - splitter.right;
 }
 
-LRESULT VerticalSplitWindowEvent::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT VerticalSplitWindowEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {

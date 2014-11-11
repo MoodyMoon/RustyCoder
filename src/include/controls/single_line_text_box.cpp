@@ -20,4 +20,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "single_line_text_box.h"
 
-SingleLineTextBox::SingleLineTextBox(HINSTANCE hInstance, HWND hWndParent, const wchar_t * const lpWindowName, int x, int y, int nWidth, int nHeight, int hMenu, DWORD dwExStyle, DWORD dwStyle) : Window(hInstance, L"EDIT", lpWindowName, hWndParent, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle, true) {}
+SingleLineTextBox::SingleLineTextBox(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, L"EDIT", lpWindowName, hWndParent, dwExStyle, dwStyle, reinterpret_cast<HMENU>(hMenu), x, y, nWidth, nHeight, true) {}
