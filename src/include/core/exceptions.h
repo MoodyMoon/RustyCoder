@@ -45,7 +45,7 @@ class Exception : public std::exception
 
     protected:
         Exception(const char * const caller_name, bool has_code, int code, const char * const message, ID exception_id);
-    
+
     public:
         const char * GetCallerName(void) const noexcept;
         void SetCallerName(std::string &caller_name);

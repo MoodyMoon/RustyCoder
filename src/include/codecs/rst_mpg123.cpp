@@ -22,43 +22,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 bool Mpg123LifetimeHandler::init = false;
 
-template<>
 Mpg123<char>::Mpg123(const char * const file, char *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
     Mpg123_2(file, container, container_size, life);
 }
 
-template<>
 Mpg123<unsigned char>::Mpg123(const char * const file, unsigned char *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
     Mpg123_2(file, container, container_size, life);
 }
 
-template<>
 Mpg123<short>::Mpg123(const char * const file, short *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
     Mpg123_2(file, container, container_size, life);
 }
 
-template<>
 Mpg123<unsigned short>::Mpg123(const char * const file, unsigned short *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
     Mpg123_2(file, container, container_size, life);
 }
 
-template<>
 Mpg123<int>::Mpg123(const char * const file, int *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
     Mpg123_2(file, container, container_size, life);
 }
 
-template<>
 Mpg123<unsigned int>::Mpg123(const char * const file, unsigned int *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
     Mpg123_2(file, container, container_size, life);
 }
 
-template<>
 Mpg123<float>::Mpg123(const char * const file, float * container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
     Mpg123_2(file, container, container_size, life);
@@ -234,49 +227,42 @@ uint64_t Mpg123<T>::SeekToFrame(SeekPosition position, int64_t offset)
     return offset;
 }
 
-template<>
 uint64_t Mpg123<char>::ReadFrames()
 {
     ReadFrames2();
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t Mpg123<unsigned char>::ReadFrames()
 {
     ReadFrames2();
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t Mpg123<short>::ReadFrames()
 {
     ReadFrames2();
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t Mpg123<unsigned short>::ReadFrames()
 {
     ReadFrames2();
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t Mpg123<int>::ReadFrames()
 {
     ReadFrames2();
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t Mpg123<unsigned int>::ReadFrames()
 {
     ReadFrames2();
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t Mpg123<float>::ReadFrames()
 {
     ReadFrames2();
@@ -292,7 +278,7 @@ inline void Mpg123<T>::ReadFrames2()
         throw ReadFileException("Mpg123", error, mpg123_plain_strerror(error));
 
     /*!
-    if there are no decoded samples and <tt>error == MPG123_DONE</tt> in rare cases where 
+    if there are no decoded samples and <tt>error == MPG123_DONE</tt> in rare cases where
     <tt>(total number of samples of the entire audio stream % (container_frame_capacity * channel_count)) == 0</tt>
     */
     if(decoded_bytes_count > 0)
@@ -352,7 +338,7 @@ Mpg123<void>::Mpg123(const char * const file, const Mpg123LifetimeHandler &/*lif
     double fval;
 
     error = mpg123_getstate(mh, MPG123_ACCURATE, &val1, &fval);
-    
+
     if(error != MPG123_OK)
         FreeAndThrow(error);
 

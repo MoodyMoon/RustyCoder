@@ -42,7 +42,7 @@ class Mpg123 : public Decoder<T>
 
         void Mpg123_2(const char * const file, T *container, uint64_t container_size, const Mpg123LifetimeHandler &life);
         inline void ReadFrames2(void);
-        
+
         /*!
         \warning \c container_size cannot be bigger than maximum of value \c size_t
         */
@@ -66,7 +66,7 @@ class Mpg123 : public Decoder<T>
         \warning \c container_size must be multiple of the number of audio channels.
         */
         Mpg123(const char * const file, T *container, uint64_t container_size, const Mpg123LifetimeHandler &life);
-        
+
         /*!
         \throw SeekException
         \note Frame offset may not be the same as the number of decoded frames.
@@ -121,7 +121,7 @@ class Mpg123<void> : public Decoder<void>
 };
 
 /*!
-For minimizing the times needed to call \c mpg123_init() and \c mpg123_exit() as mpg123 
+For minimizing the times needed to call \c mpg123_init() and \c mpg123_exit() as mpg123
 documentation has already mentioned to only init and exit once per process. However this class
 does not implement this correctly because it does not prevent another call to \c mpg123_init()
 after \c mpg123_exit() was called in the previous instance.\n

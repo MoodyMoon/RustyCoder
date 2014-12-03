@@ -47,12 +47,12 @@ unsigned long RustyThread::GetId(void)
 
 void RustyThread::SetPriority(Priority priority)
 {
-    METHOD_ASSERT(SetThreadPriority(thread, priority), != , 0);
+    METHOD_ASSERT(SetThreadPriority(thread, priority), !=, 0);
 }
 
 void RustyThread::SetBackground(bool background)
 {
-    METHOD_ASSERT(SetThreadPriority(GetCurrentThread(), background ? THREAD_MODE_BACKGROUND_BEGIN : THREAD_MODE_BACKGROUND_END), != , 0);
+    METHOD_ASSERT(SetThreadPriority(GetCurrentThread(), background ? THREAD_MODE_BACKGROUND_BEGIN : THREAD_MODE_BACKGROUND_END), !=, 0);
 }
 
 RustyThread::~RustyThread(void)

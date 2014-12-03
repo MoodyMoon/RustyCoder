@@ -26,12 +26,13 @@ class MainForm : public EventHandlerInterface
 {
     private:
         class MenuBarEvents;
-        class VerticalSplitWindow1Events;
+        class VerticalSplitWindowEvents;
         class Panel1Events;
         class JobReportListViewEvents;
         class BtnLoadProfileEvents;
+        class BtnCreateProfileEvents;
         class Panel2Events;
-        
+
         HINSTANCE hInstance = nullptr;
 
         bool form_loaded = false;
@@ -39,19 +40,21 @@ class MainForm : public EventHandlerInterface
         std::unique_ptr<Window> window;
         std::unique_ptr<MenuBar> menu_bar;
         std::unique_ptr<MenuBarEvents> menu_bar_events;
-        std::unique_ptr<VerticalSplitWindow> vertical_split_window1;
-        std::unique_ptr<VerticalSplitWindow1Events> vertical_split_window1_events;
+        std::unique_ptr<VerticalSplitWindow> vertical_split_window;
+        std::unique_ptr<VerticalSplitWindowEvents> vertical_split_window_events;
         std::unique_ptr<Panel> panel1;
         std::unique_ptr<Panel1Events> panel1_events;
         std::unique_ptr<ReportListView> job_report_list_view;
         std::unique_ptr<JobReportListViewEvents> job_report_list_view_events;
-        std::unique_ptr<Label> lbl_file_destination;
+        std::unique_ptr<Label> lbl_file_destination_sign;
         std::unique_ptr<SingleLineTextBox> sltxtbx_file_destination;
         std::unique_ptr<Button> btn_browse;
         std::unique_ptr<Button> btn_load_profile;
         std::unique_ptr<BtnLoadProfileEvents> btn_load_profile_events;
         std::unique_ptr<Button> btn_create_profile;
+        std::unique_ptr<BtnCreateProfileEvents> btn_create_profile_events;
         std::unique_ptr<Button> btn_convert;
+
         std::unique_ptr<Panel> panel2;
         std::unique_ptr<Panel2Events> panel2_events;
         std::unique_ptr<Job> job;
@@ -76,17 +79,17 @@ class MainForm::MenuBarEvents
     private:
         MainForm * const main_form = nullptr;
 
-        void File_AddFiles_OnClicked(void);
-        void File_Exit_OnClicked(void);
+        void File_AddFiles_OnClick(void);
+        void File_Exit_OnClick(void);
 
     public:
-        MenuBarEvents(const MenuBarEvents &) = delete;
+        MenuBarEvents(const MenuBar &) = delete;
         MenuBarEvents & operator=(const MenuBarEvents &) = delete;
 
         MenuBarEvents(MainForm * const main_form);
 };
 
-class MainForm::VerticalSplitWindow1Events
+class MainForm::VerticalSplitWindowEvents
 {
     friend class MainForm;
 
@@ -94,17 +97,16 @@ class MainForm::VerticalSplitWindow1Events
         MainForm * const main_form = nullptr;
 
     public:
-        VerticalSplitWindow1Events(const VerticalSplitWindow1Events &) = delete;
-        VerticalSplitWindow1Events & operator=(const VerticalSplitWindow1Events &) = delete;
+        VerticalSplitWindowEvents(const VerticalSplitWindowEvents &) = delete;
+        VerticalSplitWindowEvents & operator=(const VerticalSplitWindowEvents &) = delete;
 
-        VerticalSplitWindow1Events(MainForm * const main_form);
+        VerticalSplitWindowEvents(MainForm * const main_form);
 };
 
 class MainForm::Panel1Events : public EventHandlerInterface
 {
     private:
         MainForm * const main_form = nullptr;
-        bool form_loaded = false;
 
         void OnCreate(HWND hWnd);
         void OnSize(HWND hWnd);
@@ -124,6 +126,7 @@ class MainForm::JobReportListViewEvents
 
     private:
         MainForm * const main_form = nullptr;
+
         std::vector<std::string> source_file_full_paths;
         std::vector<std::string> output_file_full_paths;
         std::unique_ptr<ProfileForm> profile_form;
@@ -144,13 +147,28 @@ class MainForm::BtnLoadProfileEvents
 
     private:
         MainForm * const main_form = nullptr;
-        void OnClicked(void);
 
     public:
         BtnLoadProfileEvents(const BtnLoadProfileEvents &) = delete;
         BtnLoadProfileEvents & operator=(const BtnLoadProfileEvents &) = delete;
 
         BtnLoadProfileEvents(MainForm * const main_form) : main_form(main_form) {}
+};
+
+class MainForm::BtnCreateProfileEvents
+{
+    friend class Panel1Events;
+
+    private:
+        MainForm * const main_form = nullptr;
+
+        void OnClick(void);
+
+    public:
+        BtnCreateProfileEvents(const BtnCreateProfileEvents &) = delete;
+        BtnCreateProfileEvents & operator=(const BtnCreateProfileEvents &) = delete;
+
+        BtnCreateProfileEvents(MainForm * const main_form) : main_form(main_form) {}
 };
 
 class MainForm::Panel2Events : public EventHandlerInterface

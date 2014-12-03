@@ -17,25 +17,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
-#include "rst_lock.h"
+#ifndef CORE_TIMER_H
+#define CORE_TIMER_H
 
-RustyLock::RustyLock()
+class Timer
 {
-    InitializeCriticalSection(&lock);
-}
+    private:
+    HWND hWndParent;
+    unsigned int nIDEvent;
 
-void RustyLock::Lock()
-{
-    EnterCriticalSection(&lock);
-}
+    public:
+    Timer(const Timer &) = delete;
+    Timer & operator=(const Timer &) = delete;
 
-void RustyLock::Unlock()
-{
-    LeaveCriticalSection(&lock);
-}
+    Timer(HWND hWnd, unsigned int nIDEvent, unsigned int uElapse);
+    ~Timer(void);
+};
 
-RustyLock::~RustyLock()
-{
-    DeleteCriticalSection(&lock);
-}
+#endif

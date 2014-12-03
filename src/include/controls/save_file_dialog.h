@@ -24,28 +24,21 @@ class SaveFileDialog
 {
     private:
         IFileSaveDialog *pfd = nullptr;
+        IFileDialogEvents *pfde = nullptr;
+        DWORD dwCookie;
+
         std::wstring output_file_full_path;
         std::wstring output_file_name_extension;
 
         bool got_result = false;
 
     public:
-        enum File
-        {
-            FULL_PATH,
-            NAME_AND_EXTENSION,
-            PATH_AND_NAME,
-            PATH,
-            NAME,
-            EXTENSION
-        };
-
         SaveFileDialog(const SaveFileDialog &) = delete;
         SaveFileDialog & operator=(const SaveFileDialog &) = delete;
 
-        SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes);
+        SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes, FileDialogEvents *events = nullptr);
         bool HasResult(void);
-        std::wstring GetFile(File flag);
+        std::wstring GetFile(RustyFile::File flag);
         virtual ~SaveFileDialog(void);
 };
 

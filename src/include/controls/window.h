@@ -24,7 +24,7 @@ class Window
 {
     private:
         HINSTANCE hInstance = nullptr;
-        
+
         bool has_registered_class = false;
         const wchar_t * lpClassName = nullptr;
 
@@ -34,6 +34,22 @@ class Window
         HWND hWnd = nullptr;
 
     public:
+        enum WindowState
+        {
+            HIDE = SW_HIDE,
+            SHOWNORMAL = SW_SHOWNORMAL,
+            SHOWMINIMIZED = SW_SHOWMINIMIZED,
+            SHOWMAXIMIZED = SW_SHOWMAXIMIZED,
+            SHOWNOACTIVATE = SW_SHOWNOACTIVATE,
+            SHOW = SW_SHOW,
+            MINIMIZE = SW_MINIMIZE,
+            SHOWMINNOACTIVE = SW_SHOWMINNOACTIVE,
+            SHOWNA = SW_SHOWNA,
+            RESTORE = SW_RESTORE,
+            SHOWDEFAULT = SW_SHOWDEFAULT,
+            FORCEMINIMIZE = SW_FORCEMINIMIZE,
+        };
+
         Window(const Window &) = delete;
         Window & operator=(const Window &) = delete;
 
@@ -76,6 +92,9 @@ class Window
         long GetClientWidth(void) const;
         long GetClientHeight(void) const;
 
+        void Show(WindowState state);
+        void Focus(void);
+
         void MoveTo(int x, int y, bool bRepaint = true);
         void ResizeTo(int nWidth, int nHeight, bool bRepaint = true);
         void MoveAndResizeTo(int x, int y, int nWidth, int nHeight, bool bRepaint = true);
@@ -113,6 +132,9 @@ class Window
         static long GetClientBottom(HWND hWnd);
         static long GetClientWidth(HWND hWnd);
         static long GetClientHeight(HWND hWnd);
+
+        static void Show(HWND hWnd, WindowState state);
+        static void Focus(HWND hWnd);
 
         static void MoveTo(HWND hWnd, int x, int y, bool bRepaint = true);
         static void ResizeTo(HWND hWnd, int nWidth, int nHeight, bool bRepaint = true);

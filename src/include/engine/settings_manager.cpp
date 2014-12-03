@@ -29,10 +29,10 @@ void SettingsManager::Read(LameOptions &profile, std::string file_path)
 
     {
         Read(reader, read_magic, file_path);
-        if(!IsEqual(read_magic, valid_magic))
+        if(read_magic != valid_magic)
             CorruptedFileThrow(file_path);
     }
-    
+
     {
         uint32_t settings_specification_revision_number;
         Read(reader, settings_specification_revision_number);
@@ -51,10 +51,10 @@ void SettingsManager::Read(LameOptions &profile, std::string file_path)
             }
         }
     }
-    
+
     {
         Read(reader, read_magic, file_path);
-        if(!IsEqual(read_magic, valid_magic))
+        if(read_magic != valid_magic)
             CorruptedFileThrow(file_path);
     }
 }
@@ -68,7 +68,7 @@ void SettingsManager::Read(SndFileEncoderOptions &profile, std::string file_path
 
     {
         Read(reader, read_magic, file_path);
-        if(!IsEqual(read_magic, valid_magic))
+        if(read_magic != valid_magic)
             CorruptedFileThrow(file_path);
     }
 
@@ -93,7 +93,7 @@ void SettingsManager::Read(SndFileEncoderOptions &profile, std::string file_path
 
     {
         Read(reader, read_magic, file_path);
-        if(!IsEqual(read_magic, valid_magic))
+        if(read_magic != valid_magic)
             CorruptedFileThrow(file_path);
     }
 }
@@ -101,134 +101,64 @@ void SettingsManager::Read(SndFileEncoderOptions &profile, std::string file_path
 void SettingsManager::Rev1Read(LameOptions &profile, FileReader &reader, std::string &file_path)
 {
     {
-        const size_t array_size = 10;
-        uint8_t valid_algorithm_qualities[array_size] = {
-        LameOptions::AlgorithmQuality::Q0,
-        LameOptions::AlgorithmQuality::Q1,
-        LameOptions::AlgorithmQuality::Q2,
-        LameOptions::AlgorithmQuality::Q3,
-        LameOptions::AlgorithmQuality::Q4,
-        LameOptions::AlgorithmQuality::Q5,
-        LameOptions::AlgorithmQuality::Q6,
-        LameOptions::AlgorithmQuality::Q7,
-        LameOptions::AlgorithmQuality::Q8,
-        LameOptions::AlgorithmQuality::Q9};
-
         uint8_t algorithm_quality;
         Read(reader, algorithm_quality);
 
-        size_t element_position = HasElement(algorithm_quality, valid_algorithm_qualities, array_size);
-
-        if(element_position != 0)
-            profile.algorithm_quality = static_cast<LameOptions::AlgorithmQuality>(valid_algorithm_qualities[element_position - 1u]);
-        else
+        if(!profile.SetAlgorithmQuality(algorithm_quality))
             CorruptedFileThrow(file_path);
     }
-    
-    {
-        const size_t array_size = 3;
-        uint8_t valid_modes[array_size] = {
-        LameOptions::Mode::STEREO,
-        LameOptions::Mode::JOINT_STEREO,
-        LameOptions::Mode::MONO};
 
+    {
         uint8_t mode;
         Read(reader, mode);
 
-        size_t element_position = HasElement(mode, valid_modes, array_size);
-
-        if(element_position != 0)
-            profile.mode = static_cast<LameOptions::Mode>(valid_modes[element_position - 1u]);
-        else
+        if(!profile.SetMode(mode))
             CorruptedFileThrow(file_path);
     }
 
     {
-        const size_t array_size = 3;
-        uint8_t valid_replaygain_modes[array_size] = {
-        LameOptions::ReplayGain::NONE,
-        LameOptions::ReplayGain::FAST,
-        LameOptions::ReplayGain::ACCURATE};
-
         uint8_t replaygain_mode;
         Read(reader, replaygain_mode);
 
-        size_t element_position = HasElement(replaygain_mode, valid_replaygain_modes, array_size);
-
-        if(element_position != 0)
-            profile.replaygain_mode = static_cast<LameOptions::ReplayGain>(valid_replaygain_modes[element_position - 1u]);
-        else
+        if(!profile.SetReplayGainMode(replaygain_mode))
             CorruptedFileThrow(file_path);
     }
-    
+
     {
-        Read(reader, profile.copyright, file_path);
-    }
-    
-    {
-        Read(reader, profile.use_naoki_psytune, file_path);
+        bool copyright;
+        Read(reader, copyright, file_path);
+
+        profile.SetCopyright(copyright);
     }
 
     {
-        const size_t array_size = 4;
-        uint8_t valid_bitrate_encodings[array_size] = {
-        LameOptions::BitrateEncoding::CONSTANT,
-        LameOptions::BitrateEncoding::VARIABLE_OLD,
-        LameOptions::BitrateEncoding::VARIABLE_NEW,
-        LameOptions::BitrateEncoding::AVERAGE};
+        bool use_naoki_psytune;
+        Read(reader, use_naoki_psytune, file_path);
 
+        profile.SetUseNaokiPsytune(use_naoki_psytune);
+    }
+
+    {
         uint8_t bitrate_encoding;
         Read(reader, bitrate_encoding);
 
-        size_t element_position = HasElement(bitrate_encoding, valid_bitrate_encodings, array_size);
-
-        if(element_position != 0)
-            profile.bitrate_encoding = static_cast<LameOptions::BitrateEncoding>(valid_bitrate_encodings[element_position - 1u]);
-        else
+        if(!profile.SetBitrateEncoding(bitrate_encoding))
             CorruptedFileThrow(file_path);
     }
-    
+
     {
         float vbr_quality;
         Read(reader, vbr_quality);
 
-        if(vbr_quality >= 0.f && vbr_quality <= 9.999f)
-            profile.vbr_quality = vbr_quality;
-        else
+        if(!profile.SetVbrQuality(vbr_quality))
             CorruptedFileThrow(file_path);
     }
-
-    
-    const size_t array_size = 18;
-    uint16_t valid_bitrates[array_size] = {
-    LameOptions::Bitrate::B_8,
-    LameOptions::Bitrate::B_16,
-    LameOptions::Bitrate::B_24,
-    LameOptions::Bitrate::B_32,
-    LameOptions::Bitrate::B_40,
-    LameOptions::Bitrate::B_48,
-    LameOptions::Bitrate::B_56,
-    LameOptions::Bitrate::B_64,
-    LameOptions::Bitrate::B_80,
-    LameOptions::Bitrate::B_96,
-    LameOptions::Bitrate::B_112,
-    LameOptions::Bitrate::B_128,
-    LameOptions::Bitrate::B_144,
-    LameOptions::Bitrate::B_160,
-    LameOptions::Bitrate::B_192,
-    LameOptions::Bitrate::B_224,
-    LameOptions::Bitrate::B_256,
-    LameOptions::Bitrate::B_320};
 
     {
         uint16_t min_or_max_bitrate1;
         Read(reader, min_or_max_bitrate1);
 
-        size_t element_position = HasElement(min_or_max_bitrate1, valid_bitrates, array_size);
-
-        if(element_position != 0)
-            profile.min_or_max_bitrate1 = static_cast<LameOptions::Bitrate>(valid_bitrates[element_position - 1u]);
-        else
+        if(!profile.SetMinOrMaxBitrate1(min_or_max_bitrate1))
             CorruptedFileThrow(file_path);
     }
 
@@ -236,11 +166,7 @@ void SettingsManager::Rev1Read(LameOptions &profile, FileReader &reader, std::st
         uint16_t min_or_max_bitrate2;
         Read(reader, min_or_max_bitrate2);
 
-        size_t element_position = HasElement(min_or_max_bitrate2, valid_bitrates, array_size);
-
-        if(element_position != 0)
-            profile.min_or_max_bitrate2 = static_cast<LameOptions::Bitrate>(valid_bitrates[element_position - 1u]);
-        else
+        if(!profile.SetMinOrMaxBitrate2(min_or_max_bitrate2))
             CorruptedFileThrow(file_path);
     }
 }
@@ -248,167 +174,16 @@ void SettingsManager::Rev1Read(LameOptions &profile, FileReader &reader, std::st
 void SettingsManager::Rev1Read(SndFileEncoderOptions &profile, FileReader &reader, std::string &file_path)
 {
     {
-        const size_t array_size = 118;
-        uint32_t valid_formats[array_size] = {
-        SndFileEncoderOptions::OutputFormat::WAV_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::WAV_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::WAV_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::WAV_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::WAV_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::WAV_PCM_FLOAT_64,
-        SndFileEncoderOptions::OutputFormat::WAV_ULAW,
-        SndFileEncoderOptions::OutputFormat::WAV_ALAW,
-        SndFileEncoderOptions::OutputFormat::WAV_IMA_ADPACM,
-        SndFileEncoderOptions::OutputFormat::WAV_MS_ADPACM,
-        SndFileEncoderOptions::OutputFormat::WAV_GSM610,
-        SndFileEncoderOptions::OutputFormat::WAV_G721_32_ADPCM,
-
-        SndFileEncoderOptions::OutputFormat::AIFF_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::AIFF_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::AIFF_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::AIFF_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::AIFF_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::AIFF_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::AIFF_PCM_FLOAT_64,
-        SndFileEncoderOptions::OutputFormat::AIFF_ULAW,
-        SndFileEncoderOptions::OutputFormat::AIFF_ALAW,
-        SndFileEncoderOptions::OutputFormat::AIFF_IMA_ADPCM,
-        SndFileEncoderOptions::OutputFormat::AIFF_GSM610,
-        SndFileEncoderOptions::OutputFormat::AIFF_DWVW_12,
-        SndFileEncoderOptions::OutputFormat::AIFF_DWVW_16,
-        SndFileEncoderOptions::OutputFormat::AIFF_DWVW_24,
-
-        SndFileEncoderOptions::OutputFormat::AU_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::AU_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::AU_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::AU_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::AU_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::AU_PCM_FLOAT_64,
-        SndFileEncoderOptions::OutputFormat::AU_ULAW,
-        SndFileEncoderOptions::OutputFormat::AU_ALAW,
-        SndFileEncoderOptions::OutputFormat::AU_G721_32_ADPCM,
-        SndFileEncoderOptions::OutputFormat::AU_G723_24_ADPCM,
-        SndFileEncoderOptions::OutputFormat::AU_G723_40_ADPCM,
-
-        SndFileEncoderOptions::OutputFormat::PAF_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::PAF_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::PAF_PCM_INT_S24,
-
-        SndFileEncoderOptions::OutputFormat::SVX_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::SVX_PCM_INT_S16,
-
-        SndFileEncoderOptions::OutputFormat::NIST_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::NIST_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::NIST_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::NIST_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::NIST_ULAW,
-        SndFileEncoderOptions::OutputFormat::NIST_ALAW,
-
-        SndFileEncoderOptions::OutputFormat::VOC_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::VOC_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::VOC_ULAW,
-        SndFileEncoderOptions::OutputFormat::VOC_ALAW,
-
-        SndFileEncoderOptions::OutputFormat::IRCAM_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::IRCAM_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::IRCAM_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::IRCAM_ULAW,
-        SndFileEncoderOptions::OutputFormat::IRCAM_ALAW,
-
-        SndFileEncoderOptions::OutputFormat::W64_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::W64_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::W64_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::W64_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::W64_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::W64_PCM_FLOAT_64,
-        SndFileEncoderOptions::OutputFormat::W64_ULAW,
-        SndFileEncoderOptions::OutputFormat::W64_ALAW,
-        SndFileEncoderOptions::OutputFormat::W64_IMA_ADPCM,
-        SndFileEncoderOptions::OutputFormat::W64_MS_ADPCM,
-        SndFileEncoderOptions::OutputFormat::W64_GSM610,
-
-        SndFileEncoderOptions::OutputFormat::MAT4_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::MAT4_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::MAT4_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::MAT4_PCM_FLOAT_64,
-
-        SndFileEncoderOptions::OutputFormat::MAT5_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::MAT5_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::MAT5_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::MAT5_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::MAT5_PCM_FLOAT_64,
-
-        SndFileEncoderOptions::OutputFormat::PVF_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::PVF_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::PVF_PCM_INT_S32,
-
-        SndFileEncoderOptions::OutputFormat::XI_DPCM_8,
-        SndFileEncoderOptions::OutputFormat::XI_DPCM_16,
-
-        SndFileEncoderOptions::OutputFormat::HTK_PCM_INT_S16,
-
-        SndFileEncoderOptions::OutputFormat::SDS_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::SDS_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::SDS_PCM_INT_S24,
-
-        SndFileEncoderOptions::OutputFormat::AVR_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::AVR_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::AVR_PCM_INT_S16,
-            
-        SndFileEncoderOptions::OutputFormat::WAVEX_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::WAVEX_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::WAVEX_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::WAVEX_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::WAVEX_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::WAVEX_PCM_FLOAT_64,
-        SndFileEncoderOptions::OutputFormat::WAVEX_ULAW,
-        SndFileEncoderOptions::OutputFormat::WAVEX_ALAW,
-
-        SndFileEncoderOptions::OutputFormat::SD2_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::SD2_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::SD2_PCM_INT_S24,
-
-        SndFileEncoderOptions::OutputFormat::CAF_PCM_INT_S8,
-        SndFileEncoderOptions::OutputFormat::CAF_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::CAF_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::CAF_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::CAF_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::CAF_PCM_FLOAT_64,
-        SndFileEncoderOptions::OutputFormat::CAF_ULAW,
-        SndFileEncoderOptions::OutputFormat::CAF_ALAW,
-
-        SndFileEncoderOptions::OutputFormat::WVE_ALAW,
-
-        SndFileEncoderOptions::OutputFormat::MPC2K_PCM_INT_S16,
-
-        SndFileEncoderOptions::OutputFormat::RF64_PCM_INT_U8,
-        SndFileEncoderOptions::OutputFormat::RF64_PCM_INT_S16,
-        SndFileEncoderOptions::OutputFormat::RF64_PCM_INT_S24,
-        SndFileEncoderOptions::OutputFormat::RF64_PCM_INT_S32,
-        SndFileEncoderOptions::OutputFormat::RF64_PCM_FLOAT_32,
-        SndFileEncoderOptions::OutputFormat::RF64_PCM_FLOAT_64,
-        SndFileEncoderOptions::OutputFormat::RF64_ULAW,
-        SndFileEncoderOptions::OutputFormat::RF64_ALAW};
-
         uint32_t format;
         Read(reader, format);
 
-        size_t element_position = HasElement(format, valid_formats, array_size);
-
-        if(element_position != 0)
-            profile.format = static_cast<SndFileEncoderOptions::OutputFormat>(valid_formats[element_position - 1u]);
-        else
+        if(!profile.SetOutputFormat(format))
             CorruptedFileThrow(file_path);
     }
 }
 
-void SettingsManager::Write(LameOptions &profile, std::string file_path)
+void SettingsManager::Write(const LameOptions &profile, std::string file_path)
 {
-    //Check ALL options for invalid values before ANY writing
-
-    if(profile.vbr_quality < 0.f || profile.vbr_quality > 9.999f)
-        CorruptedFileThrow(file_path);
-
     FileWriter writer(file_path.c_str());
 
     std::string magic("RUSTYCODER-LAME");
@@ -416,7 +191,7 @@ void SettingsManager::Write(LameOptions &profile, std::string file_path)
     {
         Write(writer, magic);
     }
-    
+
     {
         uint32_t settings_specification_revision_number = 1u;
         Write(writer, settings_specification_revision_number);
@@ -438,13 +213,11 @@ void SettingsManager::Write(LameOptions &profile, std::string file_path)
     }
 
     {
-        uint8_t copyright = profile.copyright ? 1u : 0u;
-        Write(writer, copyright);
+        Write(writer, profile.copyright);
     }
 
     {
-        uint8_t use_naoki_psytune = profile.use_naoki_psytune ? 1u : 0u;
-        Write(writer, use_naoki_psytune);
+        Write(writer, profile.use_naoki_psytune);
     }
 
     {
@@ -453,7 +226,8 @@ void SettingsManager::Write(LameOptions &profile, std::string file_path)
     }
 
     {
-        Write(writer, profile.vbr_quality);
+        float vbr_quality = profile.vbr_quality;
+        Write(writer, vbr_quality);
     }
 
     {
@@ -465,13 +239,13 @@ void SettingsManager::Write(LameOptions &profile, std::string file_path)
         uint16_t min_or_max_bitrate2 = static_cast<uint16_t>(profile.min_or_max_bitrate2);
         Write(writer, min_or_max_bitrate2);
     }
-    
+
     {
         Write(writer, magic);
     }
 }
 
-void SettingsManager::Write(SndFileEncoderOptions &profile, std::string file_path)
+void SettingsManager::Write(const SndFileEncoderOptions &profile, std::string file_path)
 {
     //Check ALL options for invalid values before ANY writing
 
@@ -489,7 +263,7 @@ void SettingsManager::Write(SndFileEncoderOptions &profile, std::string file_pat
     }
 
     {
-        uint32_t format = static_cast<uint32_t>(profile.format);
+        uint32_t format = static_cast<uint32_t>(profile.output_format);
         Write(writer, format);
     }
 
@@ -562,7 +336,7 @@ void SettingsManager::Read(FileReader &reader, bool &value, std::string &file_pa
     Read(reader, temp);
     if(temp == 0u)
         value = false;
-    else if(temp == 1)
+    else if(temp == 1u)
         value = true;
     else
     {
@@ -610,62 +384,63 @@ void SettingsManager::Read(FileReader &reader, std::string &value, std::string &
     }
 }
 
-void SettingsManager::Write(FileWriter &writer, int8_t &value)
+void SettingsManager::Write(FileWriter &writer, const int8_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, uint8_t &value)
+void SettingsManager::Write(FileWriter &writer, const uint8_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, int16_t &value)
+void SettingsManager::Write(FileWriter &writer, const int16_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, uint16_t &value)
+void SettingsManager::Write(FileWriter &writer, const uint16_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, int32_t &value)
+void SettingsManager::Write(FileWriter &writer, const int32_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, uint32_t &value)
+void SettingsManager::Write(FileWriter &writer, const uint32_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, int64_t &value)
+void SettingsManager::Write(FileWriter &writer, const int64_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, uint64_t &value)
+void SettingsManager::Write(FileWriter &writer, const uint64_t &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, float &value)
+void SettingsManager::Write(FileWriter &writer, const float &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, double &value)
+void SettingsManager::Write(FileWriter &writer, const double &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    writer.Write(reinterpret_cast<const char *>(&value), sizeof(value));
 }
 
-void SettingsManager::Write(FileWriter &writer, bool &value)
+void SettingsManager::Write(FileWriter &writer, const bool &value)
 {
-    writer.Write(reinterpret_cast<char *>(&value), sizeof(value));
+    uint8_t _value = value ? 1u : 0u;
+    writer.Write(reinterpret_cast<const char *>(&_value), sizeof(_value));
 }
 
-void SettingsManager::Write(FileWriter &writer, std::string &value)
+void SettingsManager::Write(FileWriter &writer, const std::string &value)
 {
     size_t string_length = value.length();
     if(string_length < std::numeric_limits<uint8_t>::max())
@@ -684,154 +459,4 @@ void SettingsManager::Write(FileWriter &writer, std::string &value)
         Write(writer, _string_length);
         writer.Write(value.c_str(), _string_length);
     }
-}
-
-size_t SettingsManager::HasElement(int8_t &value, int8_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(uint8_t &value, uint8_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(int16_t &value, int16_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(uint16_t &value, uint16_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(int32_t &value, int32_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(uint32_t &value, uint32_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(int64_t &value, int64_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(uint64_t &value, uint64_t value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(bool &value, bool value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-size_t SettingsManager::HasElement(std::string &value, std::string value_array[], size_t value_array_size)
-{
-    for(size_t i = 0u; i < value_array_size; ++i)
-    {
-        if(IsEqual(value, value_array[i]))
-            return i + 1u;
-    }
-    return 0u;
-}
-
-bool SettingsManager::IsEqual(int8_t &value1, int8_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(uint8_t &value1, uint8_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(int16_t &value1, int16_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(uint16_t &value1, uint16_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(int32_t &value1, int32_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(uint32_t &value1, uint32_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(int64_t &value1, int64_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(uint64_t &value1, uint64_t &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(bool &value1, bool &value2)
-{
-    return value1 == value2;
-}
-
-bool SettingsManager::IsEqual(std::string &value1, std::string &value2)
-{
-    return value1.compare(value2) == 0;
 }

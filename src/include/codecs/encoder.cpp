@@ -18,24 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "rst_lock.h"
+#include "encoder.h"
 
-RustyLock::RustyLock()
-{
-    InitializeCriticalSection(&lock);
-}
-
-void RustyLock::Lock()
-{
-    EnterCriticalSection(&lock);
-}
-
-void RustyLock::Unlock()
-{
-    LeaveCriticalSection(&lock);
-}
-
-RustyLock::~RustyLock()
-{
-    DeleteCriticalSection(&lock);
-}
+const char * const EncoderOptions::bool_true_text = "True";
+const char * const EncoderOptions::bool_false_text = "False";

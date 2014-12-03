@@ -191,7 +191,23 @@ class SndFileEncoderOptions : public EncoderOptions
             RF64_ALAW = SF_FORMAT_RF64 | SF_FORMAT_ALAW
         };
 
-        OutputFormat format;
+        enum Profile
+        {
+            DEFAULT
+        };
+
+        /*! Output format extensions mapping obtained from command.c  */
+        static const std::map<const OutputFormat, const char *> output_format_to_file_extension;
+
+        static const std::map<const OutputFormat, const char *> output_format_to_text;
+        static const std::map<const char *, const OutputFormat> text_to_output_format;
+
+    public:
+        OutputFormat output_format;
+
+        void LoadDefaultProfile(Profile default_profile);
+
+        bool SetOutputFormat(uint32_t output_format);
 };
 
 /*!

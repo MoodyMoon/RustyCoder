@@ -20,11 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "open_folder_dialog.h"
 
-OpenFolderDialog::OpenFolderDialog(HWND hWndParent)
+OpenFolderDialog::OpenFolderDialog(HWND hWndParent, FileDialogEvents *events)
 {
     assert(hWndParent != nullptr); //owner cannot be null. Dialog must block.
 
     METHOD_ASSERT(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)), >= , 0);
+
+    if(events != nullptr)
+    {
+        events->SetData(this);
+
+        FileDialogEvents *file_dialog_events = events;
+
+        file_dialog_events->QueryInterface(IID_PPV_ARGS(&pfde));
+        file_dialog_events->Release();
+
+        METHOD_ASSERT(pfd->Advise(pfde, &dwCookie), == , S_OK);
+    }
 
     unsigned long flags;
 
@@ -60,5 +72,12 @@ std::wstring OpenFolderDialog::GetFolder()
 
 OpenFolderDialog::~OpenFolderDialog(void)
 {
+    if(pfde != nullptr)
+    {
+        METHOD_ASSERT(pfd->Unadvise(dwCookie), == , S_OK);
+
+        pfde->Release();
+    }
+
     METHOD_ASSERT(pfd->Release(), == , 0ul);
 }

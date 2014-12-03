@@ -17,25 +17,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
-#include "rst_lock.h"
+#ifndef CORE_RST_FILE_H
+#define CORE_RST_FILE_H
 
-RustyLock::RustyLock()
+class RustyFile
 {
-    InitializeCriticalSection(&lock);
-}
+    public:
+    enum File
+    {
+        FULL_PATH,
+        NAME_AND_EXTENSION,
+        PATH_AND_NAME,
+        PATH,
+        NAME,
+        EXTENSION
+    };
 
-void RustyLock::Lock()
-{
-    EnterCriticalSection(&lock);
-}
+    RustyFile() = delete;
+    RustyFile(const RustyFile &) = delete;
+    RustyFile & operator=(const RustyFile &) = delete;
 
-void RustyLock::Unlock()
-{
-    LeaveCriticalSection(&lock);
-}
+    static std::wstring GetFile(std::wstring file_full_path, File flag);
+};
 
-RustyLock::~RustyLock()
-{
-    DeleteCriticalSection(&lock);
-}
+#endif

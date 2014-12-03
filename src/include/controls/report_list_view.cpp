@@ -45,7 +45,7 @@ void ReportListView::GetColumnText(unsigned int index, wchar_t *text, size_t tex
     METHOD_ASSERT(ListView_GetColumn(hWnd, index, &column), ==, TRUE);
 }
 
-void ReportListView::EditColumnText(unsigned int index, const wchar_t *text, size_t text_size)
+void ReportListView::SetColumnText(unsigned int index, const wchar_t *text, size_t text_size)
 {
     LVCOLUMN column;
     column.mask = LVCF_TEXT;
@@ -76,12 +76,14 @@ unsigned int ReportListView::GetRowCount(void)
     return ListView_GetItemCount(hWnd);
 }
 
-void ReportListView::InsertRow(unsigned int index)
+void ReportListView::InsertRow(unsigned int index, const wchar_t *text, size_t text_size)
 {
     LVITEM item;
-    item.mask = 0u;
+    item.mask = LVFIF_TEXT;
     item.iItem = index;
     item.iSubItem = 0;
+    item.pszText = const_cast<wchar_t *>(text);
+    item.cchTextMax = static_cast<int>(text_size);
 
     METHOD_ASSERT(ListView_InsertItem(hWnd, &item), !=, -1);
 }
@@ -92,13 +94,13 @@ void ReportListView::GetCellText(unsigned int column_index, unsigned int row_ind
     item.mask = LVIF_TEXT;
     item.iItem = row_index;
     item.iSubItem = column_index;
-    item.pszText = (*text);
+    item.pszText = *text;
     item.cchTextMax = static_cast<int>(text_size);
 
     METHOD_ASSERT(ListView_GetItem(hWnd, &item), != , -1);
 }
 
-void ReportListView::EditCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text, size_t text_size)
+void ReportListView::SetCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text, size_t text_size)
 {
     LVITEM item;
     item.mask = LVIF_TEXT;

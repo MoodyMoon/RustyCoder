@@ -31,7 +31,7 @@ HMENU MenuBar::CreateSubMenu(const wchar_t * const lpNewItem, HMENU parent_menu)
     HMENU sub_menu;
     sub_menu = CreatePopupMenu();
     assert(sub_menu != nullptr);
-    
+
     HMENU menu;
     if(parent_menu == nullptr)
         menu = root_menu;

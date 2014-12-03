@@ -80,7 +80,7 @@ void Window::Window2(int icon_id, bool set_default_cursor)
         wincl.hCursor = reinterpret_cast<HCURSOR>(LoadImage(nullptr, MAKEINTRESOURCE(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_DEFAULTCOLOR | LR_SHARED));
         assert(wincl.hCursor != nullptr);
     }
-    
+
     wincl.lpszMenuName = nullptr;
     wincl.cbClsExtra = 0;
     wincl.cbWndExtra = 0;
@@ -212,6 +212,16 @@ long Window::GetClientHeight(void) const
     return rectangle.bottom - rectangle.top;
 }
 
+void Window::Show(WindowState state)
+{
+    ShowWindow(hWnd, state);
+}
+
+void Window::Focus()
+{
+    METHOD_ASSERT(SetFocus(hWnd), !=, NULL);
+}
+
 void Window::MoveTo(int x, int y, bool bRepaint)
 {
     RECT rectangle;
@@ -332,6 +342,16 @@ long Window::GetClientHeight(HWND hWnd)
     RECT rectangle;
     METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
     return rectangle.bottom - rectangle.top;
+}
+
+void Window::Show(HWND hWnd, WindowState state)
+{
+    ShowWindow(hWnd, state);
+}
+
+void Window::Focus(HWND hWnd)
+{
+    METHOD_ASSERT(SetFocus(hWnd), != , NULL);
 }
 
 void Window::MoveTo(HWND hWnd, int x, int y, bool bRepaint)

@@ -24,6 +24,9 @@ class OpenFolderDialog
 {
     private:
         IFileOpenDialog *pfd = nullptr;
+        IFileDialogEvents *pfde = nullptr;
+        DWORD dwCookie;
+
         std::wstring output_folder_path;
 
         bool got_result = false;
@@ -32,7 +35,7 @@ class OpenFolderDialog
         OpenFolderDialog(const OpenFolderDialog &) = delete;
         OpenFolderDialog & operator=(const OpenFolderDialog &) = delete;
 
-        OpenFolderDialog(HWND hWndParent);
+        OpenFolderDialog(HWND hWndParent, FileDialogEvents *events = nullptr);
         bool HasResult(void);
         std::wstring GetFolder();
         virtual ~OpenFolderDialog(void);

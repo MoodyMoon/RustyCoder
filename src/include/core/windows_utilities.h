@@ -17,12 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_WIN_UTILS_H
-#define CORE_WIN_UTILS_H
+#ifndef CORE_WINDOWS_UTILITIES_H
+#define CORE_WINDOWS_UTILITIES_H
 
 class WindowsUtilities
 {
     public:
+        WindowsUtilities() = delete;
+        WindowsUtilities(const WindowsUtilities &) = delete;
+        WindowsUtilities & operator=(const WindowsUtilities &) = delete;
+
         static std::string UTF8_Encode(const std::wstring &wstr);
         static std::wstring UTF8_Decode(const std::string &str);
         static std::wstring GetErrorMessage(unsigned int error_code);

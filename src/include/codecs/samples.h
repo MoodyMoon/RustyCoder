@@ -71,7 +71,6 @@ class Sample
       //      DPCM_8,
       //      DPCM_16
       //  };
-      //  
 
       //  /*! This enum must specify container sizes for all sample formats in SampleFormats enum */
       //  enum SuitableSampleContainers

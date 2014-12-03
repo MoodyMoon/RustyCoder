@@ -57,40 +57,18 @@ class SettingsManager
         static void Read(FileReader &reader, bool &value, std::string &file_path);
         static void Read(FileReader &reader, std::string &value, std::string &file_path);
 
-        static void Write(FileWriter &writer, int8_t &value);
-        static void Write(FileWriter &writer, uint8_t &value);
-        static void Write(FileWriter &writer, int16_t &value);
-        static void Write(FileWriter &writer, uint16_t &value);
-        static void Write(FileWriter &writer, int32_t &value);
-        static void Write(FileWriter &writer, uint32_t &value);
-        static void Write(FileWriter &writer, int64_t &value);
-        static void Write(FileWriter &writer, uint64_t &value);
-        static void Write(FileWriter &writer, float &value);
-        static void Write(FileWriter &writer, double &value);
-        static void Write(FileWriter &writer, bool &value);
-        static void Write(FileWriter &writer, std::string &value);
-
-        static size_t HasElement(int8_t &value, int8_t value_array[], size_t value_array_size);
-        static size_t HasElement(uint8_t &value, uint8_t value_array[], size_t value_array_size);
-        static size_t HasElement(int16_t &value, int16_t value_array[], size_t value_array_size);
-        static size_t HasElement(uint16_t &value, uint16_t value_array[], size_t value_array_size);
-        static size_t HasElement(int32_t &value, int32_t value_array[], size_t value_array_size);
-        static size_t HasElement(uint32_t &value, uint32_t value_array[], size_t value_array_size);
-        static size_t HasElement(int64_t &value, int64_t value_array[], size_t value_array_size);
-        static size_t HasElement(uint64_t &value, uint64_t value_array[], size_t value_array_size);
-        static size_t HasElement(bool &value, bool value_array[], size_t value_array_size);
-        static size_t HasElement(std::string &value, std::string value_array[], size_t value_array_size);
-
-        static bool IsEqual(int8_t &value1, int8_t &value2);
-        static bool IsEqual(uint8_t &value1, uint8_t &value2);
-        static bool IsEqual(int16_t &value1, int16_t &value2);
-        static bool IsEqual(uint16_t &value1, uint16_t &value2);
-        static bool IsEqual(int32_t &value1, int32_t &value2);
-        static bool IsEqual(uint32_t &value1, uint32_t &value2);
-        static bool IsEqual(int64_t &value1, int64_t &value2);
-        static bool IsEqual(uint64_t &value1, uint64_t &value2);
-        static bool IsEqual(bool &value1, bool &value2);
-        static bool IsEqual(std::string &value1, std::string &value2);
+        static void Write(FileWriter &writer, const int8_t &value);
+        static void Write(FileWriter &writer, const uint8_t &value);
+        static void Write(FileWriter &writer, const int16_t &value);
+        static void Write(FileWriter &writer, const uint16_t &value);
+        static void Write(FileWriter &writer, const int32_t &value);
+        static void Write(FileWriter &writer, const uint32_t &value);
+        static void Write(FileWriter &writer, const int64_t &value);
+        static void Write(FileWriter &writer, const uint64_t &value);
+        static void Write(FileWriter &writer, const float &value);
+        static void Write(FileWriter &writer, const double &value);
+        static void Write(FileWriter &writer, const bool &value);
+        static void Write(FileWriter &writer, const std::string &value);
 
     public:
         SettingsManager(const SettingsManager &) = delete;
@@ -98,8 +76,8 @@ class SettingsManager
 
         static void Read(LameOptions &profile, std::string file_path);
         static void Read(SndFileEncoderOptions &profile, std::string file_path);
-        static void Write(LameOptions &profile, std::string file_path);
-        static void Write(SndFileEncoderOptions &profile, std::string file_path);
+        static void Write(const LameOptions &profile, std::string file_path);
+        static void Write(const SndFileEncoderOptions &profile, std::string file_path);
 };
 
 #endif

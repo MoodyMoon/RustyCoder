@@ -40,7 +40,7 @@ class FileWriter
         \throw WriteFileException
         */
         FileWriter(const char * const file);
-        
+
         /*!
         Seek to \c position relative to \c offset.
         \param[in] position Refer to \ref SeekPosition.
@@ -49,14 +49,14 @@ class FileWriter
         \throw SeekException
         */
         uint64_t Seek(SeekPosition position, int64_t offset);
-        
+
         /*!
         Get the offset relative to the start of the write position.
         \return offset relative to the start of the write position.
         \throw SeekException
         */
         uint64_t Tell(void);
-        
+
         /*!
         Write some data to the file.
         \param[in] buffer           Valid data to be be written.

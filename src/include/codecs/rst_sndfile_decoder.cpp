@@ -20,25 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_decoder.h"
 
-template<>
 SndFileDecoder<short>::SndFileDecoder(const char * const file, short *container, uint64_t container_size)
 {
     SndFileDecoder2(file, container, container_size);
 }
 
-template<>
 SndFileDecoder<int>::SndFileDecoder(const char * const file, int *container, uint64_t container_size)
 {
     SndFileDecoder2(file, container, container_size);
 }
 
-template<>
 SndFileDecoder<float>::SndFileDecoder(const char * const file, float *container, uint64_t container_size)
 {
     SndFileDecoder2(file, container, container_size);
 }
 
-template<>
 SndFileDecoder<double>::SndFileDecoder(const char * const file, double *container, uint64_t container_size)
 {
     SndFileDecoder2(file, container, container_size);
@@ -65,7 +61,7 @@ void SndFileDecoder<T>::SetFrameBuffer(T *container, uint64_t container_size)
     assert(container != nullptr);
     assert(container_size > 0);
     assert((container_size % (sfinfo.channels * sizeof(T))) == 0);
-    
+
     this->container = container;
     this->container_size = container_size;
     container_frame_capacity = container_size / (sfinfo.channels * sizeof(T));
@@ -103,7 +99,6 @@ uint64_t SndFileDecoder<T>::SeekToFrame(SeekPosition position, int64_t offset)
     return offset;
 }
 
-template<>
 uint64_t SndFileDecoder<short>::ReadFrames()
 {
     container_valid_frame_count = sf_readf_short(sndfile, container, container_frame_capacity);
@@ -113,7 +108,6 @@ uint64_t SndFileDecoder<short>::ReadFrames()
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t SndFileDecoder<int>::ReadFrames()
 {
     container_valid_frame_count = sf_readf_int(sndfile, container, container_frame_capacity);
@@ -123,7 +117,6 @@ uint64_t SndFileDecoder<int>::ReadFrames()
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t SndFileDecoder<float>::ReadFrames()
 {
     container_valid_frame_count = sf_readf_float(sndfile, container, container_frame_capacity);
@@ -133,7 +126,6 @@ uint64_t SndFileDecoder<float>::ReadFrames()
     return container_valid_frame_count;
 }
 
-template<>
 uint64_t SndFileDecoder<double>::ReadFrames()
 {
     container_valid_frame_count = sf_readf_double(sndfile, container, container_frame_capacity);

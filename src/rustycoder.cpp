@@ -36,7 +36,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR
     assert(std::numeric_limits<long long>::max() == 9223372036854775807ll);
     assert(std::numeric_limits<unsigned long long>::max() == 18446744073709551615ull);
     #endif
-    
+
     MainForm mainform(hThisInstance, nCmdShow);
     msg_loop_start();
 }

@@ -20,28 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "job.h"
 
-Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : decoder_id(decoder_id)
+Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : decoder_id(decoder_id), encoder_options(new SndFileEncoderOptions(options))
 {
-    encoder_options.reset(new SndFileEncoderOptions());
     SndFileEncoderOptions *_encoder_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
-    _encoder_options->format = options.format;
 
     codec_controller.reset(new CodecController(source_file_full_path, output_file_full_path, decoder_id, *_encoder_options));
 }
 
-Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : decoder_id(decoder_id)
+Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : decoder_id(decoder_id), encoder_options(new LameOptions(options))
 {
-    encoder_options.reset(new LameOptions());
     LameOptions *_encoder_options = static_cast<LameOptions *>(encoder_options.get());
-    _encoder_options->algorithm_quality = options.algorithm_quality;
-    _encoder_options->mode = options.mode;
-    _encoder_options->replaygain_mode = options.replaygain_mode;
-    _encoder_options->copyright = options.copyright;
-    _encoder_options->use_naoki_psytune = options.use_naoki_psytune;
-    _encoder_options->bitrate_encoding = options.bitrate_encoding;
-    _encoder_options->vbr_quality = options.vbr_quality;
-    _encoder_options->min_or_max_bitrate1 = options.min_or_max_bitrate1;
-    _encoder_options->min_or_max_bitrate2 = options.min_or_max_bitrate2;
 
     codec_controller.reset(new CodecController(source_file_full_path, output_file_full_path, decoder_id, *_encoder_options));
 }

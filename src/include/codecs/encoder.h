@@ -20,16 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_ENCODER_H
 #define CODECS_ENCODER_H
 
-#include "stdafx.h"
-
 class EncoderOptions
 {
     protected:
         EncoderOptions(void) = default;
 
     public:
-        EncoderOptions(const EncoderOptions &) = delete;
-        EncoderOptions & operator=(const EncoderOptions &) = delete;
+        static const char * const bool_true_text;
+        static const char * const bool_false_text;
+
         virtual ~EncoderOptions(void) {};
 };
 
@@ -49,7 +48,7 @@ class Encoder
         Attach the buffer pointer which (may) contain valid audio frames.
         \param[in] container      Pointer to the buffer which contains audio samples.
         \param[in] container_size \c sizeof(container)
-        \warning \c container pointer must not be null. 
+        \warning \c container pointer must not be null.
         \warning \c container_size must > 0.
         \warning \c container_size must be multiple of the number of audio channels.
         */

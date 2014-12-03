@@ -42,7 +42,7 @@ FileReader::FileReader(const char * const file, bool seek_to_end) : file_path(fi
         error_message.append("\".");
         throw SeekException("FileReader", ifs.rdstate(), error_message.c_str());
     }
-    
+
     if(!seek_to_end)
     {
         ifs.seekg(0, std::ifstream::beg);
@@ -85,7 +85,7 @@ uint64_t FileReader::Seek(SeekPosition position, int64_t offset)
         error_message.append("\".");
         throw SeekException("FileReader", ifs.rdstate(), error_message.c_str());
     }
-    
+
     std::streampos pos = ifs.tellg();
     if(ifs.fail())
     {
@@ -94,7 +94,7 @@ uint64_t FileReader::Seek(SeekPosition position, int64_t offset)
         error_message.append("\".");
         throw SeekException("FileReader", ifs.rdstate(), error_message.c_str());
     }
-    
+
     return pos;
 }
 

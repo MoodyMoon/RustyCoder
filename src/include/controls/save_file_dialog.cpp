@@ -20,11 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "save_file_dialog.h"
 
-SaveFileDialog::SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes)
+SaveFileDialog::SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes, FileDialogEvents *events)
 {
     assert(hWndParent != nullptr); //owner cannot be null. Dialog must block.
 
     METHOD_ASSERT(CoCreateInstance(CLSID_FileSaveDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)), >= , 0);
+
+    if(events != nullptr)
+    {
+        events->SetData(this);
+
+        FileDialogEvents *file_dialog_events = events;
+
+        file_dialog_events->QueryInterface(IID_PPV_ARGS(&pfde));
+        file_dialog_events->Release();
+
+        METHOD_ASSERT(pfd->Advise(pfde, &dwCookie), == , S_OK);
+    }
 
     unsigned long flags;
 
@@ -59,78 +71,29 @@ bool SaveFileDialog::HasResult(void)
     return got_result;
 }
 
-std::wstring SaveFileDialog::GetFile(File flag)
+std::wstring SaveFileDialog::GetFile(RustyFile::File flag)
 {
     assert(got_result);
 
-    std::wstring display_name;
-
     switch(flag)
     {
-        case FULL_PATH:
+        case RustyFile::File::FULL_PATH:
             return output_file_full_path;
-        case NAME_AND_EXTENSION:
+        case RustyFile::File::NAME_AND_EXTENSION:
             return output_file_name_extension;
-        case PATH_AND_NAME:
-        {
-            display_name = output_file_full_path;
-            std::wstring display_name2;
-            display_name2 = display_name.substr(0u, display_name.rfind(L'\\') + 1u);
-            std::wstring::size_type pos1 = display_name.rfind(L'\\') + 1u, pos2;
-            display_name = display_name.substr(pos1, display_name.npos - pos1);
-            pos1 = display_name.rfind(L'.');
-            if(pos1 != display_name.npos)
-            {
-                pos2 = display_name.find(L' ', pos1 + 1u);
-                if(pos2 == display_name.npos)
-                    display_name = display_name.substr(0, pos1);
-            }
-            display_name = display_name2.append(display_name);
-            break;
-        }
-        case PATH:
-        {
-            display_name = output_file_full_path;
-            display_name = display_name.substr(0u, display_name.rfind(L'\\') + 1u);
-            break;
-        }
-        case NAME:
-        {
-            display_name = output_file_full_path;
-            std::wstring::size_type pos1 = display_name.rfind(L'\\') + 1u, pos2;
-            display_name = display_name.substr(pos1, display_name.npos - pos1);
-            pos1 = display_name.rfind(L'.');
-            if(pos1 != display_name.npos)
-            {
-                pos2 = display_name.find(L' ', pos1 + 1u);
-                if(pos2 == display_name.npos)
-                    display_name = display_name.substr(0, pos1);
-            }
-            break;
-        }
-        case EXTENSION:
-        {
-            display_name = output_file_full_path;
-            std::wstring::size_type pos1 = display_name.rfind(L'\\') + 1u, pos2;
-            display_name = display_name.substr(pos1, display_name.npos - pos1);
-            pos1 = display_name.rfind(L'.');
-            if(pos1 != display_name.npos)
-            {
-                pos2 = display_name.find(L' ', pos1 + 1u);
-                if(pos2 == display_name.npos)
-                    display_name = display_name.substr(pos1, display_name.npos);
-                else
-                    display_name.clear();
-            }
-            else
-                display_name.clear();
-            break;
-        }
+        default:
+            return RustyFile::GetFile(output_file_full_path, flag);
     }
-    return display_name;
 }
 
 SaveFileDialog::~SaveFileDialog(void)
 {
+    if(pfde != nullptr)
+    {
+        METHOD_ASSERT(pfd->Unadvise(dwCookie), == , S_OK);
+
+        pfde->Release();
+    }
+
     METHOD_ASSERT(pfd->Release(), == , 0ul);
 }

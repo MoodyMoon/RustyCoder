@@ -41,7 +41,7 @@ class Job : public RustyThreadCallbackInterface
     public:
         Job(const Job &) = delete;
         Job & operator=(const Job &) = delete;
-        
+
         Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
         Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
 

@@ -24,7 +24,9 @@ class OpenFileDialog
 {
     private:
         IFileOpenDialog *pfd = nullptr;
+        IFileDialogEvents *pfde = nullptr;
         IShellItemArray *ppenum = nullptr;
+        DWORD dwCookie;
 
         bool got_result = false;
 
@@ -34,23 +36,15 @@ class OpenFileDialog
         void GetFullPath(IShellItem *ppsi, wchar_t **ppszName);
 
     public:
-        enum File
-        {
-            FULL_PATH,
-            NAME_AND_EXTENSION,
-            PATH_AND_NAME,
-            PATH,
-            NAME,
-            EXTENSION
-        };
-
         OpenFileDialog(const OpenFileDialog &) = delete;
         OpenFileDialog & operator=(const OpenFileDialog &) = delete;
 
-        OpenFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes);
+        OpenFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes, bool multi_select, FileDialogEvents *events = nullptr);
         bool HasResult(void);
-        std::wstring GetFile(unsigned long dwIndex, File flag);
+        std::wstring GetFile(RustyFile::File flag);
+        std::wstring GetFile(unsigned long dwIndex, RustyFile::File flag);
         unsigned long GetResultCount(void);
         virtual ~OpenFileDialog(void);
 };
+
 #endif

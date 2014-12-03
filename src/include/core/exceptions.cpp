@@ -28,7 +28,7 @@ Exception::Exception(const char * const caller_name, bool has_code, int code, co
     this->has_code = has_code;
     this->code = code;
     this->message = message;
-    
+
     CreateWhatMessage();
 }
 

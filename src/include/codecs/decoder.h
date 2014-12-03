@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /*!
 Base class for all decoders.
-\note All decoders must implement this class to be of use to higher levels classes. All samples 
+\note All decoders must implement this class to be of use to higher levels classes. All samples
 obtained from all relevant member functions must return samples which are SCALED
 to the value range of its container. This interface assumes char is 8 bits wide, short 16 bits and int 32 bits.
 The word "frame" refers to the a decoded audio frame and not a encoded audio frame like a MPEG frame.

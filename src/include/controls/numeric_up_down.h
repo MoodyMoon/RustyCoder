@@ -17,21 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_TIMER_H
-#define CONTROLS_TIMER_H
+#ifndef CONTROLS_NUMERIC_UP_DOWN_H
+#define CONTROLS_NUMERIC_UP_DOWN_H
 
-class Timer
+class NumericUpDown : public Window
 {
     private:
-        HWND hWndParent;
-        unsigned int nIDEvent;
+        int lower_bound;
+        int upper_bound;
 
     public:
-        Timer(const Timer &) = delete;
-        Timer & operator=(const Timer &) = delete;
+        NumericUpDown(const NumericUpDown &) = delete;
+        NumericUpDown & operator=(const NumericUpDown &) = delete;
 
-        Timer(HWND hWnd, unsigned int nIDEvent, unsigned int uElapse);
-        ~Timer(void);
+        NumericUpDown(HINSTANCE hInstance, HWND hWndParent, int hMenu, HWND hWndBuddy, int lower_bound, int upper_bound, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_NOTHOUSANDS | UDS_SETBUDDYINT | WS_CHILD | WS_VISIBLE);
+
+        int GetPosition(void);
+        int GetLowerBound(void);
+        int GetUpperBound(void);
+        void SetPosition(int value);
 };
 
 #endif

@@ -20,17 +20,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "open_file_dialog.h"
 
-OpenFileDialog::OpenFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes)
+OpenFileDialog::OpenFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes, bool multi_select, FileDialogEvents *events)
 {
     assert(hWndParent != nullptr); //owner cannot be null. Dialog must block.
 
-    METHOD_ASSERT(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)), >=, 0);
+    METHOD_ASSERT(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)), >= , 0);
+
+    if(events != nullptr)
+    {
+        events->SetData(this);
+
+        FileDialogEvents *file_dialog_events = events;
+
+        file_dialog_events->QueryInterface(IID_PPV_ARGS(&pfde));
+        file_dialog_events->Release();
+
+        METHOD_ASSERT(pfd->Advise(pfde, &dwCookie), == , S_OK);
+    }
 
     unsigned long flags;
 
     METHOD_ASSERT(pfd->GetOptions(&flags), >=, 0);
 
-    METHOD_ASSERT(pfd->SetOptions(flags | FOS_FORCEFILESYSTEM | FOS_ALLOWMULTISELECT | FOS_FILEMUSTEXIST | FOS_DONTADDTORECENT), >=, 0);
+    METHOD_ASSERT(pfd->SetOptions(flags | FOS_FORCEFILESYSTEM | (multi_select ? FOS_ALLOWMULTISELECT : 0x0) | FOS_FILEMUSTEXIST | FOS_DONTADDTORECENT), >=, 0);
 
     METHOD_ASSERT(pfd->SetFileTypes(cFileTypes, rgFilterSpec), >= , 0);
 
@@ -46,7 +58,12 @@ bool OpenFileDialog::HasResult(void)
     return got_result;
 }
 
-std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
+std::wstring OpenFileDialog::GetFile(RustyFile::File flag)
+{
+    return GetFile(0ul, flag);
+}
+
+std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, RustyFile::File flag)
 {
     assert(got_result);
 
@@ -58,7 +75,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
 
     switch(flag)
     {
-        case FULL_PATH:
+        case RustyFile::File::FULL_PATH:
         {
             wchar_t *ppszName;
             GetFullPath(ppsi, &ppszName);
@@ -66,7 +83,7 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
             CoTaskMemFree(ppszName);
             break;
         }
-        case NAME_AND_EXTENSION:
+        case RustyFile::File::NAME_AND_EXTENSION:
         {
             wchar_t *ppszName;
             GetFileNameExtension(ppsi, &ppszName);
@@ -74,71 +91,16 @@ std::wstring OpenFileDialog::GetFile(unsigned long dwIndex, File flag)
             CoTaskMemFree(ppszName);
             break;
         }
-        case PATH_AND_NAME:
+        case RustyFile::File::PATH_AND_NAME:
+        case RustyFile::File::PATH:
+        case RustyFile::File::NAME:
+        case RustyFile::File::EXTENSION:
         {
             wchar_t *ppszName;
             GetFullPath(ppsi, &ppszName);
             display_name = ppszName;
             CoTaskMemFree(ppszName);
-            std::wstring display_name2;
-            display_name2 = display_name.substr(0u, display_name.rfind(L'\\') + 1u);
-            std::wstring::size_type pos1 = display_name.rfind(L'\\') + 1u, pos2;
-            display_name = display_name.substr(pos1, display_name.npos - pos1);
-            pos1 = display_name.rfind(L'.');
-            if(pos1 != display_name.npos)
-            {
-                pos2 = display_name.find(L' ', pos1 + 1u);
-                if(pos2 == display_name.npos)
-                    display_name = display_name.substr(0, pos1);
-            }
-            display_name = display_name2.append(display_name);
-            break;
-        }
-        case PATH:
-        {
-            wchar_t *ppszName;
-            GetFullPath(ppsi, &ppszName);
-            display_name = ppszName;
-            CoTaskMemFree(ppszName);
-            display_name = display_name.substr(0u, display_name.rfind(L'\\') + 1u);
-            break;
-        }
-        case NAME:
-        {
-            wchar_t *ppszName;
-            GetFullPath(ppsi, &ppszName);
-            display_name = ppszName;
-            CoTaskMemFree(ppszName);
-            std::wstring::size_type pos1 = display_name.rfind(L'\\') + 1u, pos2;
-            display_name = display_name.substr(pos1, display_name.npos - pos1);
-            pos1 = display_name.rfind(L'.');
-            if(pos1 != display_name.npos)
-            {
-                pos2 = display_name.find(L' ', pos1 + 1u);
-                if(pos2 == display_name.npos)
-                    display_name = display_name.substr(0, pos1);
-            }
-            break;
-        }
-        case EXTENSION:
-        {
-            wchar_t *ppszName;
-            GetFullPath(ppsi, &ppszName);
-            display_name = ppszName;
-            CoTaskMemFree(ppszName);
-            std::wstring::size_type pos1 = display_name.rfind(L'\\') + 1u, pos2;
-            display_name = display_name.substr(pos1, display_name.npos - pos1);
-            pos1 = display_name.rfind(L'.');
-            if(pos1 != display_name.npos)
-            {
-                pos2 = display_name.find(L' ', pos1 + 1u);
-                if(pos2 == display_name.npos)
-                    display_name = display_name.substr(pos1, display_name.npos);
-                else
-                    display_name.clear();
-            }
-            else
-                display_name.clear();
+            display_name = RustyFile::GetFile(display_name, flag);
             break;
         }
     }
@@ -155,14 +117,6 @@ unsigned long OpenFileDialog::GetResultCount(void)
     unsigned long result_count;
     METHOD_ASSERT(ppenum->GetCount(&result_count), == , S_OK);
     return result_count;
-}
-
-OpenFileDialog::~OpenFileDialog(void)
-{
-    if(got_result)
-        ppenum->Release();
-
-    METHOD_ASSERT(pfd->Release(), ==, 0ul);
 }
 
 void OpenFileDialog::GetResult(IShellItem **ppsi, int dwIndex)
@@ -183,4 +137,19 @@ void OpenFileDialog::GetFileNameExtension(IShellItem *ppsi, wchar_t **ppszName)
 void OpenFileDialog::GetFullPath(IShellItem *ppsi, wchar_t **ppszName)
 {
     METHOD_ASSERT(ppsi->GetDisplayName(SIGDN_DESKTOPABSOLUTEEDITING, ppszName), >=, 0);
+}
+
+OpenFileDialog::~OpenFileDialog()
+{
+    if(pfde != nullptr)
+    {
+        METHOD_ASSERT(pfd->Unadvise(dwCookie), ==, S_OK);
+
+        pfde->Release();
+    }
+
+    if(got_result)
+        ppenum->Release();
+
+    METHOD_ASSERT(pfd->Release(), == , 0ul);
 }

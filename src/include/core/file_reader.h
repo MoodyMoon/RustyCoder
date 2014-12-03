@@ -44,12 +44,12 @@ class FileReader
         \throw SeekException
         */
         FileReader(const char * const file, bool seek_to_end);
-        
+
         /*!
         Get the file size in bytes.
         */
         uint64_t GetFileLength(void) const noexcept;
-        
+
         /*!
         Seek to \c position relative to \c offset.
         \param[in] position Refer to \ref SeekPosition.
@@ -58,14 +58,14 @@ class FileReader
         \throw SeekException
         */
         uint64_t Seek(SeekPosition position, int64_t offset);
-        
+
         /*!
         Get the offset relative to the start of the file.
         \return offset relative to the start of the file.
         \throw SeekException
         */
         uint64_t Tell(void);
-        
+
         /*!
         Read some data on the file.
         \param[out] buffer           Valid data read will be filled here.

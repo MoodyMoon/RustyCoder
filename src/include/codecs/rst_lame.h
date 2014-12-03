@@ -107,6 +107,25 @@ class LameOptions : public EncoderOptions
             B_320 = 320
         };
 
+        enum Profile
+        {
+            DEFAULT
+        };
+
+        static const char *output_file_extension;
+
+        static const std::map<const AlgorithmQuality, const char *> algorithm_quality_to_text;
+        static const std::map<const Mode, const char *> mode_to_text;
+        static const std::map<const ReplayGain, const char *> replaygain_mode_to_text;
+        static const std::map<const BitrateEncoding, const char *> bitrate_encoding_to_text;
+        static const std::map<const Bitrate, const char *> bitrate_to_text;
+
+        static const std::map<const char *, const AlgorithmQuality> text_to_algorithm_quality;
+        static const std::map<const char *, const Mode> text_to_mode;
+        static const std::map<const char *, const ReplayGain> text_to_replaygain_mode;
+        static const std::map<const char *, const BitrateEncoding> text_to_bitrate_encoding;
+        static const std::map<const char *, const Bitrate> text_to_bitrate;
+
         AlgorithmQuality algorithm_quality;
         Mode mode;
         ReplayGain replaygain_mode;
@@ -116,6 +135,22 @@ class LameOptions : public EncoderOptions
         float vbr_quality;
         Bitrate min_or_max_bitrate1;
         Bitrate min_or_max_bitrate2;
+
+    private:
+        bool SetMinOrMaxBitrate(uint16_t min_or_max_bitrate, bool one);
+
+    public:
+        void LoadDefaultProfile(Profile default_profile);
+
+        bool SetAlgorithmQuality(uint8_t algorithm_quality);
+        bool SetMode(uint8_t mode);
+        bool SetReplayGainMode(uint8_t replaygain_mode);
+        void SetCopyright(bool copyright);
+        void SetUseNaokiPsytune(bool use_naoki_psytune);
+        bool SetBitrateEncoding(uint8_t bitrate_encoding);
+        bool SetVbrQuality(float vbr_quality);
+        bool SetMinOrMaxBitrate1(uint16_t min_or_max_bitrate1);
+        bool SetMinOrMaxBitrate2(uint16_t min_or_max_bitrate2);
 };
 
 /*!
@@ -131,7 +166,7 @@ class Lame : public Encoder<T>
             ID3V2_TAG,
             XING_FRAME
         };
-    
+
     private:
         lame_t gf = nullptr;
         bool encountered_start_frame = true;
@@ -146,7 +181,7 @@ class Lame : public Encoder<T>
         uint64_t container_size = 0;
         uint64_t container_frame_capacity = 0;
         uint64_t valid_output_frame_count = 0;
-        
+
         void Lame2(const char * const file,
                    int sample_rate,
                    int channel_count,
@@ -172,7 +207,7 @@ class Lame : public Encoder<T>
     public:
         Lame(const Lame &) = delete;
         Lame & operator=(const Lame &) = delete;
-        
+
         /*!
         Initialize lame library.
         \param[in] file                Output file path.
@@ -213,7 +248,7 @@ class Lame : public Encoder<T>
              uint64_t container_size);
 
         virtual const char * const GetFileExtension(void) const noexcept;
-        
+
         /*!
         \throw MemoryAllocationException
         \throw WriteFileException
