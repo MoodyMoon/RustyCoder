@@ -170,6 +170,21 @@
     <ClInclude Include="..\src\include\controls\file_dialog_events.h">
       <Filter>Controls</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\include\codecs\encoder_options.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\codecs\rst_lame_options.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\codecs\rst_sndfile_encoder_options.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\controls\file_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\include\controls\button.cpp">
@@ -265,9 +280,6 @@
     <ClCompile Include="..\src\include\controls\numeric_up_down.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\include\codecs\encoder.cpp">
-      <Filter>Codecs</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\include\core\timer.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -281,6 +293,18 @@
       <Filter>Controls</Filter>
     </ClCompile>
     <ClCompile Include="..\src\include\controls\file_dialog_events.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\codecs\rst_lame_options.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\codecs\rst_sndfile_encoder_options.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\codecs\encoder_options.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\controls\file_dialog.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
   </ItemGroup>

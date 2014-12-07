@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "report_list_view.h"
 
-ReportListView::ReportListView(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool grid_lines, bool sort_column, bool single_select, bool double_buffer, bool full_row_select, bool column_reorder) : Window(hInstance, WC_LISTVIEW, nullptr, hWndParent, dwExStyle, (sort_column ? 0x0 : LVS_NOSORTHEADER) | LVS_REPORT | (single_select ? LVS_SINGLESEL : 0x0) | dwStyle, reinterpret_cast<HMENU>(hMenu), x, y, nWidth, nHeight, false)
+ReportListView::ReportListView(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool grid_lines, bool double_buffer, bool full_row_select, bool column_reorder) : Window(hInstance, WC_LISTVIEW, nullptr, hWndParent, dwExStyle, dwStyle, reinterpret_cast<HMENU>(hMenu), x, y, nWidth, nHeight, false)
 {
     if(double_buffer)
         ListView_SetExtendedListViewStyleEx(hWnd, LVS_EX_DOUBLEBUFFER, LVS_EX_DOUBLEBUFFER);
@@ -35,33 +35,31 @@ ReportListView::ReportListView(HINSTANCE hInstance, HWND hWndParent, int hMenu, 
         ListView_SetExtendedListViewStyleEx(hWnd, LVS_EX_HEADERDRAGDROP, LVS_EX_HEADERDRAGDROP);
 }
 
-void ReportListView::GetColumnText(unsigned int index, wchar_t *text, size_t text_size)
+void ReportListView::GetColumnText(unsigned int index, wchar_t *text_buffer, size_t text_buffer_size)
 {
     LVCOLUMN column;
     column.mask = LVCF_TEXT;
-    column.pszText = text;
-    column.cchTextMax = static_cast<int>(text_size);
+    column.pszText = text_buffer;
+    column.cchTextMax = static_cast<int>(text_buffer_size);
 
     METHOD_ASSERT(ListView_GetColumn(hWnd, index, &column), ==, TRUE);
 }
 
-void ReportListView::SetColumnText(unsigned int index, const wchar_t *text, size_t text_size)
+void ReportListView::SetColumnText(unsigned int index, const wchar_t *text)
 {
     LVCOLUMN column;
     column.mask = LVCF_TEXT;
     column.pszText = const_cast<wchar_t *>(text);
-    column.cchTextMax = static_cast<int>(text_size);
 
     METHOD_ASSERT(ListView_SetColumn(hWnd, index, &column), ==, TRUE);
 }
 
-void ReportListView::InsertColumn(unsigned int column_width, unsigned int index, const wchar_t *text, size_t text_size)
+void ReportListView::InsertColumn(unsigned int column_width, unsigned int index, const wchar_t *text)
 {
     LVCOLUMN column;
     column.mask = LVCF_WIDTH | LVCF_TEXT;
     column.cx = column_width;
     column.pszText = const_cast<wchar_t *>(text);
-    column.cchTextMax = static_cast<int>(text_size);
 
     METHOD_ASSERT(ListView_InsertColumn(hWnd, index, &column), !=, -1);
 }
@@ -76,38 +74,43 @@ unsigned int ReportListView::GetRowCount(void)
     return ListView_GetItemCount(hWnd);
 }
 
-void ReportListView::InsertRow(unsigned int index, const wchar_t *text, size_t text_size)
+void ReportListView::InsertRow(unsigned int index, const wchar_t *text, void *data)
 {
     LVITEM item;
     item.mask = LVFIF_TEXT;
+
+    if(data != nullptr)
+    {
+        item.mask = LVIF_PARAM;
+        item.lParam = reinterpret_cast<LPARAM>(data);
+    }
+
     item.iItem = index;
     item.iSubItem = 0;
     item.pszText = const_cast<wchar_t *>(text);
-    item.cchTextMax = static_cast<int>(text_size);
 
     METHOD_ASSERT(ListView_InsertItem(hWnd, &item), !=, -1);
 }
 
-void ReportListView::GetCellText(unsigned int column_index, unsigned int row_index, wchar_t **text, size_t text_size)
+void ReportListView::GetCellText(unsigned int column_index, unsigned int row_index, wchar_t **text_buffer, size_t text_buffer_size)
 {
     LVITEM item;
     item.mask = LVIF_TEXT;
     item.iItem = row_index;
     item.iSubItem = column_index;
-    item.pszText = *text;
-    item.cchTextMax = static_cast<int>(text_size);
+    item.pszText = *text_buffer;
+    item.cchTextMax = static_cast<int>(text_buffer_size);
 
     METHOD_ASSERT(ListView_GetItem(hWnd, &item), != , -1);
 }
 
-void ReportListView::SetCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text, size_t text_size)
+void ReportListView::SetCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text)
 {
     LVITEM item;
     item.mask = LVIF_TEXT;
     item.iItem = row_index;
     item.iSubItem = column_index;
     item.pszText = const_cast<wchar_t *>(text);
-    item.cchTextMax = static_cast<int>(text_size);
 
     METHOD_ASSERT(ListView_SetItem(hWnd, &item), != , -1);
 }
@@ -129,5 +132,5 @@ unsigned int ReportListView::GetSelectedItemsCount(void)
 
 int ReportListView::GetNextSelectedItem(int iStart)
 {
-    return ListView_GetNextItem(hWnd, iStart, LVNI_ALL);
+    return ListView_GetNextItem(hWnd, iStart, LVNI_FOCUSED | LVNI_SELECTED);
 }

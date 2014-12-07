@@ -87,10 +87,13 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 /** Wrappers for third-party libraries */
 #include "codecs/samples.h"
 #include "codecs/decoder.h"
+#include "codecs/encoder_options.h"
 #include "codecs/encoder.h"
 #include "codecs/rst_mpg123.h"
 #include "codecs/rst_sndfile_decoder.h"
+#include "codecs/rst_sndfile_encoder_options.h"
 #include "codecs/rst_sndfile_encoder.h"
+#include "codecs/rst_lame_options.h"
 #include "codecs/rst_lame.h"
 
 /* RustyCoder engine */
@@ -105,6 +108,7 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "controls/msgbox.h"
 #include "controls/button.h"
 #include "controls/combo_box.h"
+#include "controls/file_dialog.h"
 #include "controls/file_dialog_events.h"
 #include "controls/label.h"
 #include "controls/menubar.h"

@@ -26,22 +26,22 @@ class ReportListView : public Window
         ReportListView(const ReportListView &) = delete;
         ReportListView & operator=(const ReportListView &) = delete;
 
-        ReportListView(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_CHILD | WS_VISIBLE, bool grid_lines = false, bool sort_column = false, bool single_select = false, bool double_buffer = true, bool full_row_select = true, bool column_reorder = false);
+        ReportListView(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE, bool grid_lines = false, bool double_buffer = true, bool full_row_select = true, bool column_reorder = true);
 
-        void GetColumnText(unsigned int index, wchar_t *text, size_t text_size);
-        void SetColumnText(unsigned int index, const wchar_t *text, size_t text_size);
-        void InsertColumn(unsigned int column_width, unsigned int index, const wchar_t *text, size_t text_size);
+        void GetColumnText(unsigned int index, wchar_t *text_buffer, size_t text_buffer_size);
+        void SetColumnText(unsigned int index, const wchar_t *text);
+        void InsertColumn(unsigned int column_width, unsigned int index, const wchar_t *text);
         void RemoveColumn(unsigned int index);
 
         unsigned int GetRowCount(void);
-        void InsertRow(unsigned int index, const wchar_t *text, size_t text_size);
-        void GetCellText(unsigned int column_index, unsigned int row_index, wchar_t **text, size_t text_size);
-        void SetCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text, size_t text_size);
+        void InsertRow(unsigned int index, const wchar_t *text, void *data = nullptr);
+        void GetCellText(unsigned int column_index, unsigned int row_index, wchar_t **text_buffer, size_t text_buffer_size);
+        void SetCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text);
         void RemoveRow(unsigned int index);
         void RemoveAllRows(void);
 
         unsigned int GetSelectedItemsCount(void);
-        int GetNextSelectedItem(int iStart);
+        int GetNextSelectedItem(int iStart = -1);
 
         virtual ~ReportListView(void) {}
 };

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_MAIN_FORM_H
 #define GUI_MAIN_FORM_H
 
+#include "common.h"
 #include "profile_form.h"
 
 class MainForm : public EventHandlerInterface
@@ -58,6 +59,8 @@ class MainForm : public EventHandlerInterface
         std::unique_ptr<Panel> panel2;
         std::unique_ptr<Panel2Events> panel2_events;
         std::unique_ptr<Job> job;
+
+        std::unique_ptr<ProfileForm> profile_form;
 
         void OnCreate(HWND hWnd);
         void OnSize(HWND hWnd, WPARAM wParam);
@@ -129,7 +132,6 @@ class MainForm::JobReportListViewEvents
 
         std::vector<std::string> source_file_full_paths;
         std::vector<std::string> output_file_full_paths;
-        std::unique_ptr<ProfileForm> profile_form;
 
     public:
         void AddJobs(HWND hWnd);

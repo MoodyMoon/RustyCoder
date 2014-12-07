@@ -33,13 +33,14 @@ class ComboBox : public Window
         ComboBox(const ComboBox &) = delete;
         ComboBox & operator=(const ComboBox &) = delete;
 
-        ComboBox(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_HASSTRINGS);
+        ComboBox(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_VSCROLL | WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_HASSTRINGS);
 
-        unsigned int GetItemCount(void);
-        bool IsSelectedItem(void);
         unsigned int GetSelectedItemIndex(void);
-        bool HasItemData(unsigned int index);
         LPARAM GetItemData(unsigned int index);
+        unsigned int GetItemCount(void);
+        std::wstring GetItemText(unsigned int index);
+        bool HasSelectedItems(void);
+        bool HasItemData(unsigned int index);
         void SelectItem(unsigned int index);
         void SelectItem(int start_index, const wchar_t *text);
         void AppendItem(const wchar_t *text);

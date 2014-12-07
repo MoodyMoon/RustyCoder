@@ -243,13 +243,13 @@ void CodecController::BeforeConvert()
             switch(chosen_container_type)
             {
                 case Sample::SampleContainer::INT_S16:
-                    encoder_short.reset(new Lame<short>(output_file_full_path.c_str(), sample_rate, channel_count, options->algorithm_quality, options->mode, options->replaygain_mode, options->copyright, options->use_naoki_psytune, options->bitrate_encoding, options->vbr_quality, options->min_or_max_bitrate1, options->min_or_max_bitrate1, sample_buffer_short.get(), buffer_size_in_bytes));
+                    encoder_short.reset(new Lame<short>(output_file_full_path.c_str(), sample_rate, channel_count, options->algorithm_quality, options->mode, options->replaygain_mode, options->copyright, options->use_naoki_psytune, options->bitrate_encoding, options->GetVbrQuality(), options->min_or_max_bitrate1, options->min_or_max_bitrate1, sample_buffer_short.get(), buffer_size_in_bytes));
                     break;
                 case Sample::SampleContainer::FLOAT_32:
-                    encoder_float.reset(new Lame<float>(output_file_full_path.c_str(), sample_rate, channel_count, options->algorithm_quality, options->mode, options->replaygain_mode, options->copyright, options->use_naoki_psytune, options->bitrate_encoding, options->vbr_quality, options->min_or_max_bitrate1, options->min_or_max_bitrate1, sample_buffer_float.get(), buffer_size_in_bytes));
+                    encoder_float.reset(new Lame<float>(output_file_full_path.c_str(), sample_rate, channel_count, options->algorithm_quality, options->mode, options->replaygain_mode, options->copyright, options->use_naoki_psytune, options->bitrate_encoding, options->GetVbrQuality(), options->min_or_max_bitrate1, options->min_or_max_bitrate1, sample_buffer_float.get(), buffer_size_in_bytes));
                     break;
                 default: /*<! Sample::SampleContainer::FLOAT_64 */
-                    encoder_double.reset(new Lame<double>(output_file_full_path.c_str(), sample_rate, channel_count, options->algorithm_quality, options->mode, options->replaygain_mode, options->copyright, options->use_naoki_psytune, options->bitrate_encoding, options->vbr_quality, options->min_or_max_bitrate1, options->min_or_max_bitrate1, sample_buffer_double.get(), buffer_size_in_bytes));
+                    encoder_double.reset(new Lame<double>(output_file_full_path.c_str(), sample_rate, channel_count, options->algorithm_quality, options->mode, options->replaygain_mode, options->copyright, options->use_naoki_psytune, options->bitrate_encoding, options->GetVbrQuality(), options->min_or_max_bitrate1, options->min_or_max_bitrate1, sample_buffer_double.get(), buffer_size_in_bytes));
             }
         }
     }

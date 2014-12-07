@@ -17,34 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_RST_FILE_H
-#define CORE_RST_FILE_H
+#include "stdafx.h"
+#include "encoder_options.h"
 
-class RustyFile
-{
-    public:
-        enum File
-        {
-            FULL_PATH,
-            NAME_AND_EXTENSION,
-            PATH_AND_NAME,
-            PATH,
-            NAME,
-            EXTENSION
-        };
-
-        enum FileName
-        {
-            NAME_ONLY,
-            EXTENSION_ONLY
-        };
-
-        RustyFile() = delete;
-        RustyFile(const RustyFile &) = delete;
-        RustyFile & operator=(const RustyFile &) = delete;
-
-        static std::wstring GetFile(std::wstring file_full_path, File flag);
-        static std::wstring GetFile(std::wstring file_name, FileName flag);
-};
-
-#endif
+const char *EncoderOptions::bool_true_text = "True";
+const char *EncoderOptions::bool_false_text = "False";

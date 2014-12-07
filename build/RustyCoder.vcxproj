@@ -19,16 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\common.h" />
     <ClInclude Include="..\src\include\codecs\decoder.h" />
     <ClInclude Include="..\src\include\codecs\encoder.h" />
+    <ClInclude Include="..\src\include\codecs\encoder_options.h" />
     <ClInclude Include="..\src\include\codecs\rst_lame.h" />
+    <ClInclude Include="..\src\include\codecs\rst_lame_options.h" />
     <ClInclude Include="..\src\include\codecs\rst_mpg123.h" />
     <ClInclude Include="..\src\include\codecs\rst_sndfile_decoder.h" />
     <ClInclude Include="..\src\include\codecs\rst_sndfile_encoder.h" />
+    <ClInclude Include="..\src\include\codecs\rst_sndfile_encoder_options.h" />
     <ClInclude Include="..\src\include\codecs\samples.h" />
     <ClInclude Include="..\src\include\controls\button.h" />
     <ClInclude Include="..\src\include\controls\combo_box.h" />
     <ClInclude Include="..\src\include\controls\event_handler_interface.h" />
+    <ClInclude Include="..\src\include\controls\file_dialog.h" />
     <ClInclude Include="..\src\include\controls\file_dialog_events.h" />
     <ClInclude Include="..\src\include\controls\global_window_procedure.h" />
     <ClInclude Include="..\src\include\controls\label.h" />
@@ -68,14 +73,17 @@
     <ClInclude Include="..\src\rustycoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\include\codecs\encoder.cpp" />
+    <ClCompile Include="..\src\include\codecs\encoder_options.cpp" />
     <ClCompile Include="..\src\include\codecs\rst_lame.cpp" />
+    <ClCompile Include="..\src\include\codecs\rst_lame_options.cpp" />
     <ClCompile Include="..\src\include\codecs\rst_mpg123.cpp" />
     <ClCompile Include="..\src\include\codecs\rst_sndfile_decoder.cpp" />
     <ClCompile Include="..\src\include\codecs\rst_sndfile_encoder.cpp" />
+    <ClCompile Include="..\src\include\codecs\rst_sndfile_encoder_options.cpp" />
     <ClCompile Include="..\src\include\codecs\samples.cpp" />
     <ClCompile Include="..\src\include\controls\button.cpp" />
     <ClCompile Include="..\src\include\controls\combo_box.cpp" />
+    <ClCompile Include="..\src\include\controls\file_dialog.cpp" />
     <ClCompile Include="..\src\include\controls\file_dialog_events.cpp" />
     <ClCompile Include="..\src\include\controls\global_window_procedure.cpp" />
     <ClCompile Include="..\src\include\controls\label.cpp" />

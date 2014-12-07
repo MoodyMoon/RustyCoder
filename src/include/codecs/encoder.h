@@ -20,18 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_ENCODER_H
 #define CODECS_ENCODER_H
 
-class EncoderOptions
-{
-    protected:
-        EncoderOptions(void) = default;
-
-    public:
-        static const char * const bool_true_text;
-        static const char * const bool_false_text;
-
-        virtual ~EncoderOptions(void) {};
-};
-
 /*!
 Base class for all encoders.
 \note All encoders must implement this class to be of use to higher levels classes. All samples

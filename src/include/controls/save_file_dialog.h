@@ -28,7 +28,7 @@ class SaveFileDialog
         DWORD dwCookie;
 
         std::wstring output_file_full_path;
-        std::wstring output_file_name_extension;
+        unsigned int selected_file_type_index;
 
         bool got_result = false;
 
@@ -37,8 +37,12 @@ class SaveFileDialog
         SaveFileDialog & operator=(const SaveFileDialog &) = delete;
 
         SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes, FileDialogEvents *events = nullptr);
+
         bool HasResult(void);
+
         std::wstring GetFile(RustyFile::File flag);
+        unsigned int GetSelectedFileTypeIndex(void);
+
         virtual ~SaveFileDialog(void);
 };
 

@@ -53,7 +53,7 @@ class FileDialogEvents : public IFileDialogEvents, public IFileDialogControlEven
         virtual IFACEMETHODIMP QueryInterface(REFIID riid, void** ppv);
         virtual IFACEMETHODIMP_(ULONG) Release(void);
 
-        ~FileDialogEvents();
+        virtual ~FileDialogEvents();
 };
 
 #endif

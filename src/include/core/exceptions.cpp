@@ -99,6 +99,9 @@ DecoderConfigurationException::DecoderConfigurationException(const char * const 
 EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::ENCODER_CONFIGURATION_EXCEPTION) {}
 EncoderConfigurationException::EncoderConfigurationException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::ENCODER_CONFIGURATION_EXCEPTION) {}
 
+InvalidArgumentException::InvalidArgumentException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::INVALID_ARGUMENT_EXCEPTION) {}
+InvalidArgumentException::InvalidArgumentException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::INVALID_ARGUMENT_EXCEPTION) {}
+
 MemoryAllocationException::MemoryAllocationException(const char * const caller_name) : Exception(caller_name, false, 0, message, Exception::ID::MEMORY_ALLOCATION_EXCEPTION) {}
 
 SeekException::SeekException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::SEEK_EXCEPTION) {}

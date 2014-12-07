@@ -18,7 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "encoder.h"
+#include "file_dialog.h"
 
-const char * const EncoderOptions::bool_true_text = "True";
-const char * const EncoderOptions::bool_false_text = "False";
+unsigned int FileDialog::GetSelectedFileTypeIndex(IFileDialog *save_file_dialog)
+{
+    unsigned int selected_file_type_index;
+
+    METHOD_ASSERT(save_file_dialog->GetFileTypeIndex(&selected_file_type_index), == , S_OK);
+
+    return selected_file_type_index - 1u;
+}

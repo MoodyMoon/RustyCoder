@@ -104,24 +104,21 @@ void SettingsManager::Rev1Read(LameOptions &profile, FileReader &reader, std::st
         uint8_t algorithm_quality;
         Read(reader, algorithm_quality);
 
-        if(!profile.SetAlgorithmQuality(algorithm_quality))
-            CorruptedFileThrow(file_path);
+        profile.SetAlgorithmQuality(algorithm_quality);
     }
 
     {
         uint8_t mode;
         Read(reader, mode);
 
-        if(!profile.SetMode(mode))
-            CorruptedFileThrow(file_path);
+        profile.SetMode(mode);
     }
 
     {
         uint8_t replaygain_mode;
         Read(reader, replaygain_mode);
 
-        if(!profile.SetReplayGainMode(replaygain_mode))
-            CorruptedFileThrow(file_path);
+        profile.SetReplayGainMode(replaygain_mode);
     }
 
     {
@@ -142,43 +139,38 @@ void SettingsManager::Rev1Read(LameOptions &profile, FileReader &reader, std::st
         uint8_t bitrate_encoding;
         Read(reader, bitrate_encoding);
 
-        if(!profile.SetBitrateEncoding(bitrate_encoding))
-            CorruptedFileThrow(file_path);
+        profile.SetBitrateEncoding(bitrate_encoding);
     }
 
     {
         float vbr_quality;
         Read(reader, vbr_quality);
 
-        if(!profile.SetVbrQuality(vbr_quality))
-            CorruptedFileThrow(file_path);
+        profile.SetVbrQuality(vbr_quality);
     }
 
     {
         uint16_t min_or_max_bitrate1;
         Read(reader, min_or_max_bitrate1);
 
-        if(!profile.SetMinOrMaxBitrate1(min_or_max_bitrate1))
-            CorruptedFileThrow(file_path);
+        profile.SetMinOrMaxBitrate1(min_or_max_bitrate1);
     }
 
     {
         uint16_t min_or_max_bitrate2;
         Read(reader, min_or_max_bitrate2);
 
-        if(!profile.SetMinOrMaxBitrate2(min_or_max_bitrate2))
-            CorruptedFileThrow(file_path);
+        profile.SetMinOrMaxBitrate2(min_or_max_bitrate2);
     }
 }
 
-void SettingsManager::Rev1Read(SndFileEncoderOptions &profile, FileReader &reader, std::string &file_path)
+void SettingsManager::Rev1Read(SndFileEncoderOptions &profile, FileReader &reader, std::string &/**/)
 {
     {
         uint32_t format;
         Read(reader, format);
 
-        if(!profile.SetOutputFormat(format))
-            CorruptedFileThrow(file_path);
+        profile.SetOutputFormat(format);
     }
 }
 
@@ -226,7 +218,7 @@ void SettingsManager::Write(const LameOptions &profile, std::string file_path)
     }
 
     {
-        float vbr_quality = profile.vbr_quality;
+        float vbr_quality = profile.GetVbrQuality();
         Write(writer, vbr_quality);
     }
 

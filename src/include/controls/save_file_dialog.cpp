@@ -58,9 +58,7 @@ SaveFileDialog::SaveFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const 
         output_file_full_path = ppszName;
         CoTaskMemFree(ppszName);
 
-        METHOD_ASSERT(ppsi->GetDisplayName(SIGDN_NORMALDISPLAY, &ppszName), >=, 0);
-        output_file_name_extension = ppszName;
-        CoTaskMemFree(ppszName);
+        selected_file_type_index = FileDialog::GetSelectedFileTypeIndex(pfd);
 
         METHOD_ASSERT(ppsi->Release(), == , 1ul);
     }
@@ -75,15 +73,12 @@ std::wstring SaveFileDialog::GetFile(RustyFile::File flag)
 {
     assert(got_result);
 
-    switch(flag)
-    {
-        case RustyFile::File::FULL_PATH:
-            return output_file_full_path;
-        case RustyFile::File::NAME_AND_EXTENSION:
-            return output_file_name_extension;
-        default:
-            return RustyFile::GetFile(output_file_full_path, flag);
-    }
+    return RustyFile::GetFile(output_file_full_path, flag);
+}
+
+unsigned int SaveFileDialog::GetSelectedFileTypeIndex()
+{
+    return selected_file_type_index;
 }
 
 SaveFileDialog::~SaveFileDialog(void)

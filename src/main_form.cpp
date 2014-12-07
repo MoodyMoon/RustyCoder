@@ -98,12 +98,12 @@ MainForm::VerticalSplitWindowEvents::VerticalSplitWindowEvents(MainForm * const 
 
 void MainForm::Panel1Events::OnCreate(HWND hWnd)
 {
-    main_form->job_report_list_view.reset(new ReportListView(main_form->hInstance, hWnd, MAINFORM_PANEL1_JOB_REPORT_LIST_VIEW, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 70, WS_EX_LEFT, WS_BORDER | WS_CHILD | WS_VISIBLE));
+    main_form->job_report_list_view.reset(new ReportListView(main_form->hInstance, hWnd, MAINFORM_PANEL1_JOB_REPORT_LIST_VIEW, 0, 0, Window::GetClientWidth(hWnd), Window::GetClientHeight(hWnd) - 70, WS_EX_LEFT, LVS_REPORT | WS_CHILD | WS_VISIBLE));
     main_form->job_report_list_view_events.reset(new JobReportListViewEvents(main_form));
 
     main_form->lbl_file_destination_sign.reset(new Label(main_form->hInstance, L"File destination", hWnd, MAINFORM_PANEL1_LBL_FILE_DESTINATION_SIGN, 5, Window::GetClientHeight(hWnd) - 57, 83, 18, 0ul, WS_VISIBLE | WS_CHILD | SS_LEFT | SS_LEFTNOWORDWRAP));
 
-    main_form->sltxtbx_file_destination.reset(new SingleLineTextBox(main_form->hInstance, nullptr, hWnd, 110, Window::GetClientHeight(hWnd) - 60, Window::GetClientWidth(hWnd) - 145, 22, MAINFORM_PANEL1_SLTXTBX_FILE_DESTINATION, WS_EX_CLIENTEDGE));
+    main_form->sltxtbx_file_destination.reset(new SingleLineTextBox(main_form->hInstance, nullptr, hWnd, 110, Window::GetClientHeight(hWnd) - 60, Window::GetClientWidth(hWnd) - 145, 22, MAINFORM_PANEL1_SLTXTBX_FILE_DESTINATION));
 
     main_form->btn_browse.reset(new Button(main_form->hInstance, L"...", hWnd, MAINFORM_PANEL1_BTN_BROWSE, Window::GetClientWidth(hWnd) - 30, Window::GetClientHeight(hWnd) - 60, 30, 22));
 
@@ -136,47 +136,24 @@ void MainForm::Panel1Events::OnSize(HWND hWnd)
 MainForm::JobReportListViewEvents::JobReportListViewEvents(MainForm * const main_form) : main_form(main_form)
 {
     std::wstring text(L"File name");
-    main_form->job_report_list_view->InsertColumn(250u, 0u, text.c_str(), text.length() + 1);
+    main_form->job_report_list_view->InsertColumn(250u, 0u, text.c_str());
 
     text = L"Output format";
-    main_form->job_report_list_view->InsertColumn(50u, 1u, text.c_str(), text.length() + 1);
+    main_form->job_report_list_view->InsertColumn(50u, 1u, text.c_str());
 
     text = L"Profile";
-    main_form->job_report_list_view->InsertColumn(100u, 2u, text.c_str(), text.length() + 1);
+    main_form->job_report_list_view->InsertColumn(100u, 2u, text.c_str());
 
     text = L"Status";
-    main_form->job_report_list_view->InsertColumn(100u, 3u, text.c_str(), text.length() + 1);
+    main_form->job_report_list_view->InsertColumn(100u, 3u, text.c_str());
 
     text = L"Save to";
-    main_form->job_report_list_view->InsertColumn(150u, 4u, text.c_str(), text.length() + 1);
+    main_form->job_report_list_view->InsertColumn(150u, 4u, text.c_str());
 }
 
 void MainForm::JobReportListViewEvents::AddJobs(HWND hWnd)
 {
-    COMDLG_FILTERSPEC filters[] = {{L"Audio Interchange File Format", L"*.aiff;*.aif;*.aifc"},
-                                   {L"Akai MPC 2000 Format", L"*.ampc"},
-                                   {L"Sun Microsystem Audio Format", L"*.au"},
-                                   {L"Audio Visual Research Format", L"*.avr"},
-                                   {L"Apple Core Audio File", L"*.caf"},
-                                   {L"Hidden Markov Model Toolkit Speech Recognition Format", L"*.htk"},
-                                   {L"Amiga Audio Format", L"*.iff"},
-                                   {L"GNU Octave File / Matlab File", L"*.mat"},
-                                   {L"MPEG Audio Layer I", L"*.mp1"},
-                                   {L"MPEG Audio Layer II", L"*.mp2"},
-                                   {L"MPEG Audio Layer III", L"*.mp3"},
-                                   {L"Ensoniq PARIS Audio Format", L"*.paf"},
-                                   {L"Portable Voice Format", L"*.pvf"},
-                                   {L"RIFF 64", L"*.rf64"},
-                                   {L"MIDI Sample Dump Standard Format", L"*.sds"},
-                                   {L"Sound Designer II Audio File", L"*.sd2"},
-                                   {L"Berkeley IRCAM CARL Sound File", L"*.sf"},
-                                   {L"Creative Labs Audio Format", L"*.voc"},
-                                   {L"WAV", L"*.wav"},
-                                   {L"Psion Series 3 Audio Format", L"*.wve"},
-                                   {L"SoundFoundry WAVE 64", L"*.w64"},
-                                   {L"FastTracker's Extended Instrument", L"*.xi"}};
-
-    OpenFileDialog ofd(hWnd, filters, sizeof(filters) / sizeof(COMDLG_FILTERSPEC), true);
+    OpenFileDialog ofd(hWnd, input_format_filters, sizeof(input_format_filters) / sizeof(COMDLG_FILTERSPEC), true);
 
     if(ofd.HasResult())
     {
@@ -194,19 +171,19 @@ void MainForm::JobReportListViewEvents::AddJobs(HWND hWnd)
 
             source_file_name = ofd.GetFile(i, RustyFile::File::NAME_AND_EXTENSION);
 
-            main_form->job_report_list_view->InsertRow(job_report_list_view_item_index, source_file_name.c_str(), source_file_name.length() + 1u);
+            main_form->job_report_list_view->InsertRow(job_report_list_view_item_index, source_file_name.c_str());
         }
     }
 }
 
-void MainForm::JobReportListViewEvents::LoadProfile(void)
+void MainForm::JobReportListViewEvents::LoadProfile()
 {
-    profile_form.reset(new ProfileForm(main_form->hInstance, main_form->panel1->GetHandle(), profile_form));
+
 }
 
 void MainForm::BtnCreateProfileEvents::OnClick()
 {
-    main_form->job_report_list_view_events->LoadProfile();
+    main_form->profile_form.reset(new ProfileForm(main_form->hInstance, main_form->panel1->GetHandle(), main_form->profile_form));
 }
 
 LRESULT MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

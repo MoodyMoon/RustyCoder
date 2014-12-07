@@ -101,6 +101,9 @@ class Window
 
         HWND GetHandle(void);
 
+        void GetText(wchar_t *text_buffer, unsigned int text_buffer_size);
+        void SetText(const wchar_t *lpString);
+
         static void GetWindowRectangle(HWND hWnd, RECT &rectangle);
         static void GetClientRectangle(HWND hWnd, RECT &rectangle);
         static long GetWindowLeft(HWND hWnd);
@@ -139,6 +142,9 @@ class Window
         static void MoveTo(HWND hWnd, int x, int y, bool bRepaint = true);
         static void ResizeTo(HWND hWnd, int nWidth, int nHeight, bool bRepaint = true);
         static void MoveAndResizeTo(HWND hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint = true);
+
+        static void GetText(HWND hWnd, wchar_t *text_buffer, unsigned int text_buffer_size);
+        static void SetText(HWND hWnd, const wchar_t *lpString);
 
         virtual ~Window(void);
 };

@@ -22,31 +22,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ComboBox::ComboBox(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, WC_COMBOBOX, nullptr, hWndParent, dwExStyle, dwStyle | combo_box_type, reinterpret_cast<HMENU>(hMenu), x, y, nWidth, Window::GetClientBottom(hWndParent) - x, true) {}
 
-unsigned int ComboBox::GetItemCount(void)
-{
-    return ComboBox_GetCount(hWnd);
-}
-
-bool ComboBox::IsSelectedItem(void)
-{
-    return ComboBox_GetCurSel(hWnd) != CB_ERR;
-}
-
 unsigned int ComboBox::GetSelectedItemIndex(void)
 {
     assert(ComboBox_GetCurSel(hWnd) != CB_ERR);
     return ComboBox_GetCurSel(hWnd);
 }
 
-bool ComboBox::HasItemData(unsigned int index)
-{
-    return ComboBox_GetItemData(hWnd, index) != CB_ERR;
-}
-
 LPARAM ComboBox::GetItemData(unsigned int index)
 {
     assert(ComboBox_GetItemData(hWnd, index) != CB_ERR);
     return ComboBox_GetItemData(hWnd, index);
+}
+
+unsigned int ComboBox::GetItemCount(void)
+{
+    return ComboBox_GetCount(hWnd);
+}
+
+std::wstring ComboBox::GetItemText(unsigned int index)
+{
+    std::unique_ptr<wchar_t> item_text;
+
+    int item_text_length = ComboBox_GetLBTextLen(hWnd, index);
+
+    assert(item_text_length != CB_ERR);
+
+    item_text.reset(new wchar_t[item_text_length + 1]);
+
+    METHOD_ASSERT(ComboBox_GetLBText(hWnd, index, item_text.get()), !=, CB_ERR);
+
+    return item_text.get();
+}
+
+bool ComboBox::HasSelectedItems(void)
+{
+    return ComboBox_GetCurSel(hWnd) != CB_ERR;
+}
+
+bool ComboBox::HasItemData(unsigned int index)
+{
+    return ComboBox_GetItemData(hWnd, index) != CB_ERR;
 }
 
 void ComboBox::SelectItem(unsigned int index)

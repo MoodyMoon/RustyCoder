@@ -246,6 +246,16 @@ HWND Window::GetHandle(void)
     return hWnd;
 }
 
+void Window::GetText(wchar_t *text_buffer, unsigned int text_buffer_size)
+{
+    METHOD_ASSERT(GetWindowText(hWnd, text_buffer, text_buffer_size), >, 0);
+}
+
+void Window::SetText(const wchar_t *lpString)
+{
+    METHOD_ASSERT(SetWindowText(hWnd, lpString), != , 0);
+}
+
 void Window::GetWindowRectangle(HWND hWnd, RECT &rectangle)
 {
     HWND parent = GetAncestor(hWnd, GA_PARENT);
@@ -371,6 +381,16 @@ void Window::ResizeTo(HWND hWnd, int nWidth, int nHeight, bool bRepaint)
 void Window::MoveAndResizeTo(HWND hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint)
 {
     METHOD_ASSERT(MoveWindow(hWnd, x, y, nWidth, nHeight, bRepaint ? TRUE : FALSE), !=, 0);
+}
+
+void Window::GetText(HWND hWnd, wchar_t *text_buffer, unsigned int text_buffer_size)
+{
+    METHOD_ASSERT(GetWindowText(hWnd, text_buffer, text_buffer_size), >, 0);
+}
+
+void Window::SetText(HWND hWnd, const wchar_t *lpString)
+{
+    METHOD_ASSERT(SetWindowText(hWnd, lpString), !=, 0);
 }
 
 Window::~Window(void)

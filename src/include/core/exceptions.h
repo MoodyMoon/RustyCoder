@@ -27,6 +27,7 @@ class Exception : public std::exception
         {
             DECODER_CONFIGURATION_EXCEPTION,
             ENCODER_CONFIGURATION_EXCEPTION,
+            INVALID_ARGUMENT_EXCEPTION,
             MEMORY_ALLOCATION_EXCEPTION,
             SEEK_EXCEPTION,
             READ_FILE_EXCEPTION,
@@ -72,6 +73,13 @@ class EncoderConfigurationException : public Exception
     public:
         EncoderConfigurationException(const char * const caller_name, const char * const message);
         EncoderConfigurationException(const char * const caller_name, int code, const char * const message);
+};
+
+class InvalidArgumentException : public Exception
+{
+    public:
+        InvalidArgumentException(const char * const caller_name, const char * const message);
+        InvalidArgumentException(const char * const caller_name, int code, const char * const message);
 };
 
 class MemoryAllocationException : public Exception

@@ -34,9 +34,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PROFILEFORM_CMBBX_ENCODER                 114
 #define PROFILEFORM_BTN_LOAD_DEFAULT              115
 #define PROFILEFORM_PROFILE_REPORT_LIST_VIEW      116
-#define PROFILEFORM_BTN_OPEN                      117
-#define PROFILEFORM_BTN_SAVE                      118
-#define PROFILEFORM_BTN_SAVE_AS                   119
+#define PROFILEFORM_LBL_OPTION_VALUE_SIGN         117
+#define PROFILEFORM_SLTXTBX_OPTION_SETTER         118
+#define PROFILEFORM_CMBBX_OPTION_SETTER           119
+#define PROFILEFORM_BTN_SET_OPTION                120
+#define PROFILEFORM_BTN_OPEN                      121
+#define PROFILEFORM_BTN_SAVE                      122
+#define PROFILEFORM_BTN_SAVE_AS                   123
 
 // Next default values for new objects
 //

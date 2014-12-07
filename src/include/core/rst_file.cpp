@@ -22,14 +22,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 std::wstring RustyFile::GetFile(std::wstring file_full_path, File flag)
 {
-    assert(file_full_path.empty() == false && file_full_path.length() <= 10000u);
+    assert(file_full_path.empty() == false);
+
+    while(file_full_path.back() == '.')
+    {
+        file_full_path.pop_back();
+    }
 
     switch(flag)
     {
         case File::NAME_AND_EXTENSION:
         {
             std::wstring::size_type pos1 = file_full_path.find_last_of(L"/\\");
-            file_full_path.substr(pos1 + 1u);
+            file_full_path = file_full_path.substr(pos1 + 1u);
             break;
         }
         case File::PATH_AND_NAME:
@@ -97,4 +102,52 @@ std::wstring RustyFile::GetFile(std::wstring file_full_path, File flag)
     }
 
     return file_full_path;
+}
+
+std::wstring RustyFile::GetFile(std::wstring file_name, FileName flag)
+{
+    assert(file_name.empty() == false);
+
+    while(file_name.back() == '.')
+    {
+        file_name.pop_back();
+    }
+
+    switch(flag)
+    {
+        case FileName::NAME_ONLY:
+        {
+            std::wstring::size_type pos1 = file_name.find_last_of(L'.');
+            std::wstring::size_type pos2;
+
+            if(pos1 != file_name.npos)
+            {
+                pos2 = file_name.find(L' ', pos1 + 1u);
+                if(pos2 == file_name.npos)
+                    file_name = file_name.substr(0u, pos1);
+            }
+            break;
+        }
+        case FileName::EXTENSION_ONLY:
+        {
+            std::wstring::size_type pos1 = file_name.find_last_of(L'.');
+            std::wstring::size_type pos2;
+
+            pos1 = file_name.find_last_of(L'.');
+
+            if(pos1 != file_name.npos)
+            {
+                pos2 = file_name.find(L' ', pos1 + 1u);
+                if(pos2 == file_name.npos)
+                    file_name = file_name.substr(pos1 + 1u);
+                else
+                    file_name.clear();
+            }
+            else
+                file_name.clear();
+            break;
+        }
+    }
+
+    return file_name;
 }

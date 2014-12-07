@@ -55,7 +55,7 @@ uint64_t FileWriter::Seek(SeekPosition position, int64_t offset)
         std::string error_message("Cannot perform seeking on \"");
         error_message.append(file_path);
         error_message.append("\".");
-        throw SeekException("FileReader", ofs.rdstate(), error_message.c_str());
+        throw SeekException("FileWriter", ofs.rdstate(), error_message.c_str());
     }
 
     std::streampos pos = ofs.tellp();
@@ -64,7 +64,7 @@ uint64_t FileWriter::Seek(SeekPosition position, int64_t offset)
         std::string error_message("Cannot get the current seek position on \"");
         error_message.append(file_path);
         error_message.append("\".");
-        throw SeekException("FileReader", ofs.rdstate(), error_message.c_str());
+        throw SeekException("FileWriter", ofs.rdstate(), error_message.c_str());
     }
 
     return pos;
@@ -78,7 +78,7 @@ uint64_t FileWriter::Tell(void)
         std::string error_message("Cannot get the current seek position on \"");
         error_message.append(file_path);
         error_message.append("\".");
-        throw SeekException("FileReader", ofs.rdstate(), error_message.c_str());
+        throw SeekException("FileWriter", ofs.rdstate(), error_message.c_str());
     }
 
     return pos;
@@ -92,7 +92,7 @@ void FileWriter::Write(const char *buffer, uint32_t valid_byte_count)
         std::string error_message("Cannot write to \"");
         error_message.append(file_path);
         error_message.append("\".");
-        throw ReadFileException("FileReader", ofs.rdstate(), error_message.c_str());
+        throw WriteFileException("FileWriter", ofs.rdstate(), error_message.c_str());
     }
 }
 
