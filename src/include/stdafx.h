@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef PCH_STDAFX_H
 #define PCH_STDAFX_H
 
+#define WIDEN_STRING_HELPER(x, y) x##y
+#define WIDEN_STRING(s) WIDEN_STRING_HELPER(L,s)
+
 #define OEMRESOURCE /** Enable OEM resources */
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
@@ -35,13 +38,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /** C++ standard headers */
+#include <atomic>
 #include <cassert>
+#include <chrono>
 #include <exception>
 #include <fstream>
-#include <map>
 #include <memory>
 #include <string>
+#include <thread>
 #include <typeinfo>
+#include <unordered_map>
 #include <vector>
 #ifdef _DEBUG
 #include <limits>
@@ -81,10 +87,12 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "core/rst_file.h"
 #include "core/rst_lock.h"
 #include "core/rst_thread.h"
-#include "core/timer.h"
+#include "core/timer_async.h"
+#include "core/timer_sync.h"
 #include "core/windows_utilities.h"
 
 /** Wrappers for third-party libraries */
+#include "codecs/file_extensions.h"
 #include "codecs/samples.h"
 #include "codecs/decoder.h"
 #include "codecs/encoder_options.h"
@@ -97,9 +105,10 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "codecs/rst_lame.h"
 
 /* RustyCoder engine */
+#include "engine/settings_manager.h"
 #include "engine/codec_controller.h"
 #include "engine/job.h"
-#include "engine/settings_manager.h"
+#include "engine/job_description.h"
 
 /** Win32 control wrappers */
 #include "controls/event_handler_interface.h"

@@ -131,20 +131,20 @@ class LameOptions : public EncoderOptions
             MIN_OR_MAX_BITRATE2
         };
 
-        static const std::map<const AlgorithmQuality, std::string> algorithm_quality_to_text;
-        static const std::map<const Mode, std::string> mode_to_text;
-        static const std::map<const ReplayGain, std::string> replaygain_mode_to_text;
-        static const std::map<const BitrateEncoding, std::string> bitrate_encoding_to_text;
-        static const std::map<const Bitrate, std::string> bitrate_to_text;
+        static const std::unordered_map<const AlgorithmQuality, std::string> algorithm_quality_to_text;
+        static const std::unordered_map<const Mode, std::string> mode_to_text;
+        static const std::unordered_map<const ReplayGain, std::string> replaygain_mode_to_text;
+        static const std::unordered_map<const BitrateEncoding, std::string> bitrate_encoding_to_text;
+        static const std::unordered_map<const Bitrate, std::string> bitrate_to_text;
 
-        static const std::map<std::string, const AlgorithmQuality> text_to_algorithm_quality;
-        static const std::map<std::string, const Mode> text_to_mode;
-        static const std::map<std::string, const ReplayGain> text_to_replaygain_mode;
-        static const std::map<std::string, const BitrateEncoding> text_to_bitrate_encoding;
-        static const std::map<std::string, const Bitrate> text_to_bitrate;
+        static const std::unordered_map<std::string, const AlgorithmQuality> text_to_algorithm_quality;
+        static const std::unordered_map<std::string, const Mode> text_to_mode;
+        static const std::unordered_map<std::string, const ReplayGain> text_to_replaygain_mode;
+        static const std::unordered_map<std::string, const BitrateEncoding> text_to_bitrate_encoding;
+        static const std::unordered_map<std::string, const Bitrate> text_to_bitrate;
 
-        static const std::map<const Option, std::string> option_to_text;
-        static const std::map<std::string, const Option> text_to_option;
+        static const std::unordered_map<const Option, std::string> option_to_text;
+        static const std::unordered_map<std::string, const Option> text_to_option;
 
         void SetMinOrMaxBitrate(uint16_t min_or_max_bitrate, bool one);
 

@@ -30,7 +30,7 @@ class NumericUpDown : public Window
         NumericUpDown(const NumericUpDown &) = delete;
         NumericUpDown & operator=(const NumericUpDown &) = delete;
 
-        NumericUpDown(HINSTANCE hInstance, HWND hWndParent, int hMenu, HWND hWndBuddy, int lower_bound, int upper_bound, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_NOTHOUSANDS | UDS_SETBUDDYINT | WS_CHILD | WS_VISIBLE);
+        NumericUpDown(HINSTANCE hInstance, HWND hWndParent, int hMenu, HWND hWndBuddy, int lower_bound, int upper_bound, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_NOTHOUSANDS | UDS_SETBUDDYINT | WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE);
 
         int GetPosition(void);
         int GetLowerBound(void);

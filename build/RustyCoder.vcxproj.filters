@@ -5,10 +5,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="PCH">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="3rd-Party Headers">
       <UniqueIdentifier>{9a024dbe-ade6-45d5-8550-93c576d3768b}</UniqueIdentifier>
     </Filter>
@@ -25,7 +21,10 @@
       <UniqueIdentifier>{3c03d73e-bf92-4472-a306-1db7978b8831}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine">
-      <UniqueIdentifier>{11bb25a8-f190-498b-aa36-d9041ea6a1eb}</UniqueIdentifier>
+      <UniqueIdentifier>{de12c5e5-0977-4195-ac5c-41da5bdf86c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{9e2d021d-fce3-4faa-abe8-6ee12139c142}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,12 +51,6 @@
     </ClInclude>
     <ClInclude Include="..\src\rustycoder.h">
       <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\stdafx.h">
-      <Filter>PCH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\targetver.h">
-      <Filter>PCH</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\resources\resource.h">
       <Filter>Resources</Filter>
@@ -116,12 +109,6 @@
     <ClInclude Include="..\src\include\codecs\encoder.h">
       <Filter>Codecs</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\engine\codec_controller.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\engine\settings_manager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\controls\save_file_dialog.h">
       <Filter>Controls</Filter>
     </ClInclude>
@@ -137,9 +124,6 @@
     <ClInclude Include="..\src\include\controls\label.h">
       <Filter>Controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\engine\job.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\main_form.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -151,9 +135,6 @@
     </ClInclude>
     <ClInclude Include="..\src\include\controls\numeric_up_down.h">
       <Filter>Controls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\core\timer.h">
-      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\include\resources\version_info.h">
       <Filter>Resources</Filter>
@@ -179,11 +160,38 @@
     <ClInclude Include="..\src\include\codecs\rst_sndfile_encoder_options.h">
       <Filter>Codecs</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\common.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\controls\file_dialog.h">
       <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\engine\codec_controller.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\engine\job.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\engine\settings_manager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\stdafx.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\targetver.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\codecs\file_extensions.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\file_extension_filters.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\timer_sync.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\core\timer_async.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\include\engine\job_description.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -192,9 +200,6 @@
     </ClCompile>
     <ClCompile Include="..\src\rustycoder.cpp">
       <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\include\stdafx.cpp">
-      <Filter>PCH</Filter>
     </ClCompile>
     <ClCompile Include="..\src\include\controls\menubar.cpp">
       <Filter>Controls</Filter>
@@ -244,12 +249,6 @@
     <ClCompile Include="..\src\include\codecs\samples.cpp">
       <Filter>Codecs</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\include\engine\codec_controller.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\include\engine\settings_manager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\include\controls\save_file_dialog.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
@@ -265,9 +264,6 @@
     <ClCompile Include="..\src\include\controls\label.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\include\engine\job.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\main_form.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -279,9 +275,6 @@
     </ClCompile>
     <ClCompile Include="..\src\include\controls\numeric_up_down.cpp">
       <Filter>Controls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\include\core\timer.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\src\include\core\rst_file.cpp">
       <Filter>Core</Filter>
@@ -306,6 +299,30 @@
     </ClCompile>
     <ClCompile Include="..\src\include\controls\file_dialog.cpp">
       <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\engine\codec_controller.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\engine\job.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\engine\settings_manager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\stdafx.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\file_extension_filters.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\timer_sync.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\core\timer_async.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\include\engine\job_description.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

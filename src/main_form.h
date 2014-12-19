@@ -20,19 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_MAIN_FORM_H
 #define GUI_MAIN_FORM_H
 
-#include "common.h"
+#include "file_extension_filters.h"
 #include "profile_form.h"
 
 class MainForm : public EventHandlerInterface
 {
     private:
         class MenuBarEvents;
-        class VerticalSplitWindowEvents;
-        class Panel1Events;
         class JobReportListViewEvents;
+        class BtnBrowseFolderEvents;
+        class BtnAddFilesEvents;
+        class BtnRemoveFilesEvents;
         class BtnLoadProfileEvents;
         class BtnCreateProfileEvents;
-        class Panel2Events;
+        class BtnStartQueueEvents;
+        class BtnPauseQueueEvents;
 
         HINSTANCE hInstance = nullptr;
 
@@ -41,30 +43,30 @@ class MainForm : public EventHandlerInterface
         std::unique_ptr<Window> window;
         std::unique_ptr<MenuBar> menu_bar;
         std::unique_ptr<MenuBarEvents> menu_bar_events;
-        std::unique_ptr<VerticalSplitWindow> vertical_split_window;
-        std::unique_ptr<VerticalSplitWindowEvents> vertical_split_window_events;
-        std::unique_ptr<Panel> panel1;
-        std::unique_ptr<Panel1Events> panel1_events;
         std::unique_ptr<ReportListView> job_report_list_view;
         std::unique_ptr<JobReportListViewEvents> job_report_list_view_events;
-        std::unique_ptr<Label> lbl_file_destination_sign;
-        std::unique_ptr<SingleLineTextBox> sltxtbx_file_destination;
-        std::unique_ptr<Button> btn_browse;
+        std::unique_ptr<Button> btn_add_files;
+        std::unique_ptr<BtnAddFilesEvents> btn_add_files_events;
+        std::unique_ptr<Button> btn_remove_files;
+        std::unique_ptr<BtnRemoveFilesEvents> btn_remove_files_events;
         std::unique_ptr<Button> btn_load_profile;
         std::unique_ptr<BtnLoadProfileEvents> btn_load_profile_events;
         std::unique_ptr<Button> btn_create_profile;
         std::unique_ptr<BtnCreateProfileEvents> btn_create_profile_events;
-        std::unique_ptr<Button> btn_convert;
+        std::unique_ptr<Button> btn_browse_folder;
+        std::unique_ptr<BtnBrowseFolderEvents> btn_browse_folder_events;
+        std::unique_ptr<Button> btn_start_queue;
+        std::unique_ptr<BtnStartQueueEvents> btn_start_queue_events;
+        std::unique_ptr<Button> btn_pause_queue;
+        std::unique_ptr<BtnPauseQueueEvents> btn_pause_queue_events;
 
-        std::unique_ptr<Panel> panel2;
-        std::unique_ptr<Panel2Events> panel2_events;
         std::unique_ptr<Job> job;
 
         std::unique_ptr<ProfileForm> profile_form;
 
         void OnCreate(HWND hWnd);
-        void OnSize(HWND hWnd, WPARAM wParam);
-        void OnGetMinMaxInfo(MINMAXINFO * const min_max_info);
+        void OnSize(WPARAM wParam, LPARAM lParam);
+        void OnBeforeDestroy(void);
 
     public:
         MainForm(const MainForm &) = delete;
@@ -92,63 +94,119 @@ class MainForm::MenuBarEvents
         MenuBarEvents(MainForm * const main_form);
 };
 
-class MainForm::VerticalSplitWindowEvents
+class MainForm::JobReportListViewEvents
 {
     friend class MainForm;
 
     private:
         MainForm * const main_form = nullptr;
 
-    public:
-        VerticalSplitWindowEvents(const VerticalSplitWindowEvents &) = delete;
-        VerticalSplitWindowEvents & operator=(const VerticalSplitWindowEvents &) = delete;
+        /*!
+        Queue processor members;
+        */
 
-        VerticalSplitWindowEvents(MainForm * const main_form);
-};
+        TimerSync queue_processor;
 
-class MainForm::Panel1Events : public EventHandlerInterface
-{
-    private:
-        MainForm * const main_form = nullptr;
+        static const std::size_t max_simultaneous_jobs_count = 2;
 
-        void OnCreate(HWND hWnd);
-        void OnSize(HWND hWnd);
+        std::vector<JobDescription> job_descriptions;
+        std::unique_ptr<Job> jobs[max_simultaneous_jobs_count];
+        std::size_t job_indices_tracker[max_simultaneous_jobs_count];
 
-    public:
-        Panel1Events(const Panel1Events &) = delete;
-        Panel1Events & operator=(const Panel1Events &) = delete;
+        uint64_t total_frame_count_uint64[max_simultaneous_jobs_count];
+        double total_frame_count_double[max_simultaneous_jobs_count];
 
-        Panel1Events(MainForm * const main_form) : main_form(main_form) {}
+        void OnTimerSyncTick(void);
 
-        virtual LRESULT HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-};
+        void ResumeJobsIfAny(void);
+        void TryQueueJobs(void);
+        void UpdateJobDescriptions(void);
+        void CleanActiveQueue(void);
+        void TryStopQueueProcessor(void);
+        void PauseJobsIfAny(void);
 
-class MainForm::JobReportListViewEvents
-{
-    friend class Panel1Events;
-
-    private:
-        MainForm * const main_form = nullptr;
-
-        std::vector<std::string> source_file_full_paths;
-        std::vector<std::string> output_file_full_paths;
+        bool IsQueueFull(void);
+        std::size_t GetFreeSlot(void);
+        void CreateAndRunJob(const JobDescription *job_description, std::size_t free_slot_index);
+        void SetErrorMessage(const Exception *exception, std::size_t row_index);
+        std::wstring GetConversionProgress(std::size_t job_index);
 
     public:
         void AddJobs(HWND hWnd);
-        void LoadProfile(void);
+        void RemoveSelectedJobs(void);
+        void LoadProfile(HWND hWnd);
+        void SetOutputPath(HWND hWnd);
+
+        /*!
+        Queueing functions
+        */
+        void StartQueue(void);
+        void PauseQueue(void);
 
         JobReportListViewEvents(const JobReportListViewEvents &) = delete;
         JobReportListViewEvents & operator=(const JobReportListViewEvents &) = delete;
 
-        JobReportListViewEvents(MainForm * const main_form);
+        JobReportListViewEvents(MainForm * const main_form, HWND main_form_handle);
+
+        ~JobReportListViewEvents(void);
+};
+
+class MainForm::BtnBrowseFolderEvents
+{
+    friend class MainForm;
+
+    private:
+        MainForm * const main_form = nullptr;
+
+        void OnClick(HWND hWnd);
+
+    public:
+        BtnBrowseFolderEvents(const BtnBrowseFolderEvents &) = delete;
+        BtnBrowseFolderEvents & operator=(const BtnBrowseFolderEvents &) = delete;
+
+        BtnBrowseFolderEvents(MainForm * const main_form) : main_form(main_form) {}
+};
+
+class MainForm::BtnAddFilesEvents
+{
+    friend class MainForm;
+
+    private:
+        MainForm * const main_form = nullptr;
+
+        void OnClick(HWND hWnd);
+
+    public:
+        BtnAddFilesEvents(const BtnAddFilesEvents &) = delete;
+        BtnAddFilesEvents & operator=(const BtnAddFilesEvents &) = delete;
+
+        BtnAddFilesEvents(MainForm * const main_form) : main_form(main_form) {}
+};
+
+class MainForm::BtnRemoveFilesEvents
+{
+    friend class MainForm;
+
+    private:
+        MainForm * const main_form = nullptr;
+
+        void OnClick(void);
+
+    public:
+        BtnRemoveFilesEvents(const BtnRemoveFilesEvents &) = delete;
+        BtnRemoveFilesEvents & operator=(const BtnRemoveFilesEvents &) = delete;
+
+        BtnRemoveFilesEvents(MainForm * const main_form) : main_form(main_form) {}
 };
 
 class MainForm::BtnLoadProfileEvents
 {
-    friend class Panel1Events;
+    friend class MainForm;
 
     private:
         MainForm * const main_form = nullptr;
+
+        void OnClick(HWND hWnd);
 
     public:
         BtnLoadProfileEvents(const BtnLoadProfileEvents &) = delete;
@@ -159,7 +217,7 @@ class MainForm::BtnLoadProfileEvents
 
 class MainForm::BtnCreateProfileEvents
 {
-    friend class Panel1Events;
+    friend class MainForm;
 
     private:
         MainForm * const main_form = nullptr;
@@ -173,18 +231,36 @@ class MainForm::BtnCreateProfileEvents
         BtnCreateProfileEvents(MainForm * const main_form) : main_form(main_form) {}
 };
 
-class MainForm::Panel2Events : public EventHandlerInterface
+class MainForm::BtnStartQueueEvents
 {
+    friend class MainForm;
+
     private:
         MainForm * const main_form = nullptr;
 
+        void OnClick(void);
+
     public:
-        Panel2Events(const Panel2Events &) = delete;
-        Panel2Events & operator=(const Panel2Events &) = delete;
+        BtnStartQueueEvents(const BtnStartQueueEvents &) = delete;
+        BtnStartQueueEvents & operator=(const BtnStartQueueEvents &) = delete;
 
-        Panel2Events(MainForm * const main_form) : main_form(main_form) {}
+        BtnStartQueueEvents(MainForm * const main_form) : main_form(main_form) {}
+};
 
-        virtual LRESULT HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+class MainForm::BtnPauseQueueEvents
+{
+    friend class MainForm;
+
+    private:
+        MainForm * const main_form = nullptr;
+
+        void OnClick(void);
+
+    public:
+        BtnPauseQueueEvents(const BtnPauseQueueEvents &) = delete;
+        BtnPauseQueueEvents & operator=(const BtnPauseQueueEvents &) = delete;
+
+        BtnPauseQueueEvents(MainForm * const main_form) : main_form(main_form) {}
 };
 
 #endif

@@ -20,21 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_sndfile_encoder_options.h"
 
-const std::map<const SndFileEncoderOptions::OutputFormat, std::string> SndFileEncoderOptions::output_format_to_file_extension =
+const std::unordered_map<const SndFileEncoderOptions::OutputFormat, std::string> SndFileEncoderOptions::output_format_to_file_extension =
 {
     /*! WAV (Microsoft) */
-    {OutputFormat::WAV_PCM_INT_U8, "wav"},
-    {OutputFormat::WAV_PCM_INT_S16, "wav"},
-    {OutputFormat::WAV_PCM_INT_S24, "wav"},
-    {OutputFormat::WAV_PCM_INT_S32, "wav"},
-    {OutputFormat::WAV_PCM_FLOAT_32, "wav"},
-    {OutputFormat::WAV_PCM_FLOAT_64, "wav"},
-    {OutputFormat::WAV_ULAW, "wav"},
-    {OutputFormat::WAV_ALAW, "wav"},
-    {OutputFormat::WAV_IMA_ADPACM, "wav"},
-    {OutputFormat::WAV_MS_ADPACM, "wav"},
-    {OutputFormat::WAV_GSM610, "wav"},
-    {OutputFormat::WAV_G721_32_ADPCM, "wav"},
+    {OutputFormat::WAV_PCM_INT_U8, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_PCM_INT_S16, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_PCM_INT_S24, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_PCM_INT_S32, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_PCM_FLOAT_32, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_PCM_FLOAT_64, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_ULAW, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_ALAW, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_IMA_ADPACM, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_MS_ADPACM, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_GSM610, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAV_G721_32_ADPCM, AUDIO_EXTENSION_WAV},
 
     /*! AIFF (Apple/SGI) */
     {OutputFormat::AIFF_PCM_INT_U8, "aiff"},
@@ -187,7 +187,7 @@ const std::map<const SndFileEncoderOptions::OutputFormat, std::string> SndFileEn
 
 const char *SndFileEncoderOptions::profile_file_extension = "sndfe";
 
-const std::map<const SndFileEncoderOptions::OutputFormat, std::string> SndFileEncoderOptions::output_format_to_text =
+const std::unordered_map<const SndFileEncoderOptions::OutputFormat, std::string> SndFileEncoderOptions::output_format_to_text =
 {
     /*! WAV (Microsoft) */
     {OutputFormat::WAV_PCM_INT_U8, "WAV_PCM_INT_U8"},
@@ -352,7 +352,7 @@ const std::map<const SndFileEncoderOptions::OutputFormat, std::string> SndFileEn
     {OutputFormat::RF64_ALAW, "RF64_ALAW"}
 };
 
-const std::map<std::string, const SndFileEncoderOptions::OutputFormat> SndFileEncoderOptions::text_to_output_format =
+const std::unordered_map<std::string, const SndFileEncoderOptions::OutputFormat> SndFileEncoderOptions::text_to_output_format =
 {
     /*! WAV (Microsoft) */
     {SndFileEncoderOptions::output_format_to_text.at(OutputFormat::WAV_PCM_INT_U8), OutputFormat::WAV_PCM_INT_U8},
@@ -517,12 +517,12 @@ const std::map<std::string, const SndFileEncoderOptions::OutputFormat> SndFileEn
     {SndFileEncoderOptions::output_format_to_text.at(OutputFormat::RF64_ALAW), OutputFormat::RF64_ALAW}
 };
 
-const std::map<const SndFileEncoderOptions::Option, std::string> SndFileEncoderOptions::option_to_text =
+const std::unordered_map<const SndFileEncoderOptions::Option, std::string> SndFileEncoderOptions::option_to_text =
 {
     {Option::OUPTPUT_FORMAT, "Output format"}
 };
 
-const std::map<std::string, const SndFileEncoderOptions::Option> SndFileEncoderOptions::text_to_option =
+const std::unordered_map<std::string, const SndFileEncoderOptions::Option> SndFileEncoderOptions::text_to_option =
 {
     {SndFileEncoderOptions::option_to_text.at(Option::OUPTPUT_FORMAT), Option::OUPTPUT_FORMAT}
 };

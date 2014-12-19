@@ -20,106 +20,117 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "job.h"
 
-Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : decoder_id(decoder_id), encoder_options(new SndFileEncoderOptions(options))
+const std::unordered_map<Job::State, std::string> Job::state_to_string =
 {
-    SndFileEncoderOptions *_encoder_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
+    {State::NOT_READY, "Not ready"},
+    {State::READY, "Ready"},
+    {State::RUNNING, "Running"},
+    {State::PAUSE, "Paused"},
+    {State::DONE, "Done"},
+    {State::ERROR_OCCURED, "Error"}
+};
+
+Job::Job(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const LameOptions &lame_options) : encoder_options(new LameOptions(lame_options))
+{
+    LameOptions *_encoder_options = static_cast<LameOptions *>(this->encoder_options.get());
 
     codec_controller.reset(new CodecController(source_file_full_path, output_file_full_path, decoder_id, *_encoder_options));
+
+    total_frame_count = codec_controller->GetTotalFrameCount();
 }
 
-Job::Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : decoder_id(decoder_id), encoder_options(new LameOptions(options))
+Job::Job(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const SndFileEncoderOptions &sndfileencoder_options) : encoder_options(new SndFileEncoderOptions(sndfileencoder_options))
 {
-    LameOptions *_encoder_options = static_cast<LameOptions *>(encoder_options.get());
+    SndFileEncoderOptions *_encoder_options = static_cast<SndFileEncoderOptions *>(this->encoder_options.get());
 
     codec_controller.reset(new CodecController(source_file_full_path, output_file_full_path, decoder_id, *_encoder_options));
+
+    total_frame_count = codec_controller->GetTotalFrameCount();
 }
 
-void Job::StartAsync(void)
+void Job::StartAsync()
 {
-    bool do_not_continue = false;
-    progress_lock.Lock();
-    if(!started && !finished && !error)
-        started = true;
+    State _state = state.load();
+
+    if(_state == State::READY || _state == State::PAUSE)
+    {
+        state.store(State::RUNNING);
+        thread.reset(new RustyThread(this, nullptr, RustyThread::Priority::NORMAL));
+    }
+    #ifdef _DEBUG
     else
-        do_not_continue = true;
-    progress_lock.Unlock();
-
-    if(do_not_continue)
-        return;
-
-    thread.reset(new RustyThread(this, nullptr, RustyThread::Priority::NORMAL));
+        assert(false);
+    #endif
 }
 
-void Job::StopSync(void)
+void Job::PauseSync()
 {
-    progress_lock.Lock();
-    if(started)
-        started = false;
-    bool _started = started;
-    progress_lock.Unlock();
-
-    if(!_started)
+    if(state.load() == State::RUNNING)
+    {
+        state.store(State::PAUSE);
         thread.reset();
+    }
+    #ifdef _DEBUG
+    else
+        assert(false);
+    #endif
 }
 
-bool Job::IsStartedSync(void)
+Job::State Job::GetStateSync() const noexcept
 {
-    progress_lock.Lock();
-    bool _started = started;
-    progress_lock.Unlock();
-    return _started;
+    return state.load();
 }
 
-bool Job::IsFinishedSync(void)
+Exception * Job::GetError() const noexcept
 {
-    progress_lock.Lock();
-    bool _finished = finished;
-    progress_lock.Unlock();
-    return _finished;
+    return error.load().get();
 }
 
-bool Job::HasError(void)
+uint64_t Job::GetWrittenFrameCount() const noexcept
 {
-    progress_lock.Lock();
-    bool _error_occured = error_occured;
-    progress_lock.Unlock();
-    return _error_occured;
+    return written_frame_count.load();
 }
 
-Exception * Job::GetError(void)
+uint64_t Job::GetTotalFrameCount() const noexcept
 {
-    progress_lock.Lock();
-    Exception *_error = error.get();
-    progress_lock.Unlock();
-    return _error;
+    return total_frame_count.load();
 }
 
 DWORD Job::DoSync(void *)
 {
     CodecController *_codec_controller = codec_controller.get();
 
+    int check_pause_count = 0;
+
     try
     {
         do
         {
-            progress_lock.Lock();
             if(_codec_controller->CanConvert())
-                _codec_controller->Convert();
+            {
+                written_frame_count.fetch_add(_codec_controller->Convert());
+            }
             else
             {
-                finished = true;
-                started = false;
+                state.store(State::DONE);
                 codec_controller.reset();
+                break;
             }
-            progress_lock.Unlock();
-        }while(IsStartedSync());
+            if(check_pause_count < 10)
+            {
+                ++check_pause_count;
+                continue;
+            }
+            else
+            {
+                check_pause_count = 0;
+            }
+        }while(state.load() == State::RUNNING);
     }
     catch(Exception &ex)
     {
-        progress_lock.Lock();
-        error_occured = true;
-        error.reset(new Exception(ex));
-        progress_lock.Unlock();
+        state.store(State::ERROR_OCCURED);
+        error.load().reset(new Exception(ex));
     }
 
     return 0ul;
@@ -127,5 +138,9 @@ DWORD Job::DoSync(void *)
 
 Job::~Job()
 {
-    StopSync();
+    if(state.load() == State::RUNNING)
+    {
+        state.store(State::PAUSE);
+        thread.reset();
+    }
 }

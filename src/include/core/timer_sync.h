@@ -17,21 +17,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CORE_TIMER_H
-#define CORE_TIMER_H
+#ifndef CORE_TIMER_SYNC_H
+#define CORE_TIMER_SYNC_H
 
-class Timer
+class TimerSync
 {
     private:
-    HWND hWndParent;
-    unsigned int nIDEvent;
+        HWND hWndParent;
+        unsigned long long nIDEvent;
+        unsigned int uElapse;
+        bool started;
 
     public:
-    Timer(const Timer &) = delete;
-    Timer & operator=(const Timer &) = delete;
+        TimerSync(const TimerSync &) = delete;
+        TimerSync & operator=(const TimerSync &) = delete;
 
-    Timer(HWND hWnd, unsigned int nIDEvent, unsigned int uElapse);
-    ~Timer(void);
+        TimerSync(HWND hWnd, unsigned long long nIDEvent, unsigned int uElapse, bool start_now);
+        void Start(void);
+        void Stop(void);
+        bool IsStarted(void);
+        ~TimerSync(void);
 };
 
 #endif

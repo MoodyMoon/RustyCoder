@@ -20,14 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "codec_controller.h"
 
-CodecController::CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
+CodecController::CodecController(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const SndFileEncoderOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
 {
     encoder_id = Encoder<void>::ID::SNDFILEENCODER;
     PopulateAudioProperties();
     BeforeConvert();
 }
 
-CodecController::CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
+CodecController::CodecController(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const LameOptions &options) : source_file_full_path(source_file_full_path), output_file_full_path(output_file_full_path), decoder_id(decoder_id), encoder_options(&options)
 {
     encoder_id = Encoder<void>::ID::LAME;
     PopulateAudioProperties();
@@ -50,7 +50,6 @@ void CodecController::PopulateAudioProperties()
         {
             mpg123_lifetime_handler.reset(new Mpg123LifetimeHandler());
             decoder_void.reset(new Mpg123<void>(source_file_full_path.c_str(), *mpg123_lifetime_handler.get()));
-            break;
         }
     }
 
@@ -58,7 +57,7 @@ void CodecController::PopulateAudioProperties()
 
     channel_count = decoder_void->GetChannelCount();
     sample_rate = decoder_void->GetSampleRate();
-    frame_count = decoder_void->GetFrameCount();
+    total_frame_count = decoder_void->GetFrameCount();
     Sample::SampleContainer decoder_container_type = decoder_void->GetPreferableOutputContainer();
 
     std::unique_ptr<Encoder<void>> encoder_void;
@@ -70,7 +69,6 @@ void CodecController::PopulateAudioProperties()
             break;
         default: /*!< MPG123 */
             encoder_void.reset(new Lame<void>());
-            break;
     }
 
     assert(encoder_void != nullptr);
@@ -183,6 +181,7 @@ void CodecController::BeforeConvert()
                 default: //Sample::SampleContainer::FLOAT_64
                     decoder_double.reset(new SndFileDecoder<double>(source_file_full_path.c_str(), sample_buffer_double.get(), buffer_size_in_bytes));
             }
+            break;
         }
         default: /*!< MPG123 */
         {
@@ -218,7 +217,7 @@ void CodecController::BeforeConvert()
     {
         case Encoder<void>::ID::SNDFILEENCODER:
         {
-            SndFileEncoderOptions *options = static_cast<SndFileEncoderOptions *>(encoder_options);
+            const SndFileEncoderOptions *options = static_cast<const SndFileEncoderOptions *>(encoder_options);
 
             switch(chosen_container_type)
             {
@@ -238,7 +237,7 @@ void CodecController::BeforeConvert()
         }
         default: /*!< LAME */
         {
-            LameOptions *options = static_cast<LameOptions *>(encoder_options);
+            const LameOptions *options = static_cast<const LameOptions *>(encoder_options);
 
             switch(chosen_container_type)
             {
@@ -369,25 +368,29 @@ uint64_t CodecController::Convert()
     if(buffer_valid_frames_count < max_buffer_valid_frames_count)
         can_convert = false;
 
-    return buffer_valid_frames_count;
+    /*!
+    \c buffer_valid_frames_count is equal to the amount of samples decoded and not frames.
+    I have no idea why. Just a simple hack to solve the problem. Dividing it by \c channel_count again.
+    */
+    return buffer_valid_frames_count / channel_count;
 }
 
-unsigned int CodecController::GetChannelCount(void)
+unsigned int CodecController::GetChannelCount()
 {
     return channel_count;
 }
 
-unsigned int CodecController::GetSampleRate(void)
+unsigned int CodecController::GetSampleRate()
 {
     return sample_rate;
 }
 
-uint64_t CodecController::GetFrameCount(void)
+uint64_t CodecController::GetTotalFrameCount()
 {
-    return frame_count;
+    return total_frame_count;
 }
 
-bool CodecController::CanConvert(void)
+bool CodecController::CanConvert()
 {
     return can_convert;
 }

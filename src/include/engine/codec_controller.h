@@ -28,7 +28,7 @@ class CodecController
         Decoder<void>::ID decoder_id;
         Encoder<void>::ID encoder_id;
         Sample::SampleContainer chosen_container_type;
-        EncoderOptions *encoder_options;
+        const EncoderOptions *encoder_options;
         std::unique_ptr<Mpg123LifetimeHandler> mpg123_lifetime_handler;
 
         std::unique_ptr<Decoder<char>> decoder_char;
@@ -80,7 +80,8 @@ class CodecController
         const unsigned int max_samples_in_buffer = min_samples_in_buffer * 13;
         unsigned int channel_count;
         unsigned int sample_rate;
-        uint64_t frame_count;
+
+        uint64_t total_frame_count;
         bool can_convert = true;
 
         uint64_t buffer_valid_frames_count;
@@ -93,13 +94,14 @@ class CodecController
         CodecController(const CodecController &) = delete;
         CodecController & operator=(const CodecController &) = delete;
 
-        CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
-        CodecController(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
+        CodecController(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const SndFileEncoderOptions &options);
+        CodecController(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const LameOptions &options);
 
         uint64_t Convert(void);
         unsigned int GetChannelCount(void);
         unsigned int GetSampleRate(void);
-        uint64_t GetFrameCount(void);
+
+        uint64_t GetTotalFrameCount(void);
         bool CanConvert(void);
 };
 

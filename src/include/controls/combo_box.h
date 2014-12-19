@@ -33,7 +33,7 @@ class ComboBox : public Window
         ComboBox(const ComboBox &) = delete;
         ComboBox & operator=(const ComboBox &) = delete;
 
-        ComboBox(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_VSCROLL | WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_HASSTRINGS);
+        ComboBox(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_VSCROLL | WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_HASSTRINGS);
 
         unsigned int GetSelectedItemIndex(void);
         LPARAM GetItemData(unsigned int index);

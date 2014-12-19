@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_mpg123.h"
 
-bool Mpg123LifetimeHandler::init = false;
+std::atomic<uint32_t> Mpg123LifetimeHandler::init_count(0u);
 
 Mpg123<char>::Mpg123(const char * const file, char *container, uint64_t container_size, const Mpg123LifetimeHandler &life)
 {
@@ -329,6 +329,7 @@ Mpg123<void>::Mpg123(const char * const file, const Mpg123LifetimeHandler &/*lif
     if(error != MPG123_OK)
         FreeAndThrow(error);
 
+    /*! This is important for calculating the exact amount of samples in the track */
     error = mpg123_scan(mh);
 
     if(error != MPG123_OK)
@@ -384,7 +385,7 @@ Sample::SampleContainer Mpg123<void>::GetPreferableOutputContainer() const noexc
     return _valid_containers[6];
 }
 
-size_t Mpg123<void>::GetValidContainersCount(void) const noexcept
+size_t Mpg123<void>::GetValidContainersCount() const noexcept
 {
     return valid_containers_count;
 }
@@ -395,25 +396,24 @@ Mpg123<void>::~Mpg123(void)
     mpg123_delete(mh);
 }
 
-Mpg123LifetimeHandler::Mpg123LifetimeHandler(void)
+Mpg123LifetimeHandler::Mpg123LifetimeHandler()
 {
-    assert(init == false);
-    if(!init)
+    if(init_count.load() == 0u)
     {
         int error = mpg123_init();
         if(error != MPG123_OK)
             throw DecoderConfigurationException("Mpg123LifetimeHandler", error, mpg123_plain_strerror(error));
-        else
-            init = true;
     }
+
+    ++init_count;
 }
 
-Mpg123LifetimeHandler::~Mpg123LifetimeHandler(void)
+Mpg123LifetimeHandler::~Mpg123LifetimeHandler()
 {
-    assert(init == true);
-    if(init)
+    --init_count;
+
+    if(init_count.load() == 0u)
     {
         mpg123_exit();
-        init = false;
     }
 }

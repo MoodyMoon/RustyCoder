@@ -116,7 +116,7 @@ Encoder<void>::ID ProfileForm::ProfileReportListViewEvents::GetLoadedProfileEnco
     return loaded_encoder_profile_id;
 }
 
-void ProfileForm::ProfileReportListViewEvents::SaveProfile(std::wstring file_full_path)
+void ProfileForm::ProfileReportListViewEvents::SaveProfile(std::wstring profile_full_path)
 {
     if(loaded_encoder_profile)
     {
@@ -125,30 +125,62 @@ void ProfileForm::ProfileReportListViewEvents::SaveProfile(std::wstring file_ful
             case Encoder<void>::ID::LAME:
             {
                 LameOptions *lame_options = static_cast<LameOptions *>(encoder_options.get());
-                SettingsManager::Write(*lame_options, WindowsUtilities::UTF8_Encode(file_full_path));
+                SettingsManager::Write(*lame_options, WindowsUtilities::UTF8_Encode(profile_full_path));
                 break;
             }
             case Encoder<void>::ID::SNDFILEENCODER:
             {
                 SndFileEncoderOptions *sndfileencoder_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
-                SettingsManager::Write(*sndfileencoder_options, WindowsUtilities::UTF8_Encode(file_full_path));
+                SettingsManager::Write(*sndfileencoder_options, WindowsUtilities::UTF8_Encode(profile_full_path));
                 break;
             }
         }
 
         profile_has_unsaved_changes = false;
-        current_profile_last_saved_full_path = file_full_path;
+        current_profile_last_saved_full_path = profile_full_path;
     }
 }
 
-void ProfileForm::ProfileReportListViewEvents::LoadProfile(LameOptions &lame_options)
+void ProfileForm::ProfileReportListViewEvents::LoadProfile(HWND hWnd)
 {
-    PopulateListView(Encoder<void>::ID::LAME, &lame_options);
-}
+    OpenFileDialog open_file_dialog(hWnd, FileExtensionFilters::input_profile_format_filters, sizeof(FileExtensionFilters::input_profile_format_filters) / sizeof(COMDLG_FILTERSPEC), false);
 
-void ProfileForm::ProfileReportListViewEvents::LoadProfile(SndFileEncoderOptions &sndfileencoder_options)
-{
-    PopulateListView(Encoder<void>::ID::SNDFILEENCODER, &sndfileencoder_options);
+    if(open_file_dialog.HasResult())
+    {
+        std::wstring profile_full_file_path = open_file_dialog.GetFile(RustyFile::File::FULL_PATH);
+        std::wstring profile_file_extension = open_file_dialog.GetFile(RustyFile::File::EXTENSION);
+
+        if(profile_file_extension == PROFILE_EXTENSION_LAME_W)
+        {
+            try
+            {
+                LameOptions lame_options;
+                SettingsManager::Read(lame_options, WindowsUtilities::UTF8_Encode(profile_full_file_path));
+                PopulateListView(Encoder<void>::ID::LAME, &lame_options);
+            }
+            catch(ReadFileException &ex)
+            {
+                MsgBox::Show(ex.what(), hWnd);
+            }
+
+            current_profile_last_saved_full_path = profile_full_file_path;
+        }
+        else if(profile_file_extension == PROFILE_EXTENSION_SNDFILEENCODER_W)
+        {
+            try
+            {
+                SndFileEncoderOptions sndfileencoder_options;
+                SettingsManager::Read(sndfileencoder_options, WindowsUtilities::UTF8_Encode(profile_full_file_path));
+                PopulateListView(Encoder<void>::ID::SNDFILEENCODER, &sndfileencoder_options);
+            }
+            catch(ReadFileException &ex)
+            {
+                MsgBox::Show(ex.what(), hWnd);
+            }
+
+            current_profile_last_saved_full_path = profile_full_file_path;
+        }
+    }
 }
 
 void ProfileForm::ProfileReportListViewEvents::LoadDefaultProfile(Encoder<void>::ID encoder_id)
@@ -248,7 +280,9 @@ void ProfileForm::ProfileReportListViewEvents::PopulateListView(Encoder<void>::I
         profile_form->profile_report_list_view->SetCellText(1u, index, wtext.c_str());
     }
 
-    profile_has_unsaved_changes = true;
+    if(encoder_options == nullptr)
+        profile_has_unsaved_changes = true;
+
     loaded_encoder_profile = true;
 }
 
@@ -395,40 +429,7 @@ void ProfileForm::BtnSetOptionEvents::OnClick(HWND hWnd)
 
 void ProfileForm::BtnOpenEvents::OnClick(HWND hWnd)
 {
-    OpenFileDialog open_file_dialog(hWnd, input_profile_format_filters, sizeof(input_profile_format_filters) / sizeof(COMDLG_FILTERSPEC), false);
-
-    if(open_file_dialog.HasResult())
-    {
-        std::wstring profile_full_file_path = open_file_dialog.GetFile(RustyFile::File::FULL_PATH);
-        std::wstring profile_file_extension = open_file_dialog.GetFile(RustyFile::File::EXTENSION);
-
-        if(profile_file_extension == L"lame")
-        {
-            try
-            {
-                LameOptions lame_options;
-                SettingsManager::Read(lame_options, WindowsUtilities::UTF8_Encode(profile_full_file_path));
-                profile_form->profile_report_list_view_events->LoadProfile(lame_options);
-            }
-            catch(ReadFileException &ex)
-            {
-                MsgBox::Show(ex.what());
-            }
-        }
-        else if(profile_file_extension == L"sndfe")
-        {
-            try
-            {
-                SndFileEncoderOptions sndfileencoder_options;
-                SettingsManager::Read(sndfileencoder_options, WindowsUtilities::UTF8_Encode(profile_full_file_path));
-                profile_form->profile_report_list_view_events->LoadProfile(sndfileencoder_options);
-            }
-            catch(ReadFileException &ex)
-            {
-                MsgBox::Show(ex.what());
-            }
-        }
-    }
+    profile_form->profile_report_list_view_events->LoadProfile(hWnd);
 }
 
 void ProfileForm::BtnSaveEvents::OnClick()
@@ -443,7 +444,7 @@ void ProfileForm::BtnSaveEvents::OnClick()
         }
         catch(WriteFileException &ex)
         {
-            MsgBox::Show(ex.what());
+            MsgBox::Show(ex.what(), profile_form->window->GetHandle());
         }
     }
 }
@@ -509,7 +510,7 @@ void ProfileForm::BtnSaveAsEvents::OnClick(HWND hWnd)
             }
             catch(WriteFileException &ex)
             {
-                MsgBox::Show(ex.what());
+                MsgBox::Show(ex.what(), hWnd);
             }
         }
     }

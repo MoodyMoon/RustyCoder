@@ -156,14 +156,14 @@ long Window::GetWindowBottom(void) const
     return rectangle.bottom - 1l;
 }
 
-long Window::GetWindowWidth(void) const
+unsigned long Window::GetWindowWidth(void) const
 {
     RECT rectangle;
     METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
     return rectangle.right - rectangle.left;
 }
 
-long Window::GetWindowHeight(void) const
+unsigned long Window::GetWindowHeight(void) const
 {
     RECT rectangle;
     METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
@@ -198,28 +198,18 @@ long Window::GetClientBottom(void) const
     return rectangle.bottom - 1l;
 }
 
-long Window::GetClientWidth(void) const
+unsigned long Window::GetClientWidth(void) const
 {
     RECT rectangle;
     METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
     return rectangle.right - rectangle.left;
 }
 
-long Window::GetClientHeight(void) const
+unsigned long Window::GetClientHeight(void) const
 {
     RECT rectangle;
     METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
     return rectangle.bottom - rectangle.top;
-}
-
-void Window::Show(WindowState state)
-{
-    ShowWindow(hWnd, state);
-}
-
-void Window::Focus()
-{
-    METHOD_ASSERT(SetFocus(hWnd), !=, NULL);
 }
 
 void Window::MoveTo(int x, int y, bool bRepaint)
@@ -254,6 +244,26 @@ void Window::GetText(wchar_t *text_buffer, unsigned int text_buffer_size)
 void Window::SetText(const wchar_t *lpString)
 {
     METHOD_ASSERT(SetWindowText(hWnd, lpString), != , 0);
+}
+
+void Window::Focus()
+{
+    METHOD_ASSERT(SetFocus(hWnd), != , NULL);
+}
+
+void Window::Show(WindowState state)
+{
+    ShowWindow(hWnd, state);
+}
+
+void Window::SetRedraw(bool redraw)
+{
+    SendMessage(hWnd, WM_SETREDRAW, redraw ? TRUE : FALSE, 0);
+}
+
+void Window::Redraw(const RECT *lprcUpdate, HRGN hrgnUpdate, unsigned int flags)
+{
+    METHOD_ASSERT(RedrawWindow(hWnd, lprcUpdate, hrgnUpdate, flags), !=, 0);
 }
 
 void Window::GetWindowRectangle(HWND hWnd, RECT &rectangle)
@@ -298,14 +308,14 @@ long Window::GetWindowBottom(HWND hWnd)
     return rectangle.bottom - 1l;
 }
 
-long Window::GetWindowWidth(HWND hWnd)
+unsigned long Window::GetWindowWidth(HWND hWnd)
 {
     RECT rectangle;
     METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
     return rectangle.right - rectangle.left;
 }
 
-long Window::GetWindowHeight(HWND hWnd)
+unsigned long Window::GetWindowHeight(HWND hWnd)
 {
     RECT rectangle;
     METHOD_ASSERT(GetWindowRect(hWnd, &rectangle), != , FALSE);
@@ -340,28 +350,18 @@ long Window::GetClientBottom(HWND hWnd)
     return rectangle.bottom - 1l;
 }
 
-long Window::GetClientWidth(HWND hWnd)
+unsigned long Window::GetClientWidth(HWND hWnd)
 {
     RECT rectangle;
     METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
     return rectangle.right - rectangle.left;
 }
 
-long Window::GetClientHeight(HWND hWnd)
+unsigned long Window::GetClientHeight(HWND hWnd)
 {
     RECT rectangle;
     METHOD_ASSERT(GetClientRect(hWnd, &rectangle), != , FALSE);
     return rectangle.bottom - rectangle.top;
-}
-
-void Window::Show(HWND hWnd, WindowState state)
-{
-    ShowWindow(hWnd, state);
-}
-
-void Window::Focus(HWND hWnd)
-{
-    METHOD_ASSERT(SetFocus(hWnd), != , NULL);
 }
 
 void Window::MoveTo(HWND hWnd, int x, int y, bool bRepaint)
@@ -391,6 +391,26 @@ void Window::GetText(HWND hWnd, wchar_t *text_buffer, unsigned int text_buffer_s
 void Window::SetText(HWND hWnd, const wchar_t *lpString)
 {
     METHOD_ASSERT(SetWindowText(hWnd, lpString), !=, 0);
+}
+
+void Window::Focus(HWND hWnd)
+{
+    METHOD_ASSERT(SetFocus(hWnd), != , NULL);
+}
+
+void Window::Show(HWND hWnd, WindowState state)
+{
+    ShowWindow(hWnd, state);
+}
+
+void Window::SetRedraw(HWND hWnd, bool redraw)
+{
+    SendMessage(hWnd, WM_SETREDRAW, redraw ? TRUE : FALSE, 0);
+}
+
+void Window::Redraw(HWND hWnd, const RECT *lprcUpdate, HRGN hrgnUpdate, unsigned int flags)
+{
+    METHOD_ASSERT(RedrawWindow(hWnd, lprcUpdate, hrgnUpdate, flags), != , 0);
 }
 
 Window::~Window(void)

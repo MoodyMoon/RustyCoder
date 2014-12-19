@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VER_PRODUCTVERSION_STR     VER_FILEVERSION_STR
 
 #define VER_PRODUCTNAME_STR        "RustyCoder"
-#define VER_FILEDESCRIPTION_STR    "Just another audio converter"
+#define VER_FILEDESCRIPTION_STR    "RustyCoder"
 #define VER_ORIGINALFILENAME_STR   VER_PRODUCTNAME_STR ".exe"
 #define VER_INTERNALNAME_STR       VER_ORIGINALFILENAME_STR
 #define VER_COPYRIGHT_STR          "Copyright (C) 2012-2014 Chak Wai Yuan"

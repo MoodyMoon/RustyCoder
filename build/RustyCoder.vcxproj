@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\common.h" />
+    <ClInclude Include="..\src\file_extension_filters.h" />
     <ClInclude Include="..\src\include\codecs\decoder.h" />
     <ClInclude Include="..\src\include\codecs\encoder.h" />
     <ClInclude Include="..\src\include\codecs\encoder_options.h" />
+    <ClInclude Include="..\src\include\codecs\file_extensions.h" />
     <ClInclude Include="..\src\include\codecs\rst_lame.h" />
     <ClInclude Include="..\src\include\codecs\rst_lame_options.h" />
     <ClInclude Include="..\src\include\codecs\rst_mpg123.h" />
@@ -55,10 +56,12 @@
     <ClInclude Include="..\src\include\core\rst_file.h" />
     <ClInclude Include="..\src\include\core\rst_lock.h" />
     <ClInclude Include="..\src\include\core\rst_thread.h" />
-    <ClInclude Include="..\src\include\core\timer.h" />
+    <ClInclude Include="..\src\include\core\timer_sync.h" />
+    <ClInclude Include="..\src\include\core\timer_async.h" />
     <ClInclude Include="..\src\include\core\windows_utilities.h" />
     <ClInclude Include="..\src\include\engine\codec_controller.h" />
     <ClInclude Include="..\src\include\engine\job.h" />
+    <ClInclude Include="..\src\include\engine\job_description.h" />
     <ClInclude Include="..\src\include\engine\settings_manager.h" />
     <ClInclude Include="..\src\include\lame\lame.h" />
     <ClInclude Include="..\src\include\libsndfile\sndfile.h" />
@@ -73,6 +76,7 @@
     <ClInclude Include="..\src\rustycoder.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\file_extension_filters.cpp" />
     <ClCompile Include="..\src\include\codecs\encoder_options.cpp" />
     <ClCompile Include="..\src\include\codecs\rst_lame.cpp" />
     <ClCompile Include="..\src\include\codecs\rst_lame_options.cpp" />
@@ -104,10 +108,12 @@
     <ClCompile Include="..\src\include\core\rst_file.cpp" />
     <ClCompile Include="..\src\include\core\rst_lock.cpp" />
     <ClCompile Include="..\src\include\core\rst_thread.cpp" />
-    <ClCompile Include="..\src\include\core\timer.cpp" />
+    <ClCompile Include="..\src\include\core\timer_sync.cpp" />
+    <ClCompile Include="..\src\include\core\timer_async.cpp" />
     <ClCompile Include="..\src\include\core\windows_utilities.cpp" />
     <ClCompile Include="..\src\include\engine\codec_controller.cpp" />
     <ClCompile Include="..\src\include\engine\job.cpp" />
+    <ClCompile Include="..\src\include\engine\job_description.cpp" />
     <ClCompile Include="..\src\include\engine\settings_manager.cpp" />
     <ClCompile Include="..\src\include\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

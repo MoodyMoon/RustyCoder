@@ -17,16 +17,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTROLS_BUTTON_H
-#define CONTROLS_BUTTON_H
-
-class Button : public Window
-{
-    public:
-        Button(const Button &) = delete;
-        Button & operator=(const Button &) = delete;
-
-        Button(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON);
-};
-
-#endif
+#include "stdafx.h"
+#include "file_extensions.h"

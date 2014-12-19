@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const char *LameOptions::output_file_extension = "mp3";
 const char *LameOptions::profile_file_extension = "lame";
 
-const std::map<const LameOptions::AlgorithmQuality, std::string> LameOptions::algorithm_quality_to_text =
+const std::unordered_map<const LameOptions::AlgorithmQuality, std::string> LameOptions::algorithm_quality_to_text =
 {
     {AlgorithmQuality::Q0, "0"},
     {AlgorithmQuality::Q1, "1"},
@@ -37,21 +37,21 @@ const std::map<const LameOptions::AlgorithmQuality, std::string> LameOptions::al
     {AlgorithmQuality::Q9, "9"}
 };
 
-const std::map<const LameOptions::Mode, std::string> LameOptions::mode_to_text =
+const std::unordered_map<const LameOptions::Mode, std::string> LameOptions::mode_to_text =
 {
     {Mode::STEREO, "Stereo"},
     {Mode::JOINT_STEREO, "Joint stereo"},
     {Mode::MONO, "Mono"}
 };
 
-const std::map<const LameOptions::ReplayGain, std::string> LameOptions::replaygain_mode_to_text =
+const std::unordered_map<const LameOptions::ReplayGain, std::string> LameOptions::replaygain_mode_to_text =
 {
     {ReplayGain::NONE, "None"},
     {ReplayGain::FAST, "Fast"},
     {ReplayGain::ACCURATE, "Accurate"}
 };
 
-const std::map<const LameOptions::BitrateEncoding, std::string> LameOptions::bitrate_encoding_to_text =
+const std::unordered_map<const LameOptions::BitrateEncoding, std::string> LameOptions::bitrate_encoding_to_text =
 {
     {BitrateEncoding::CONSTANT, "Constant"},
     {BitrateEncoding::VARIABLE_OLD, "Old variable"},
@@ -59,7 +59,7 @@ const std::map<const LameOptions::BitrateEncoding, std::string> LameOptions::bit
     {BitrateEncoding::AVERAGE, "Average"}
 };
 
-const std::map<const LameOptions::Bitrate, std::string> LameOptions::bitrate_to_text =
+const std::unordered_map<const LameOptions::Bitrate, std::string> LameOptions::bitrate_to_text =
 {
     {Bitrate::B_8, "8"},
     {Bitrate::B_16, "16"},
@@ -81,7 +81,7 @@ const std::map<const LameOptions::Bitrate, std::string> LameOptions::bitrate_to_
     {Bitrate::B_320, "320"}
 };
 
-const std::map<std::string, const LameOptions::AlgorithmQuality> LameOptions::text_to_algorithm_quality =
+const std::unordered_map<std::string, const LameOptions::AlgorithmQuality> LameOptions::text_to_algorithm_quality =
 {
     {LameOptions::algorithm_quality_to_text.at(AlgorithmQuality::Q0), AlgorithmQuality::Q0},
     {LameOptions::algorithm_quality_to_text.at(AlgorithmQuality::Q1), AlgorithmQuality::Q1},
@@ -95,21 +95,21 @@ const std::map<std::string, const LameOptions::AlgorithmQuality> LameOptions::te
     {LameOptions::algorithm_quality_to_text.at(AlgorithmQuality::Q9), AlgorithmQuality::Q9}
 };
 
-const std::map<std::string, const LameOptions::Mode> LameOptions::text_to_mode =
+const std::unordered_map<std::string, const LameOptions::Mode> LameOptions::text_to_mode =
 {
     {LameOptions::mode_to_text.at(Mode::STEREO), Mode::STEREO},
     {LameOptions::mode_to_text.at(Mode::JOINT_STEREO), Mode::JOINT_STEREO},
     {LameOptions::mode_to_text.at(Mode::MONO), Mode::MONO}
 };
 
-const std::map<std::string, const LameOptions::ReplayGain> LameOptions::text_to_replaygain_mode =
+const std::unordered_map<std::string, const LameOptions::ReplayGain> LameOptions::text_to_replaygain_mode =
 {
     {LameOptions::replaygain_mode_to_text.at(ReplayGain::NONE), ReplayGain::NONE},
     {LameOptions::replaygain_mode_to_text.at(ReplayGain::FAST), ReplayGain::FAST},
     {LameOptions::replaygain_mode_to_text.at(ReplayGain::ACCURATE), ReplayGain::ACCURATE}
 };
 
-const std::map<std::string, const LameOptions::BitrateEncoding> LameOptions::text_to_bitrate_encoding =
+const std::unordered_map<std::string, const LameOptions::BitrateEncoding> LameOptions::text_to_bitrate_encoding =
 {
     {LameOptions::bitrate_encoding_to_text.at(BitrateEncoding::CONSTANT), BitrateEncoding::CONSTANT},
     {LameOptions::bitrate_encoding_to_text.at(BitrateEncoding::VARIABLE_OLD), BitrateEncoding::VARIABLE_OLD},
@@ -117,7 +117,7 @@ const std::map<std::string, const LameOptions::BitrateEncoding> LameOptions::tex
     {LameOptions::bitrate_encoding_to_text.at(BitrateEncoding::AVERAGE), BitrateEncoding::AVERAGE}
 };
 
-const std::map<std::string, const LameOptions::Bitrate> LameOptions::text_to_bitrate =
+const std::unordered_map<std::string, const LameOptions::Bitrate> LameOptions::text_to_bitrate =
 {
     {LameOptions::bitrate_to_text.at(Bitrate::B_8), Bitrate::B_8},
     {LameOptions::bitrate_to_text.at(Bitrate::B_16), Bitrate::B_16},
@@ -139,7 +139,7 @@ const std::map<std::string, const LameOptions::Bitrate> LameOptions::text_to_bit
     {LameOptions::bitrate_to_text.at(Bitrate::B_320), Bitrate::B_320}
 };
 
-const std::map<const LameOptions::Option, std::string> LameOptions::option_to_text =
+const std::unordered_map<const LameOptions::Option, std::string> LameOptions::option_to_text =
 {
     {LameOptions::Option::ALGORITHM_QUALITY, "Algorithm quality"},
     {LameOptions::Option::MODE, "Channel"},
@@ -152,7 +152,7 @@ const std::map<const LameOptions::Option, std::string> LameOptions::option_to_te
     {LameOptions::Option::MIN_OR_MAX_BITRATE2, "Min or max bitrate"}
 };
 
-const std::map<std::string, const LameOptions::Option> LameOptions::text_to_option =
+const std::unordered_map<std::string, const LameOptions::Option> LameOptions::text_to_option =
 {
     {LameOptions::option_to_text.at(Option::ALGORITHM_QUALITY), Option::ALGORITHM_QUALITY},
     {LameOptions::option_to_text.at(Option::MODE), Option::MODE},
@@ -272,10 +272,10 @@ void LameOptions::LoadDefaultProfile(Profile default_profile)
             replaygain_mode = ReplayGain::ACCURATE;
             copyright = false;
             use_naoki_psytune = true;
-            bitrate_encoding = BitrateEncoding::CONSTANT;
+            bitrate_encoding = BitrateEncoding::VARIABLE_NEW;
             vbr_quality = 0.0f;
             min_or_max_bitrate1 = Bitrate::B_320;
-            min_or_max_bitrate2 = Bitrate::B_8;
+            min_or_max_bitrate2 = Bitrate::B_32;
             break;
         }
     }

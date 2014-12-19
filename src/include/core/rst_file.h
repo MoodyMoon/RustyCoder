@@ -43,7 +43,9 @@ class RustyFile
         RustyFile(const RustyFile &) = delete;
         RustyFile & operator=(const RustyFile &) = delete;
 
+        static std::string GetFile(std::string file_full_path, File flag);
         static std::wstring GetFile(std::wstring file_full_path, File flag);
+        static std::string GetFile(std::string file_name, FileName flag);
         static std::wstring GetFile(std::wstring file_name, FileName flag);
 };
 

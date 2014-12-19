@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "stdafx.h"
 #include "exceptions.h"
+
 Exception::Exception(const char * const caller_name, bool has_code, int code, const char * const message, ID exception_id) : exception_id(exception_id)
 {
     assert(caller_name != nullptr);
@@ -103,6 +104,9 @@ InvalidArgumentException::InvalidArgumentException(const char * const caller_nam
 InvalidArgumentException::InvalidArgumentException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::INVALID_ARGUMENT_EXCEPTION) {}
 
 MemoryAllocationException::MemoryAllocationException(const char * const caller_name) : Exception(caller_name, false, 0, message, Exception::ID::MEMORY_ALLOCATION_EXCEPTION) {}
+
+OutOfRangeException::OutOfRangeException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::OUT_OF_RANGE_EXCEPTION) {}
+OutOfRangeException::OutOfRangeException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::OUT_OF_RANGE_EXCEPTION) {}
 
 SeekException::SeekException(const char * const caller_name, const char * const message) : Exception(caller_name, false, 0, message, Exception::ID::SEEK_EXCEPTION) {}
 SeekException::SeekException(const char * const caller_name, int code, const char * const message) : Exception(caller_name, true, code, message, Exception::ID::SEEK_EXCEPTION) {}

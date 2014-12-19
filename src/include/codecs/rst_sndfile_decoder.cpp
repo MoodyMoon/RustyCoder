@@ -181,7 +181,8 @@ unsigned int SndFileDecoder<void>::GetSampleRate() const noexcept
 
 uint64_t SndFileDecoder<void>::GetFrameCount() const noexcept
 {
-    return sfinfo.frames;
+    //sfinfo.frames is in fact samples, NOT frames
+    return sfinfo.frames / sfinfo.channels;
 }
 
 Sample::SampleContainer SndFileDecoder<void>::GetPreferableOutputContainer() const noexcept

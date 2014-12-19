@@ -20,6 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_file.h"
 
+std::string RustyFile::GetFile(std::string file_full_path, File flag)
+{
+    return WindowsUtilities::UTF8_Encode(GetFile(WindowsUtilities::UTF8_Decode(file_full_path), flag));
+}
+
 std::wstring RustyFile::GetFile(std::wstring file_full_path, File flag)
 {
     assert(file_full_path.empty() == false);
@@ -102,6 +107,11 @@ std::wstring RustyFile::GetFile(std::wstring file_full_path, File flag)
     }
 
     return file_full_path;
+}
+
+std::string RustyFile::GetFile(std::string file_name, FileName flag)
+{
+    return WindowsUtilities::UTF8_Encode(GetFile(WindowsUtilities::UTF8_Decode(file_name), flag));
 }
 
 std::wstring RustyFile::GetFile(std::wstring file_name, FileName flag)

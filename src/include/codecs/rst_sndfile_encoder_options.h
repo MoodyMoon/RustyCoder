@@ -202,17 +202,17 @@ class SndFileEncoderOptions : public EncoderOptions
             OUPTPUT_FORMAT
         };
 
-        static const std::map<const OutputFormat, std::string> output_format_to_text;
-        static const std::map<std::string, const OutputFormat> text_to_output_format;
+        static const std::unordered_map<const OutputFormat, std::string> output_format_to_text;
+        static const std::unordered_map<std::string, const OutputFormat> text_to_output_format;
 
-        static const std::map<const Option, std::string> option_to_text;
-        static const std::map<std::string, const Option> text_to_option;
+        static const std::unordered_map<const Option, std::string> option_to_text;
+        static const std::unordered_map<std::string, const Option> text_to_option;
 
     public:
         OutputFormat output_format;
 
         /*! Output format extensions mapping obtained from command.c  */
-        static const std::map<const OutputFormat, std::string> output_format_to_file_extension;
+        static const std::unordered_map<const OutputFormat, std::string> output_format_to_file_extension;
         static const char *profile_file_extension;
 
         static const std::vector<std::string> options_and_selections[1];

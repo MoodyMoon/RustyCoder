@@ -34,6 +34,8 @@ class ReportListView : public Window
         void RemoveColumn(unsigned int index);
 
         unsigned int GetRowCount(void);
+        unsigned int GetRowUniqueId(unsigned int index);
+        unsigned int GetRowIndex(unsigned int id);
         void InsertRow(unsigned int index, const wchar_t *text, void *data = nullptr);
         void GetCellText(unsigned int column_index, unsigned int row_index, wchar_t **text_buffer, size_t text_buffer_size);
         void SetCellText(unsigned int column_index, unsigned int row_index, const wchar_t *text);
@@ -41,7 +43,8 @@ class ReportListView : public Window
         void RemoveAllRows(void);
 
         unsigned int GetSelectedItemsCount(void);
-        int GetNextSelectedItem(int iStart = -1);
+        int GetNextSelectedItem(unsigned int iStart = 0);
+        bool HasSelectedItems(void);
 
         virtual ~ReportListView(void) {}
 };

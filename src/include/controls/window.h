@@ -74,8 +74,8 @@ class Window
         Bottom pixels are inclusive
         */
         long GetWindowBottom(void) const;
-        long GetWindowWidth(void) const;
-        long GetWindowHeight(void) const;
+        unsigned long GetWindowWidth(void) const;
+        unsigned long GetWindowHeight(void) const;
 
         long GetClientLeft(void) const;
         long GetClientTop(void) const;
@@ -89,11 +89,8 @@ class Window
         Bottom pixels are inclusive
         */
         long GetClientBottom(void) const;
-        long GetClientWidth(void) const;
-        long GetClientHeight(void) const;
-
-        void Show(WindowState state);
-        void Focus(void);
+        unsigned long GetClientWidth(void) const;
+        unsigned long GetClientHeight(void) const;
 
         void MoveTo(int x, int y, bool bRepaint = true);
         void ResizeTo(int nWidth, int nHeight, bool bRepaint = true);
@@ -103,6 +100,12 @@ class Window
 
         void GetText(wchar_t *text_buffer, unsigned int text_buffer_size);
         void SetText(const wchar_t *lpString);
+
+        void Focus(void);
+        void Show(WindowState state);
+
+        void SetRedraw(bool redraw);
+        void Redraw(const RECT *lprcUpdate = nullptr, HRGN hrgnUpdate = nullptr, unsigned int flags = RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
         static void GetWindowRectangle(HWND hWnd, RECT &rectangle);
         static void GetClientRectangle(HWND hWnd, RECT &rectangle);
@@ -118,8 +121,8 @@ class Window
         Bottom pixels are inclusive
         */
         static long GetWindowBottom(HWND hWnd);
-        static long GetWindowWidth(HWND hWnd);
-        static long GetWindowHeight(HWND hWnd);
+        static unsigned long GetWindowWidth(HWND hWnd);
+        static unsigned long GetWindowHeight(HWND hWnd);
 
         static long GetClientLeft(HWND hWnd);
         static long GetClientTop(HWND hWnd);
@@ -133,11 +136,8 @@ class Window
         Bottom pixels are inclusive
         */
         static long GetClientBottom(HWND hWnd);
-        static long GetClientWidth(HWND hWnd);
-        static long GetClientHeight(HWND hWnd);
-
-        static void Show(HWND hWnd, WindowState state);
-        static void Focus(HWND hWnd);
+        static unsigned long GetClientWidth(HWND hWnd);
+        static unsigned long GetClientHeight(HWND hWnd);
 
         static void MoveTo(HWND hWnd, int x, int y, bool bRepaint = true);
         static void ResizeTo(HWND hWnd, int nWidth, int nHeight, bool bRepaint = true);
@@ -145,6 +145,12 @@ class Window
 
         static void GetText(HWND hWnd, wchar_t *text_buffer, unsigned int text_buffer_size);
         static void SetText(HWND hWnd, const wchar_t *lpString);
+
+        static void Focus(HWND hWnd);
+        static void Show(HWND hWnd, WindowState state);
+
+        static void SetRedraw(HWND hWnd, bool redraw);
+        static void Redraw(HWND hWnd, const RECT *lprcUpdate = nullptr, HRGN hrgnUpdate = nullptr, unsigned int flags = RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
         virtual ~Window(void);
 };

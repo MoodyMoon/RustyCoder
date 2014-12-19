@@ -74,6 +74,16 @@ unsigned int ReportListView::GetRowCount(void)
     return ListView_GetItemCount(hWnd);
 }
 
+unsigned int ReportListView::GetRowUniqueId(unsigned int index)
+{
+    return ListView_MapIndexToID(hWnd, index);
+}
+
+unsigned int ReportListView::GetRowIndex(unsigned int id)
+{
+    return ListView_MapIDToIndex(hWnd, id);
+}
+
 void ReportListView::InsertRow(unsigned int index, const wchar_t *text, void *data)
 {
     LVITEM item;
@@ -120,17 +130,22 @@ void ReportListView::RemoveRow(unsigned int index)
     METHOD_ASSERT(ListView_DeleteItem(hWnd, index), ==, TRUE);
 }
 
-void ReportListView::RemoveAllRows(void)
+void ReportListView::RemoveAllRows()
 {
     METHOD_ASSERT(ListView_DeleteAllItems(hWnd), == , TRUE);
 }
 
-unsigned int ReportListView::GetSelectedItemsCount(void)
+unsigned int ReportListView::GetSelectedItemsCount()
 {
     return ListView_GetSelectedCount(hWnd);
 }
 
-int ReportListView::GetNextSelectedItem(int iStart)
+int ReportListView::GetNextSelectedItem(unsigned int iStart)
 {
-    return ListView_GetNextItem(hWnd, iStart, LVNI_FOCUSED | LVNI_SELECTED);
+    return ListView_GetNextItem(hWnd, static_cast<int>(iStart) - 1, LVNI_SELECTED);
+}
+
+bool ReportListView::HasSelectedItems()
+{
+    return (ListView_GetNextItem(hWnd, -1, LVNI_SELECTED) > -1);
 }

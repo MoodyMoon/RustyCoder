@@ -67,6 +67,13 @@ std::wstring OpenFolderDialog::GetFolder()
 {
     assert(got_result);
 
+    wchar_t output_folder_path_last_character = output_folder_path.back();
+
+    if(output_folder_path_last_character == L'\\' || output_folder_path_last_character == L'/')
+    {
+        output_folder_path.pop_back();
+    }
+
     return output_folder_path;
 }
 

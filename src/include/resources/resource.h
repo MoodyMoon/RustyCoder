@@ -20,27 +20,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RUSTYCODER_ICON                           100
 #define MAINFORM_MENUBAR_FILE_ADDFILES            101
 #define MAINFORM_MENUBAR_FILE_EXIT                102
-#define MAINFORM_VERTICAL_SPLIT_WINDOW1           103
-#define MAINFORM_PANEL1                           104
-#define MAINFORM_PANEL1_JOB_REPORT_LIST_VIEW      105
-#define MAINFORM_PANEL1_LBL_FILE_DESTINATION_SIGN 106
-#define MAINFORM_PANEL1_SLTXTBX_FILE_DESTINATION  107
-#define MAINFORM_PANEL1_BTN_BROWSE                108
-#define MAINFORM_PANEL1_BTN_LOAD_PROFILE          109
-#define MAINFORM_PANEL1_BTN_CREATE_PROFILE        110
-#define MAINFORM_PANEL1_BTN_CONVERT               111
-#define MAINFORM_PANEL2                           112
-#define PROFILEFORM_LBL_ENCODER_SIGN              113
-#define PROFILEFORM_CMBBX_ENCODER                 114
-#define PROFILEFORM_BTN_LOAD_DEFAULT              115
-#define PROFILEFORM_PROFILE_REPORT_LIST_VIEW      116
-#define PROFILEFORM_LBL_OPTION_VALUE_SIGN         117
-#define PROFILEFORM_SLTXTBX_OPTION_SETTER         118
-#define PROFILEFORM_CMBBX_OPTION_SETTER           119
-#define PROFILEFORM_BTN_SET_OPTION                120
-#define PROFILEFORM_BTN_OPEN                      121
-#define PROFILEFORM_BTN_SAVE                      122
-#define PROFILEFORM_BTN_SAVE_AS                   123
+#define MAINFORM_JOB_REPORT_LIST_VIEW             103
+#define MAINFORM_BTN_ADD_FILES                    104
+#define MAINFORM_BTN_REMOVE_FILES                 105
+#define MAINFORM_BTN_LOAD_PROFILE                 106
+#define MAINFORM_BTN_CREATE_PROFILE               107
+#define MAINFORM_BTN_BROWSE_FOLDER                108
+#define MAINFORM_BTN_START_QUEUE                  109
+#define MAINFORM_BTN_PAUSE_QUEUE                  110
+#define PROFILEFORM_LBL_ENCODER_SIGN              111
+#define PROFILEFORM_CMBBX_ENCODER                 112
+#define PROFILEFORM_BTN_LOAD_DEFAULT              113
+#define PROFILEFORM_PROFILE_REPORT_LIST_VIEW      114
+#define PROFILEFORM_LBL_OPTION_VALUE_SIGN         115
+#define PROFILEFORM_SLTXTBX_OPTION_SETTER         116
+#define PROFILEFORM_CMBBX_OPTION_SETTER           117
+#define PROFILEFORM_BTN_SET_OPTION                118
+#define PROFILEFORM_BTN_OPEN                      119
+#define PROFILEFORM_BTN_SAVE                      120
+#define PROFILEFORM_BTN_SAVE_AS                   121
 
 // Next default values for new objects
 //

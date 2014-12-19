@@ -17,15 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef GUI_FILE_EXTENSION_FILTERS_H
+#define GUI_FILE_EXTENSION_FILTERS_H
+
 #include "stdafx.h"
-#include "timer.h"
 
-Timer::Timer(HWND hWnd, unsigned int nIDEvent, unsigned int uElapse) : hWndParent(hWnd), nIDEvent(nIDEvent)
+class FileExtensionFilters
 {
-    SetTimer(hWnd, nIDEvent, uElapse, nullptr);
-}
+    public:
+        static const COMDLG_FILTERSPEC input_audio_format_filters[22];
+        static const COMDLG_FILTERSPEC input_profile_format_filters[3];
+};
 
-Timer::~Timer(void)
-{
-    KillTimer(hWndParent, nIDEvent);
-}
+#endif

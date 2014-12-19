@@ -29,6 +29,7 @@ class Exception : public std::exception
             ENCODER_CONFIGURATION_EXCEPTION,
             INVALID_ARGUMENT_EXCEPTION,
             MEMORY_ALLOCATION_EXCEPTION,
+            OUT_OF_RANGE_EXCEPTION,
             SEEK_EXCEPTION,
             READ_FILE_EXCEPTION,
             WRITE_FILE_EXCEPTION
@@ -89,6 +90,13 @@ class MemoryAllocationException : public Exception
 
     public:
         MemoryAllocationException(const char * const caller_name);
+};
+
+class OutOfRangeException : public Exception
+{
+    public:
+        OutOfRangeException(const char * const caller_name, const char * const message);
+        OutOfRangeException(const char * const caller_name, int code, const char * const message);
 };
 
 class SeekException : public Exception

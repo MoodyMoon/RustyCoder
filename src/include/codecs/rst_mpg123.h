@@ -132,7 +132,7 @@ to prevent mpg123_init() to be called twice in the same process and mpg123_exit(
 class Mpg123LifetimeHandler
 {
     private:
-        static bool init;
+        static std::atomic<uint32_t> init_count;
 
     public:
         Mpg123LifetimeHandler(const Mpg123LifetimeHandler &) = delete;

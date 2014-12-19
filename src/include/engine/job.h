@@ -22,35 +22,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Job : public RustyThreadCallbackInterface
 {
-    private:
-        Decoder<void>::ID decoder_id;
+    public:
+        enum State
+        {
+            NOT_READY,
+            READY,
+            RUNNING,
+            PAUSE,
+            DONE,
+            ERROR_OCCURED
+        };
 
+    private:
         std::unique_ptr<EncoderOptions> encoder_options;
         std::unique_ptr<CodecController> codec_controller;
-        RustyLock progress_lock;
 
-        bool started = false;
-        bool finished = false;
-        bool error_occured = false;
+        std::atomic<State> state = State::READY;
 
-        std::unique_ptr<Exception> error;
+        std::atomic<uint64_t> written_frame_count = 0ull;
+        std::atomic<uint64_t> total_frame_count;
+
+        std::atomic<std::unique_ptr<Exception>> error;
         std::unique_ptr<RustyThread> thread;
 
         virtual DWORD DoSync(void *);
 
     public:
+        static const std::unordered_map<State, std::string> state_to_string;
+
         Job(const Job &) = delete;
         Job & operator=(const Job &) = delete;
 
-        Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, SndFileEncoderOptions &options);
-        Job(std::string &source_file_full_path, std::string &output_file_full_path, Decoder<void>::ID decoder_id, LameOptions &options);
+        Job(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const LameOptions &lame_options);
+        Job(const std::string &source_file_full_path, const std::string &output_file_full_path, Decoder<void>::ID decoder_id, const SndFileEncoderOptions &sndfileencoder_options);
 
         void StartAsync(void);
-        void StopSync(void);
-        bool IsStartedSync(void);
-        bool IsFinishedSync(void);
-        bool HasError(void);
-        Exception * GetError(void);
+        void PauseSync(void);
+        State GetStateSync(void) const noexcept;
+        Exception * GetError(void) const noexcept;
+
+        uint64_t GetWrittenFrameCount(void) const noexcept;
+        uint64_t GetTotalFrameCount(void) const noexcept;
 
         virtual ~Job(void);
 };

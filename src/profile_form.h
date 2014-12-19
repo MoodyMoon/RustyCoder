@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_PROFILE_FORM_H
 #define GUI_PROFILE_FORM_H
 
-#include "common.h"
+#include "file_extension_filters.h"
 
 class ProfileForm : public EventHandlerInterface
 {
@@ -130,10 +130,9 @@ class ProfileForm::ProfileReportListViewEvents
 
         Encoder<void>::ID GetLoadedProfileEncoderID(void);
 
-        void SaveProfile(std::wstring file_full_path);
+        void SaveProfile(std::wstring profile_full_path);
 
-        void LoadProfile(LameOptions &lame_options);
-        void LoadProfile(SndFileEncoderOptions &sndfileencoder_options);
+        void LoadProfile(HWND hWnd);
         void LoadDefaultProfile(Encoder<void>::ID encoder_id);
 
         void SetEncoderOption(std::string &value);
