@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "rst_lame_options.h"
 
-const char *LameOptions::output_file_extension = "mp3";
-const char *LameOptions::profile_file_extension = "lame";
+const char *LameOptions::output_file_extension = AUDIO_EXTENSION_MP3;
+const char *LameOptions::profile_file_extension = PROFILE_EXTENSION_LAME;
 
 const std::unordered_map<const LameOptions::AlgorithmQuality, std::string> LameOptions::algorithm_quality_to_text =
 {

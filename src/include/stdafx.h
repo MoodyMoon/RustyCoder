@@ -87,7 +87,6 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "core/rst_file.h"
 #include "core/rst_lock.h"
 #include "core/rst_thread.h"
-#include "core/timer_async.h"
 #include "core/timer_sync.h"
 #include "core/windows_utilities.h"
 
@@ -121,13 +120,11 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 #include "controls/file_dialog_events.h"
 #include "controls/label.h"
 #include "controls/menubar.h"
-#include "controls/numeric_up_down.h"
 #include "controls/open_file_dialog.h"
 #include "controls/open_folder_dialog.h"
 #include "controls/panel.h"
 #include "controls/report_list_view.h"
 #include "controls/save_file_dialog.h"
 #include "controls/single_line_text_box.h"
-#include "controls/vertical_split_window.h"
 
 #endif

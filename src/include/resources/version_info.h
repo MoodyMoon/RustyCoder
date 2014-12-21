@@ -20,10 +20,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MACRO_STRINGIFY(s) #s
 #define MACRO_EXPANDED_STRINGIFY(s) MACRO_STRINGIFY(s)
 
+/** Change version numbers only before release */
+
+/** Increment this number when there are huge feature changes */
 #define VERSION_MAJOR               1
+
+/** Increment this number when there are feature additions */
 #define VERSION_MINOR               0
+
+/** Increment this number when there are bug fixes and minor improvements */
 #define VERSION_REVISION            0
-#define VERSION_BUILD               0
+
+/** Change this to number of commits on the master branch before release */
+#define VERSION_BUILD               26
 
 #define VER_FILEVERSION            VERSION_MAJOR,VERSION_MINOR,VERSION_REVISION,VERSION_BUILD
 #define VER_FILEVERSION_STR        MACRO_EXPANDED_STRINGIFY(VERSION_MAJOR) "." \

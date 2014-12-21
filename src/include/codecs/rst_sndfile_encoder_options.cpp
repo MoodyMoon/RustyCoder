@@ -37,142 +37,142 @@ const std::unordered_map<const SndFileEncoderOptions::OutputFormat, std::string>
     {OutputFormat::WAV_G721_32_ADPCM, AUDIO_EXTENSION_WAV},
 
     /*! AIFF (Apple/SGI) */
-    {OutputFormat::AIFF_PCM_INT_U8, "aiff"},
-    {OutputFormat::AIFF_PCM_INT_S8, "aiff"},
-    {OutputFormat::AIFF_PCM_INT_S16, "aiff"},
-    {OutputFormat::AIFF_PCM_INT_S24, "aiff"},
-    {OutputFormat::AIFF_PCM_INT_S32, "aiff"},
-    {OutputFormat::AIFF_PCM_FLOAT_32, "aifc"},
-    {OutputFormat::AIFF_PCM_FLOAT_64, "aiff"},
-    {OutputFormat::AIFF_ULAW, "aiff"},
-    {OutputFormat::AIFF_ALAW, "aiff"},
-    {OutputFormat::AIFF_IMA_ADPCM, "aiff"},
-    {OutputFormat::AIFF_GSM610, "aiff"},
-    {OutputFormat::AIFF_DWVW_12, "aiff"},
-    {OutputFormat::AIFF_DWVW_16, "aiff"},
-    {OutputFormat::AIFF_DWVW_24, "aiff"},
+    {OutputFormat::AIFF_PCM_INT_U8, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_PCM_INT_S8, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_PCM_INT_S16, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_PCM_INT_S24, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_PCM_INT_S32, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_PCM_FLOAT_32, AUDIO_EXTENSION_AIFC},
+    {OutputFormat::AIFF_PCM_FLOAT_64, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_ULAW, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_ALAW, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_IMA_ADPCM, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_GSM610, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_DWVW_12, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_DWVW_16, AUDIO_EXTENSION_AIFF},
+    {OutputFormat::AIFF_DWVW_24, AUDIO_EXTENSION_AIFF},
 
     /*! AU (Sun/NeXT) */
-    {OutputFormat::AU_PCM_INT_S8, "au"},
-    {OutputFormat::AU_PCM_INT_S16, "au"},
-    {OutputFormat::AU_PCM_INT_S24, "au"},
-    {OutputFormat::AU_PCM_INT_S32, "au"},
-    {OutputFormat::AU_PCM_FLOAT_32, "au"},
-    {OutputFormat::AU_PCM_FLOAT_64, "au"},
-    {OutputFormat::AU_ULAW, "au"},
-    {OutputFormat::AU_ALAW, "au"},
-    {OutputFormat::AU_G721_32_ADPCM, "au"},
-    {OutputFormat::AU_G723_24_ADPCM, "au"},
-    {OutputFormat::AU_G723_40_ADPCM, "au"},
+    {OutputFormat::AU_PCM_INT_S8, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_PCM_INT_S16, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_PCM_INT_S24, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_PCM_INT_S32, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_PCM_FLOAT_32, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_PCM_FLOAT_64, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_ULAW, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_ALAW, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_G721_32_ADPCM, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_G723_24_ADPCM, AUDIO_EXTENSION_AU},
+    {OutputFormat::AU_G723_40_ADPCM, AUDIO_EXTENSION_AU},
 
     /*! PAF (Ensoniq PARIS) */
-    {OutputFormat::PAF_PCM_INT_S8, "paf"},
-    {OutputFormat::PAF_PCM_INT_S16, "paf"},
-    {OutputFormat::PAF_PCM_INT_S24, "paf"},
+    {OutputFormat::PAF_PCM_INT_S8, AUDIO_EXTENSION_PAF},
+    {OutputFormat::PAF_PCM_INT_S16, AUDIO_EXTENSION_PAF},
+    {OutputFormat::PAF_PCM_INT_S24, AUDIO_EXTENSION_PAF},
 
     /*! IFF (Amiga IFF/SVX8/SV16) */
-    {OutputFormat::SVX_PCM_INT_S8, "iff"},
-    {OutputFormat::SVX_PCM_INT_S16, "iff"},
+    {OutputFormat::SVX_PCM_INT_S8, AUDIO_EXTENSION_IFF},
+    {OutputFormat::SVX_PCM_INT_S16, AUDIO_EXTENSION_IFF},
 
     /*! WAV (NIST Sphere) */
-    {OutputFormat::NIST_PCM_INT_S8, "wav"},
-    {OutputFormat::NIST_PCM_INT_S16, "wav"},
-    {OutputFormat::NIST_PCM_INT_S24, "wav"},
-    {OutputFormat::NIST_PCM_INT_S32, "wav"},
-    {OutputFormat::NIST_ULAW, "wav"},
-    {OutputFormat::NIST_ALAW, "wav"},
+    {OutputFormat::NIST_PCM_INT_S8, AUDIO_EXTENSION_WAV},
+    {OutputFormat::NIST_PCM_INT_S16, AUDIO_EXTENSION_WAV},
+    {OutputFormat::NIST_PCM_INT_S24, AUDIO_EXTENSION_WAV},
+    {OutputFormat::NIST_PCM_INT_S32, AUDIO_EXTENSION_WAV},
+    {OutputFormat::NIST_ULAW, AUDIO_EXTENSION_WAV},
+    {OutputFormat::NIST_ALAW, AUDIO_EXTENSION_WAV},
 
     /*! VOC (Creative Labs) */
-    {OutputFormat::VOC_PCM_INT_U8, "voc"},
-    {OutputFormat::VOC_PCM_INT_S16, "voc"},
-    {OutputFormat::VOC_ULAW, "voc"},
-    {OutputFormat::VOC_ALAW, "voc"},
+    {OutputFormat::VOC_PCM_INT_U8, AUDIO_EXTENSION_VOC},
+    {OutputFormat::VOC_PCM_INT_S16, AUDIO_EXTENSION_VOC},
+    {OutputFormat::VOC_ULAW, AUDIO_EXTENSION_VOC},
+    {OutputFormat::VOC_ALAW, AUDIO_EXTENSION_VOC},
 
     /*! SF (Berkeley/IRCAM/CARL) */
-    {OutputFormat::IRCAM_PCM_INT_S16, "sf"},
-    {OutputFormat::IRCAM_PCM_INT_S32, "sf"},
-    {OutputFormat::IRCAM_PCM_FLOAT_32, "sf"},
-    {OutputFormat::IRCAM_ULAW, "sf"},
-    {OutputFormat::IRCAM_ALAW, "sf"},
+    {OutputFormat::IRCAM_PCM_INT_S16, AUDIO_EXTENSION_SF},
+    {OutputFormat::IRCAM_PCM_INT_S32, AUDIO_EXTENSION_SF},
+    {OutputFormat::IRCAM_PCM_FLOAT_32, AUDIO_EXTENSION_SF},
+    {OutputFormat::IRCAM_ULAW, AUDIO_EXTENSION_SF},
+    {OutputFormat::IRCAM_ALAW, AUDIO_EXTENSION_SF},
 
     /*! W64 (SoundFoundry WAVE 64) */
-    {OutputFormat::W64_PCM_INT_U8, "w64"},
-    {OutputFormat::W64_PCM_INT_S16, "w64"},
-    {OutputFormat::W64_PCM_INT_S24, "w64"},
-    {OutputFormat::W64_PCM_INT_S32, "w64"},
-    {OutputFormat::W64_PCM_FLOAT_32, "w64"},
-    {OutputFormat::W64_PCM_FLOAT_64, "w64"},
-    {OutputFormat::W64_ULAW, "w64"},
-    {OutputFormat::W64_ALAW, "w64"},
-    {OutputFormat::W64_IMA_ADPCM, "w64"},
-    {OutputFormat::W64_MS_ADPCM, "w64"},
-    {OutputFormat::W64_GSM610, "w64"},
+    {OutputFormat::W64_PCM_INT_U8, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_PCM_INT_S16, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_PCM_INT_S24, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_PCM_INT_S32, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_PCM_FLOAT_32, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_PCM_FLOAT_64, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_ULAW, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_ALAW, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_IMA_ADPCM, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_MS_ADPCM, AUDIO_EXTENSION_W64},
+    {OutputFormat::W64_GSM610, AUDIO_EXTENSION_W64},
 
     /*! MAT4 (GNU Octave 2.0 / Matlab 4.2) */
-    {OutputFormat::MAT4_PCM_INT_S16, "mat"},
-    {OutputFormat::MAT4_PCM_INT_S32, "mat"},
-    {OutputFormat::MAT4_PCM_FLOAT_32, "mat"},
-    {OutputFormat::MAT4_PCM_FLOAT_64, "mat"},
+    {OutputFormat::MAT4_PCM_INT_S16, AUDIO_EXTENSION_MAT},
+    {OutputFormat::MAT4_PCM_INT_S32, AUDIO_EXTENSION_MAT},
+    {OutputFormat::MAT4_PCM_FLOAT_32, AUDIO_EXTENSION_MAT},
+    {OutputFormat::MAT4_PCM_FLOAT_64, AUDIO_EXTENSION_MAT},
 
     /*! MAT5 (GNU Octave 2.1 / Matlab 5.0) */
-    {OutputFormat::MAT5_PCM_INT_U8, "mat"},
-    {OutputFormat::MAT5_PCM_INT_S16, "mat"},
-    {OutputFormat::MAT5_PCM_INT_S32, "mat"},
-    {OutputFormat::MAT5_PCM_FLOAT_32, "mat"},
-    {OutputFormat::MAT5_PCM_FLOAT_64, "mat"},
+    {OutputFormat::MAT5_PCM_INT_U8, AUDIO_EXTENSION_MAT},
+    {OutputFormat::MAT5_PCM_INT_S16, AUDIO_EXTENSION_MAT},
+    {OutputFormat::MAT5_PCM_INT_S32, AUDIO_EXTENSION_MAT},
+    {OutputFormat::MAT5_PCM_FLOAT_32, AUDIO_EXTENSION_MAT},
+    {OutputFormat::MAT5_PCM_FLOAT_64, AUDIO_EXTENSION_MAT},
 
     /*! PVF (Portable Voice Format) */
-    {OutputFormat::PVF_PCM_INT_S8, "pvf"},
-    {OutputFormat::PVF_PCM_INT_S16, "pvf"},
-    {OutputFormat::PVF_PCM_INT_S32, "pvf"},
+    {OutputFormat::PVF_PCM_INT_S8, AUDIO_EXTENSION_PVF},
+    {OutputFormat::PVF_PCM_INT_S16, AUDIO_EXTENSION_PVF},
+    {OutputFormat::PVF_PCM_INT_S32, AUDIO_EXTENSION_PVF},
 
     /*! XI (FastTracker 2) */
-    {OutputFormat::XI_DPCM_8, "xi"},
-    {OutputFormat::XI_DPCM_16, "xi"},
+    {OutputFormat::XI_DPCM_8, AUDIO_EXTENSION_XI},
+    {OutputFormat::XI_DPCM_16, AUDIO_EXTENSION_XI},
 
     /*! HTK (HMM Tool Kit) */
-    {OutputFormat::HTK_PCM_INT_S16, "htk"},
+    {OutputFormat::HTK_PCM_INT_S16, AUDIO_EXTENSION_HTK},
 
     /*! SDS (Midi Sample Dump Standard) */
-    {OutputFormat::SDS_PCM_INT_S8, "sds"},
-    {OutputFormat::SDS_PCM_INT_S16, "sds"},
-    {OutputFormat::SDS_PCM_INT_S24, "sds"},
+    {OutputFormat::SDS_PCM_INT_S8, AUDIO_EXTENSION_SDS},
+    {OutputFormat::SDS_PCM_INT_S16, AUDIO_EXTENSION_SDS},
+    {OutputFormat::SDS_PCM_INT_S24, AUDIO_EXTENSION_SDS},
 
     /*! AVR (Audio Visual Research) */
-    {OutputFormat::AVR_PCM_INT_U8, "avr"},
-    {OutputFormat::AVR_PCM_INT_S8, "avr"},
-    {OutputFormat::AVR_PCM_INT_S16, "avr"},
+    {OutputFormat::AVR_PCM_INT_U8, AUDIO_EXTENSION_AVR},
+    {OutputFormat::AVR_PCM_INT_S8, AUDIO_EXTENSION_AVR},
+    {OutputFormat::AVR_PCM_INT_S16, AUDIO_EXTENSION_AVR},
 
     /*! WAVEX (Microsoft) */
-    {OutputFormat::WAVEX_PCM_INT_U8, "wav"},
-    {OutputFormat::WAVEX_PCM_INT_S16, "wav"},
-    {OutputFormat::WAVEX_PCM_INT_S24, "wav"},
-    {OutputFormat::WAVEX_PCM_INT_S32, "wav"},
-    {OutputFormat::WAVEX_PCM_FLOAT_32, "wav"},
-    {OutputFormat::WAVEX_PCM_FLOAT_64, "wav"},
-    {OutputFormat::WAVEX_ULAW, "wav"},
-    {OutputFormat::WAVEX_ALAW, "wav"},
+    {OutputFormat::WAVEX_PCM_INT_U8, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAVEX_PCM_INT_S16, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAVEX_PCM_INT_S24, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAVEX_PCM_INT_S32, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAVEX_PCM_FLOAT_32, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAVEX_PCM_FLOAT_64, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAVEX_ULAW, AUDIO_EXTENSION_WAV},
+    {OutputFormat::WAVEX_ALAW, AUDIO_EXTENSION_WAV},
 
     /*! SD2 (Sound Designer II) */
-    {OutputFormat::SD2_PCM_INT_S8, "sd2"},
-    {OutputFormat::SD2_PCM_INT_S16, "sd2"},
-    {OutputFormat::SD2_PCM_INT_S24, "sd2"},
+    {OutputFormat::SD2_PCM_INT_S8, AUDIO_EXTENSION_SD2},
+    {OutputFormat::SD2_PCM_INT_S16, AUDIO_EXTENSION_SD2},
+    {OutputFormat::SD2_PCM_INT_S24, AUDIO_EXTENSION_SD2},
 
     /*! CAF (Apple Core Audio File) */
-    {OutputFormat::CAF_PCM_INT_S8, "caf"},
-    {OutputFormat::CAF_PCM_INT_S16, "caf"},
-    {OutputFormat::CAF_PCM_INT_S24, "caf"},
-    {OutputFormat::CAF_PCM_INT_S32, "caf"},
-    {OutputFormat::CAF_PCM_FLOAT_32, "caf"},
-    {OutputFormat::CAF_PCM_FLOAT_64, "caf"},
-    {OutputFormat::CAF_ULAW, "caf"},
-    {OutputFormat::CAF_ALAW, "caf"},
+    {OutputFormat::CAF_PCM_INT_S8, AUDIO_EXTENSION_CAF},
+    {OutputFormat::CAF_PCM_INT_S16, AUDIO_EXTENSION_CAF},
+    {OutputFormat::CAF_PCM_INT_S24, AUDIO_EXTENSION_CAF},
+    {OutputFormat::CAF_PCM_INT_S32, AUDIO_EXTENSION_CAF},
+    {OutputFormat::CAF_PCM_FLOAT_32, AUDIO_EXTENSION_CAF},
+    {OutputFormat::CAF_PCM_FLOAT_64, AUDIO_EXTENSION_CAF},
+    {OutputFormat::CAF_ULAW, AUDIO_EXTENSION_CAF},
+    {OutputFormat::CAF_ALAW, AUDIO_EXTENSION_CAF},
 
     /*! WVE (Psion Series 3) */
-    {OutputFormat::WVE_ALAW, "wve"},
+    {OutputFormat::WVE_ALAW, AUDIO_EXTENSION_WVE},
 
-    /*! MPC (Akai MPC 2k) Do not change the extension to "mpc" to prevent clash with Musepack format extension */
-    {OutputFormat::MPC2K_PCM_INT_S16, "ampc"},
+    /*! MPC (Akai MPC 2k) */
+    {OutputFormat::MPC2K_PCM_INT_S16, AUDIO_EXTENSION_AMPC},
 
     /*! RF64 (RIFF 64) */
     {OutputFormat::RF64_PCM_INT_U8, "rf64"},
@@ -185,7 +185,7 @@ const std::unordered_map<const SndFileEncoderOptions::OutputFormat, std::string>
     {OutputFormat::RF64_ALAW, "rf64"}
 };
 
-const char *SndFileEncoderOptions::profile_file_extension = "sndfe";
+const char *SndFileEncoderOptions::profile_file_extension = PROFILE_EXTENSION_SNDFILEENCODER;
 
 const std::unordered_map<const SndFileEncoderOptions::OutputFormat, std::string> SndFileEncoderOptions::output_format_to_text =
 {

@@ -24,7 +24,7 @@ class TimerSync
 {
     private:
         HWND hWndParent;
-        unsigned long long nIDEvent;
+        UINT_PTR nIDEvent;
         unsigned int uElapse;
         bool started;
 
@@ -32,7 +32,7 @@ class TimerSync
         TimerSync(const TimerSync &) = delete;
         TimerSync & operator=(const TimerSync &) = delete;
 
-        TimerSync(HWND hWnd, unsigned long long nIDEvent, unsigned int uElapse, bool start_now);
+        TimerSync(HWND hWnd, UINT_PTR nIDEvent, unsigned int uElapse, bool start_now);
         void Start(void);
         void Stop(void);
         bool IsStarted(void);

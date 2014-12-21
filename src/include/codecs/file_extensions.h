@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AUDIO_EXTENSION_AIFC "aifc"
 #define AUDIO_EXTENSION_AIFF "aiff"
 
+/*! Do not change the extension to "mpc" to prevent clash with Musepack format extension */
 #define AUDIO_EXTENSION_DESCRIPTION_AKAI_MPC_2000 "Akai MPC 2000 Format"
 #define AUDIO_EXTENSION_AMPC "ampc"
 
@@ -167,121 +168,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define PROFILE_EXTENSION_DESCRIPTION_SNDFILEENCODER_W              WIDEN_STRING(PROFILE_EXTENSION_DESCRIPTION_SNDFILEENCODER)
 #define PROFILE_EXTENSION_SNDFILEENCODER_W                          WIDEN_STRING(PROFILE_EXTENSION_SNDFILEENCODER)
-
-/*
-class FileExtension
-{
-    public:
-        enum AudioExtension
-        {
-            AIF,
-            AIFC,
-            AIFF,
-            AMPC,
-            AU,
-            AVR,
-            CAF,
-            HTK,
-            IFF,
-            MAT,
-            MP1,
-            MP2,
-            MP3,
-            PAF,
-            PVF,
-            RF64,
-            SD2,
-            SDS,
-            SF,
-            VOC,
-            W64,
-            WAV,
-            WVE,
-            XI
-        };
-
-        enum ProfileExtension
-        {
-            LAME,
-            SNDFE
-        };
-
-        static const std::unordered_map<AudioExtension, std::string> audio_format_to_text;
-        static const std::unordered_map<std::string, AudioExtension> text_to_audio_format;
-
-        static const std::unordered_map<ProfileExtension, std::string> profile_format_to_text;
-        static const std::unordered_map<std::string, ProfileExtension> text_to_profile_format;
-};
-*/
-
-/*
-const std::unordered_map<FileExtension::AudioExtension, std::string> FileExtension::audio_format_to_text =
-{
-{AudioExtension::AIF, "aif"},
-{AudioExtension::AIFC, "aifc"},
-{AudioExtension::AIFF, "aiff"},
-{AudioExtension::AMPC, "ampc"},
-{AudioExtension::AU, "au"},
-{AudioExtension::AVR, "avr"},
-{AudioExtension::CAF, "caf"},
-{AudioExtension::HTK, "htk"},
-{AudioExtension::IFF, "iff"},
-{AudioExtension::MAT, "mat"},
-{AudioExtension::MP1, "mp1"},
-{AudioExtension::MP2, "mp2"},
-{AudioExtension::MP3, "mp3"},
-{AudioExtension::PAF, "paf"},
-{AudioExtension::PVF, "pvf"},
-{AudioExtension::RF64, "rf64"},
-{AudioExtension::SD2, "sd2"},
-{AudioExtension::SDS, "sds"},
-{AudioExtension::SF, "sf"},
-{AudioExtension::VOC, "voc"},
-{AudioExtension::W64, "w64"},
-{AudioExtension::WAV, "wav"},
-{AudioExtension::WVE, "wve"},
-{AudioExtension::XI, "xi"}
-};
-
-const std::unordered_map<std::string, FileExtension::AudioExtension> FileExtension::text_to_audio_format =
-{
-{FileExtension::audio_format_to_text.at(AudioExtension::AIF), AudioExtension::AIF},
-{FileExtension::audio_format_to_text.at(AudioExtension::AIFC), AudioExtension::AIFC},
-{FileExtension::audio_format_to_text.at(AudioExtension::AIFF), AudioExtension::AIFF},
-{FileExtension::audio_format_to_text.at(AudioExtension::AMPC), AudioExtension::AMPC},
-{FileExtension::audio_format_to_text.at(AudioExtension::AU), AudioExtension::AU},
-{FileExtension::audio_format_to_text.at(AudioExtension::AVR), AudioExtension::AVR},
-{FileExtension::audio_format_to_text.at(AudioExtension::CAF), AudioExtension::CAF},
-{FileExtension::audio_format_to_text.at(AudioExtension::HTK), AudioExtension::HTK},
-{FileExtension::audio_format_to_text.at(AudioExtension::IFF), AudioExtension::IFF},
-{FileExtension::audio_format_to_text.at(AudioExtension::MAT), AudioExtension::MAT},
-{FileExtension::audio_format_to_text.at(AudioExtension::MP1), AudioExtension::MP1},
-{FileExtension::audio_format_to_text.at(AudioExtension::MP2), AudioExtension::MP2},
-{FileExtension::audio_format_to_text.at(AudioExtension::MP3), AudioExtension::MP3},
-{FileExtension::audio_format_to_text.at(AudioExtension::PAF), AudioExtension::PAF},
-{FileExtension::audio_format_to_text.at(AudioExtension::PVF), AudioExtension::PVF},
-{FileExtension::audio_format_to_text.at(AudioExtension::RF64), AudioExtension::RF64},
-{FileExtension::audio_format_to_text.at(AudioExtension::SD2), AudioExtension::SD2},
-{FileExtension::audio_format_to_text.at(AudioExtension::SDS), AudioExtension::SDS},
-{FileExtension::audio_format_to_text.at(AudioExtension::SF), AudioExtension::SF},
-{FileExtension::audio_format_to_text.at(AudioExtension::VOC), AudioExtension::VOC},
-{FileExtension::audio_format_to_text.at(AudioExtension::W64), AudioExtension::W64},
-{FileExtension::audio_format_to_text.at(AudioExtension::WAV), AudioExtension::WAV},
-{FileExtension::audio_format_to_text.at(AudioExtension::WVE), AudioExtension::WVE},
-{FileExtension::audio_format_to_text.at(AudioExtension::XI), AudioExtension::XI}
-};
-
-const std::unordered_map<FileExtension::ProfileExtension, std::string> FileExtension::profile_format_to_text =
-{
-{ProfileExtension::LAME, "lame"},
-{ProfileExtension::SNDFE, "sndfe"}
-};
-
-const std::unordered_map<std::string, FileExtension::ProfileExtension> FileExtension::text_to_profile_format =
-{
-{FileExtension::profile_format_to_text.at(ProfileExtension::LAME), ProfileExtension::LAME},
-{FileExtension::profile_format_to_text.at(ProfileExtension::SNDFE), ProfileExtension::SNDFE}
-};
-*/
 
 #endif

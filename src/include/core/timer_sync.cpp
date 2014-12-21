@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "timer_sync.h"
 
-TimerSync::TimerSync(HWND hWnd, unsigned long long nIDEvent, unsigned int uElapse, bool start_now) : hWndParent(hWnd), nIDEvent(nIDEvent), uElapse(uElapse), started(start_now)
+TimerSync::TimerSync(HWND hWnd, UINT_PTR nIDEvent, unsigned int uElapse, bool start_now) : hWndParent(hWnd), nIDEvent(nIDEvent), uElapse(uElapse), started(start_now)
 {
     if(start_now)
         METHOD_ASSERT(SetTimer(hWnd, nIDEvent, uElapse, nullptr), !=, 0);
