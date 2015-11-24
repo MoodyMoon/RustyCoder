@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\file_extension_filters.cpp" />
+    <ClCompile Include="src\include\codecs\decoder.cpp" />
+    <ClCompile Include="src\include\codecs\encoder.cpp" />
+    <ClCompile Include="src\include\codecs\encoder_profile.cpp" />
+    <ClCompile Include="src\include\codecs\lame.cpp" />
+    <ClCompile Include="src\include\codecs\lame_profile.cpp" />
+    <ClCompile Include="src\include\codecs\mpg123.cpp" />
+    <ClCompile Include="src\include\codecs\samples.cpp" />
+    <ClCompile Include="src\include\codecs\sndfile.cpp" />
+    <ClCompile Include="src\include\codecs\sndfile_decoder.cpp" />
+    <ClCompile Include="src\include\codecs\sndfile_encoder.cpp" />
+    <ClCompile Include="src\include\codecs\sndfile_encoder_profile.cpp" />
+    <ClCompile Include="src\include\controls\button.cpp" />
+    <ClCompile Include="src\include\controls\combo_box.cpp" />
+    <ClCompile Include="src\include\controls\file_dialog.cpp" />
+    <ClCompile Include="src\include\controls\file_dialog_events.cpp" />
+    <ClCompile Include="src\include\controls\global_window_procedure.cpp" />
+    <ClCompile Include="src\include\controls\label.cpp" />
+    <ClCompile Include="src\include\controls\menu_bar.cpp" />
+    <ClCompile Include="src\include\controls\msg_box.cpp" />
+    <ClCompile Include="src\include\controls\numeric_up_down.cpp" />
+    <ClCompile Include="src\include\controls\open_file_dialog.cpp" />
+    <ClCompile Include="src\include\controls\open_folder_dialog.cpp" />
+    <ClCompile Include="src\include\controls\panel.cpp" />
+    <ClCompile Include="src\include\controls\report_list_view.cpp" />
+    <ClCompile Include="src\include\controls\save_file_dialog.cpp" />
+    <ClCompile Include="src\include\controls\single_line_text_box.cpp" />
+    <ClCompile Include="src\include\controls\vertical_split_window.cpp" />
+    <ClCompile Include="src\include\controls\window.cpp" />
+    <ClCompile Include="src\include\core\critical_section.cpp" />
+    <ClCompile Include="src\include\core\exception.cpp" />
+    <ClCompile Include="src\include\core\file_reader.cpp" />
+    <ClCompile Include="src\include\core\file_writer.cpp" />
+    <ClCompile Include="src\include\core\reader_writer_lock.cpp" />
+    <ClCompile Include="src\include\core\thread.cpp" />
+    <ClCompile Include="src\include\core\timer_async.cpp" />
+    <ClCompile Include="src\include\core\timer_sync.cpp" />
+    <ClCompile Include="src\include\core\windows_utilities.cpp" />
+    <ClCompile Include="src\include\engine\codec_controller.cpp" />
+    <ClCompile Include="src\include\engine\common.cpp" />
+    <ClCompile Include="src\include\engine\encoder_profile_reader.cpp" />
+    <ClCompile Include="src\include\engine\encoder_profile_writer.cpp" />
+    <ClCompile Include="src\include\engine\job_builder.cpp" />
+    <ClCompile Include="src\include\engine\job_builder_runner.cpp" />
+    <ClCompile Include="src\include\engine\job_queue.cpp" />
+    <ClCompile Include="src\include\engine\job_runner.cpp" />
+    <ClCompile Include="src\include\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\main_form.cpp" />
+    <ClCompile Include="src\profile_form.cpp" />
+    <ClCompile Include="src\rustycoder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\file_extension_filters.h" />
+    <ClInclude Include="src\include\codecs\common.h" />
+    <ClInclude Include="src\include\codecs\decoder.h" />
+    <ClInclude Include="src\include\codecs\encoder.h" />
+    <ClInclude Include="src\include\codecs\encoder_profile.h" />
+    <ClInclude Include="src\include\codecs\lame.h" />
+    <ClInclude Include="src\include\codecs\lame_profile.h" />
+    <ClInclude Include="src\include\codecs\mpg123.h" />
+    <ClInclude Include="src\include\codecs\samples.h" />
+    <ClInclude Include="src\include\codecs\sndfile.h" />
+    <ClInclude Include="src\include\codecs\sndfile_decoder.h" />
+    <ClInclude Include="src\include\codecs\sndfile_encoder.h" />
+    <ClInclude Include="src\include\codecs\sndfile_encoder_profile.h" />
+    <ClInclude Include="src\include\controls\button.h" />
+    <ClInclude Include="src\include\controls\combo_box.h" />
+    <ClInclude Include="src\include\controls\event_handler_interface.h" />
+    <ClInclude Include="src\include\controls\file_dialog.h" />
+    <ClInclude Include="src\include\controls\file_dialog_events.h" />
+    <ClInclude Include="src\include\controls\global_window_procedure.h" />
+    <ClInclude Include="src\include\controls\label.h" />
+    <ClInclude Include="src\include\controls\menu_bar.h" />
+    <ClInclude Include="src\include\controls\msg_box.h" />
+    <ClInclude Include="src\include\controls\numeric_up_down.h" />
+    <ClInclude Include="src\include\controls\open_file_dialog.h" />
+    <ClInclude Include="src\include\controls\open_folder_dialog.h" />
+    <ClInclude Include="src\include\controls\panel.h" />
+    <ClInclude Include="src\include\controls\report_list_view.h" />
+    <ClInclude Include="src\include\controls\save_file_dialog.h" />
+    <ClInclude Include="src\include\controls\single_line_text_box.h" />
+    <ClInclude Include="src\include\controls\vertical_split_window.h" />
+    <ClInclude Include="src\include\controls\window.h" />
+    <ClInclude Include="src\include\core\common.h" />
+    <ClInclude Include="src\include\core\critical_section.h" />
+    <ClInclude Include="src\include\core\exception.h" />
+    <ClInclude Include="src\include\core\file_reader.h" />
+    <ClInclude Include="src\include\core\file_writer.h" />
+    <ClInclude Include="src\include\core\reader_writer_lock.h" />
+    <ClInclude Include="src\include\core\thread.h" />
+    <ClInclude Include="src\include\core\timer_async.h" />
+    <ClInclude Include="src\include\core\timer_sync.h" />
+    <ClInclude Include="src\include\core\windows_utilities.h" />
+    <ClInclude Include="src\include\engine\codec_controller.h" />
+    <ClInclude Include="src\include\engine\common.h" />
+    <ClInclude Include="src\include\engine\encoder_profile_reader.h" />
+    <ClInclude Include="src\include\engine\encoder_profile_writer.h" />
+    <ClInclude Include="src\include\engine\job_builder.h" />
+    <ClInclude Include="src\include\engine\job_builder_runner.h" />
+    <ClInclude Include="src\include\engine\job_queue.h" />
+    <ClInclude Include="src\include\engine\job_runner.h" />
+    <ClInclude Include="src\include\lame\lame.h" />
+    <ClInclude Include="src\include\libsndfile\sndfile.h" />
+    <ClInclude Include="src\include\mpg123\mpg123.h" />
+    <ClInclude Include="src\include\resources\resource.h" />
+    <ClInclude Include="src\include\resources\version_info.h" />
+    <ClInclude Include="src\include\stdafx.h" />
+    <ClInclude Include="src\include\targetver.h" />
+    <ClInclude Include="src\main_form.h" />
+    <ClInclude Include="src\profile_form.h" />
+    <ClInclude Include="src\rustycoder.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="src\include\resources\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\include\resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\include\resources\rusty_coder.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3CF2E865-9527-4F52-AB57-0BDE2065F3C8}</ProjectGuid>
+    <RootNamespace>RustyCoder</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)-$(Configuration)\</OutDir>
+    <IntDir>build\$(PlatformTarget)-$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)-$(Configuration)\</OutDir>
+    <IntDir>build\$(PlatformTarget)-$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)-$(Configuration)\</OutDir>
+    <IntDir>build\$(PlatformTarget)-$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)-$(Configuration)\</OutDir>
+    <IntDir>build\$(PlatformTarget)-$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BOOST_FILESYSTEM_NO_DEPRECATED;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)obj\%(RelativeDir)\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(BOOST);src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>lib\$(PlatformTarget)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmp3lame.lib;libmpg123.lib;libsndfile.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BOOST_FILESYSTEM_NO_DEPRECATED;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)obj\%(RelativeDir)\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(BOOST);src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>lib\$(PlatformTarget)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmp3lame.lib;libmpg123.lib;libsndfile.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>BOOST_FILESYSTEM_NO_DEPRECATED;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)obj\%(RelativeDir)\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(BOOST);src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>lib\$(PlatformTarget)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmp3lame.lib;libmpg123.lib;libsndfile.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>BOOST_FILESYSTEM_NO_DEPRECATED;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)obj\%(RelativeDir)\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(BOOST);src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>lib\$(PlatformTarget)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmp3lame.lib;libmpg123.lib;libsndfile.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

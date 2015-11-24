@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,13 +20,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_DECODER_H
 #define CODECS_DECODER_H
 
-#include "stdafx.h"
+#include "../core/common.h"
+#include "common.h"
+#include "samples.h"
 
+namespace rusty
+{
+namespace codecs
+{
 /*!
 Base class for all decoders.
 \note All decoders must implement this class to be of use to higher levels classes. All samples
 obtained from all relevant member functions must return samples which are SCALED
-to the value range of its container. This interface assumes char is 8 bits wide, short 16 bits and int 32 bits.
+to the value range of its container. This class assumes char is 8 bits wide, short 16 bits and int 32 bits.
 The word "frame" refers to the a decoded audio frame and not a encoded audio frame like a MPEG frame.
 A frame may have multiple samples which is number is equal to the number of channels in the audio.
 */
@@ -44,8 +50,10 @@ class Decoder
         */
         virtual void SetFrameBuffer(T * container, uint64_t container_size) = 0;
 
-    public:
+    protected:
         Decoder(void) = default;
+
+    public:
         Decoder(const Decoder &) = delete;
         Decoder & operator=(const Decoder &) = delete;
 
@@ -61,7 +69,7 @@ class Decoder
         \param[in] offset   An offset relative to \c position.
         \return offset relative to the start of the audio data.
         */
-        virtual uint64_t SeekToFrame(SeekPosition position, int64_t offset) = 0;
+        virtual uint64_t SeekToFrame(core::SeekPosition position, int64_t offset) = 0;
 
         /*!
         Read the file and decode enough audio frames to fill the container or until the end of audio data is reached.
@@ -76,7 +84,7 @@ class Decoder
 
 /*!
 Base class for all decoders. Retrieves information about the audio file.
-\note All decoders must implement this interface to be of use to higher levels classes.\n
+\note All decoders must implement this class to be of use to higher levels classes.\n
 <b>All decoders must initialize \c valid_containers with supported sample formats.
 It shows all supported intermediate sample formats.</b>
 */
@@ -84,15 +92,20 @@ template<>
 class Decoder<void>
 {
     public:
-        enum ID
+        enum class ID : uint32_t
         {
-            SNDFILEDECODER,
-            MPG123
+            MPG123,
+            SNDFILE_DECODER
         };
 
-        std::unique_ptr<Sample::SampleContainer> valid_containers;
+        static constexpr const unsigned int decoder_count = 2u;
 
+        static const std::unordered_map<ID, std::string> decoder_id_to_text;
+
+    protected:
         Decoder(void) = default;
+
+    public:
         Decoder(const Decoder &) = delete;
         Decoder & operator=(const Decoder &) = delete;
 
@@ -126,12 +139,19 @@ class Decoder<void>
         virtual Sample::SampleContainer GetPreferableOutputContainer(void) const noexcept = 0;
 
         /*!
-        Get number of valid containers
-        \return Number of valid containers
+        Get an array of supported containers.
+        \return An array of supported containers
         */
-        virtual size_t GetValidContainersCount(void) const noexcept = 0;
+        virtual const Sample::SampleContainer * GetSupportedContainers(void) const noexcept = 0;
+
+        /*!
+        Get number of supported containers
+        \return Number of supported containers
+        */
+        virtual size_t GetSupportedContainersCount(void) const noexcept = 0;
 
         virtual ~Decoder(void) {};
 };
-
+}
+}
 #endif

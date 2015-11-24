@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,12 +20,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_VERTICAL_SPLIT_WINDOW_H
 #define CONTROLS_VERTICAL_SPLIT_WINDOW_H
 
+#include "event_handler_interface.h"
+#include "panel.h"
+#include "window.h"
+
+namespace rusty
+{
+namespace controls
+{
 class VerticalSplitWindow;
 
 class VerticalSplitWindowEvents : public EventHandlerInterface
 {
     public:
-        enum MinWidthPanel
+        enum class MinWidthPanel : unsigned int
         {
             LEFT,
             RIGHT
@@ -84,5 +92,7 @@ class VerticalSplitWindow : public VerticalSplitWindowEvents, public Panel
 
         virtual ~VerticalSplitWindow(void) {}
 };
+}
+}
 
 #endif

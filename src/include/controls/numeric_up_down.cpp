@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "numeric_up_down.h"
 
-NumericUpDown::NumericUpDown(HINSTANCE hInstance, HWND hWndParent, int hMenu, HWND hWndBuddy, int lower_bound, int upper_bound, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, UPDOWN_CLASS, nullptr, hWndParent, dwExStyle, dwStyle, reinterpret_cast<HMENU>(hMenu), 0, 0, 0, 0, true), lower_bound(lower_bound), upper_bound(upper_bound)
+rusty::controls::NumericUpDown::NumericUpDown(HINSTANCE hInstance, HWND hWndParent, uintptr_t hMenu, HWND hWndBuddy, int lower_bound, int upper_bound, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, UPDOWN_CLASS, nullptr, hWndParent, dwExStyle, dwStyle, hMenu, 0, 0, 0, 0, true), lower_bound(lower_bound), upper_bound(upper_bound)
 {
     SendMessage(hWnd, UDM_SETBUDDY, reinterpret_cast<WPARAM>(hWndBuddy), 0);
 
@@ -29,7 +29,7 @@ NumericUpDown::NumericUpDown(HINSTANCE hInstance, HWND hWndParent, int hMenu, HW
     SendMessage(hWnd, UDM_SETRANGE32, static_cast<WPARAM>(lower_bound), static_cast<LPARAM>(upper_bound));
 }
 
-int NumericUpDown::GetPosition(void)
+int rusty::controls::NumericUpDown::GetPosition(void)
 {
     BOOL valid;
     int position = static_cast<int>(SendMessage(hWnd, UDM_GETPOS32, 0, reinterpret_cast<LPARAM>(&valid)));
@@ -38,17 +38,17 @@ int NumericUpDown::GetPosition(void)
     return position;
 }
 
-int NumericUpDown::GetLowerBound(void)
+int rusty::controls::NumericUpDown::GetLowerBound(void)
 {
     return lower_bound;
 }
 
-int NumericUpDown::GetUpperBound(void)
+int rusty::controls::NumericUpDown::GetUpperBound(void)
 {
     return upper_bound;
 }
 
-void NumericUpDown::SetPosition(int value)
+void rusty::controls::NumericUpDown::SetPosition(int value)
 {
     SendMessage(hWnd, UDM_SETPOS32, 0, static_cast<LPARAM>(value));
 }

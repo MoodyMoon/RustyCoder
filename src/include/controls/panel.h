@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,15 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_PANEL_H
 #define CONTROLS_PANEL_H
 
+#include "window.h"
+
+namespace rusty
+{
+namespace controls
+{
 class Panel : public Window
 {
     public:
         Panel(const Panel &) = delete;
         Panel & operator=(const Panel &) = delete;
 
-        Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_BORDER | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE, bool set_cursor = true);
+        Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, HWND hWndParent, uintptr_t hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_BORDER | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE, bool set_cursor = true);
 
         virtual ~Panel(void) {}
 };
+}
+}
 
 #endif

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_WINDOW_H
 #define CONTROLS_WINDOW_H
 
+#include "event_handler_interface.h"
+#include "global_window_procedure.h"
+
+namespace rusty
+{
+namespace controls
+{
 class Window
 {
     private:
@@ -34,7 +41,7 @@ class Window
         HWND hWnd = nullptr;
 
     public:
-        enum WindowState
+        enum WindowState : int
         {
             HIDE = SW_HIDE,
             SHOWNORMAL = SW_SHOWNORMAL,
@@ -54,8 +61,8 @@ class Window
         Window & operator=(const Window &) = delete;
 
         Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, int nCmdShow = -1, int icon_id = -1, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int nWidth = CW_USEDEFAULT, int nHeight = CW_USEDEFAULT, bool set_default_cursor = true);
-        Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, HMENU hMenu, int icon_id = -1, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int nWidth = CW_USEDEFAULT, int nHeight = CW_USEDEFAULT, bool set_default_cursor = true);
-        Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, HMENU hMenu, int x, int y, int nWidth, int nHeight, bool set_default_font);
+        Window(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, uintptr_t hMenu, int icon_id = -1, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int nWidth = CW_USEDEFAULT, int nHeight = CW_USEDEFAULT, bool set_default_cursor = true);
+        Window(HINSTANCE hInstance, const wchar_t * const lpClassName, const wchar_t * const lpWindowName, HWND hWndParent, unsigned long dwExStyle, unsigned long dwStyle, uintptr_t hMenu, int x, int y, int nWidth, int nHeight, bool set_default_font);
 
         static HFONT GetDefaultFont(void);
         void SetFont(HFONT hFont, BOOL redraw = FALSE);
@@ -154,5 +161,7 @@ class Window
 
         virtual ~Window(void);
 };
+}
+}
 
 #endif

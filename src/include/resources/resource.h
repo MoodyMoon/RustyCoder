@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,17 +37,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PROFILEFORM_CMBBX_OPTION_SETTER           117
 #define PROFILEFORM_BTN_SET_OPTION                118
 #define PROFILEFORM_BTN_OPEN                      119
-#define PROFILEFORM_BTN_SAVE                      120
-#define PROFILEFORM_BTN_SAVE_AS                   121
+#define PROFILEFORM_BTN_SAVE_AS                   120
 
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32777
-#define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           113
+#define _APS_NO_MFC                               130
+#define _APS_NEXT_RESOURCE_VALUE                  129
+#define _APS_NEXT_COMMAND_VALUE                   32771
+#define _APS_NEXT_CONTROL_VALUE                   1000
+#define _APS_NEXT_SYMED_VALUE                     110
 #endif
 #endif

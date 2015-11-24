@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_SAMPLES_H
 #define CODECS_SAMPLES_H
 
+namespace rusty
+{
+namespace codecs
+{
 class Sample
 {
     public:
@@ -73,7 +77,7 @@ class Sample
       //  };
 
       //  /*! This enum must specify container sizes for all sample formats in SampleFormats enum */
-      //  enum SuitableSampleContainers
+      //  enum class SuitableSampleContainers
       //  {
       //      PCM_INT_S8_CONTAINER = SampleContainers::INT_S8, /*!< signed 8 bits */
       //      PCM_INT_U8_CONTAINER = SampleContainers::INT_U8, /*!< unsigned 8 bits */
@@ -102,5 +106,7 @@ class Sample
       //      DPCM_16_CONTAINER = SampleContainers::INT_S16 /*!< signed 16 bits */
       //  };
 };
+}
+}
 
 #endif

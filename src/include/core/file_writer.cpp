@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,83 +20,109 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "file_writer.h"
 
-FileWriter::FileWriter(const char * const file) : file_path(file)
+rusty::core::FileWriter::FileWriter(const boost::filesystem::path &path, Access access, Create create)
 {
-    ofs.open(file, std::ofstream::out | std::ofstream::binary);
+    file_handle = CreateFile(path.wstring().c_str(), GENERIC_WRITE, static_cast<unsigned long>(access), nullptr, static_cast<unsigned long>(create), FILE_ATTRIBUTE_NORMAL, nullptr);
 
-    if(ofs.fail())
+    if(file_handle == INVALID_HANDLE_VALUE)
     {
-        std::string error_message("Cannot open \"");
-        error_message.append(file);
-        error_message.append("\".");
-        throw WriteFileException("FileWriter", ofs.rdstate(), error_message.c_str());
+        unsigned int error_code = GetLastError();
+        throw ReadFileException("FileWriter", error_code, WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(error_code)).c_str());
     }
 }
 
-uint64_t FileWriter::Seek(SeekPosition position, int64_t offset)
+uint64_t rusty::core::FileWriter::Tell(void)
 {
-    std::ofstream::seekdir way;
+    return Seek(SeekPosition::CURRENT, 0ll);
+}
+
+uint64_t rusty::core::FileWriter::Seek(SeekPosition position, int64_t offset)
+{
+    LARGE_INTEGER seek_distance;
+    seek_distance.QuadPart = offset;
+
+    LARGE_INTEGER pointer_position;
+
+    unsigned int _position;
 
     switch(position)
     {
-        case START:
-            way = std::ofstream::beg;
+        case SeekPosition::START:
+            _position = FILE_BEGIN;
+            if(offset < 0ll)
+                throw SeekException("FileWriter", "Unable to seek to position less than 0."); //To prevent Windows from interpreting the offset as an unsigned value when \c FILE_BEGIN is specified.
             break;
-        case CURRENT:
-            way = std::ofstream::cur;
+        case SeekPosition::CURRENT:
+            _position = FILE_CURRENT;
+            break;
+        case SeekPosition::END:
+            _position = FILE_END;
             break;
         default:
-            way = std::ofstream::end;
+            assert(false);
     }
 
-    ofs.seekp(offset, way);
-    if(ofs.fail())
+    if(SetFilePointerEx(file_handle, seek_distance, &pointer_position, _position) == 0)
     {
-        std::string error_message("Cannot perform seeking on \"");
-        error_message.append(file_path);
-        error_message.append("\".");
-        throw SeekException("FileWriter", ofs.rdstate(), error_message.c_str());
+        unsigned int error_code = GetLastError();
+        throw SeekException("FileWriter", error_code, WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(error_code)).c_str());
     }
 
-    std::streampos pos = ofs.tellp();
-    if(ofs.fail())
-    {
-        std::string error_message("Cannot get the current seek position on \"");
-        error_message.append(file_path);
-        error_message.append("\".");
-        throw SeekException("FileWriter", ofs.rdstate(), error_message.c_str());
-    }
-
-    return pos;
+    return pointer_position.QuadPart;
 }
 
-uint64_t FileWriter::Tell(void)
+uint32_t rusty::core::FileWriter::Write(const unsigned char *buffer, uint32_t valid_byte_count)
 {
-    std::streampos pos = ofs.tellp();
-    if(ofs.fail())
-    {
-        std::string error_message("Cannot get the current seek position on \"");
-        error_message.append(file_path);
-        error_message.append("\".");
-        throw SeekException("FileWriter", ofs.rdstate(), error_message.c_str());
-    }
-
-    return pos;
+    return Write(buffer, valid_byte_count, true, nullptr);
 }
 
-void FileWriter::Write(const char *buffer, uint32_t valid_byte_count)
+uint32_t rusty::core::FileWriter::Write(const unsigned char *buffer, uint32_t valid_byte_count, bool &error)
 {
-    ofs.write(buffer, valid_byte_count);
-    if(ofs.fail())
-    {
-        std::string error_message("Cannot write to \"");
-        error_message.append(file_path);
-        error_message.append("\".");
-        throw WriteFileException("FileWriter", ofs.rdstate(), error_message.c_str());
-    }
+    return Write(buffer, valid_byte_count, false, &error);
 }
 
-FileWriter::~FileWriter()
+uint32_t rusty::core::FileWriter::Write(const unsigned char *buffer, uint32_t valid_byte_count, bool throw_exception, bool *error)
 {
-    ofs.close();
+    /* This 0 byte write check is to ensure nothing is written if <tt>valid_byte_count == 0</tt> is given. \c WriteFile handles this differently on different file systems. */
+    if(valid_byte_count > 0u)
+    {
+        unsigned long bytes_written;
+
+        if(WriteFile(file_handle, buffer, valid_byte_count, &bytes_written, nullptr) == FALSE)
+        {
+            if(throw_exception)
+            {
+                unsigned int error_code = GetLastError();
+                throw WriteFileException("FileWriter", error_code, WindowsUtilities::UTF8_Encode(WindowsUtilities::GetErrorMessage(error_code)).c_str());
+            }
+            else
+            {
+                *error = true;
+            }
+        }
+        else if(!throw_exception)
+        {
+            *error = false;
+        }
+
+        #ifdef _DEBUG
+        if(!throw_exception && *error == false)
+        {
+            assert(bytes_written == valid_byte_count);
+        }
+        #endif
+
+        return bytes_written;
+    }
+    else if(!throw_exception)
+    {
+        *error = false;
+    }
+
+    return 0ull;
+}
+
+rusty::core::FileWriter::~FileWriter()
+{
+    ASSERT_METHOD(CloseHandle(file_handle), != , 0);
 }

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_FILE_DIALOG_EVENTS_H
 #define CONTROLS_FILE_DIALOG_EVENTS_H
 
+namespace rusty
+{
+namespace controls
+{
 class FileDialogEvents : public IFileDialogEvents, public IFileDialogControlEvents
 {
     private:
@@ -55,5 +59,7 @@ class FileDialogEvents : public IFileDialogEvents, public IFileDialogControlEven
 
         virtual ~FileDialogEvents();
 };
+}
+}
 
 #endif

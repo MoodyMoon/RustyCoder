@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,4 +20,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "panel.h"
 
-Panel::Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor) : Window(hInstance, event_handler, lpClassName, nullptr, hWndParent, dwExStyle, dwStyle, reinterpret_cast<HMENU>(hMenu), -1, x, y, nWidth, nHeight, set_cursor) {}
+rusty::controls::Panel::Panel(HINSTANCE hInstance, EventHandlerInterface *event_handler, const wchar_t * const lpClassName, HWND hWndParent, uintptr_t hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle, bool set_cursor) : Window(hInstance, event_handler, lpClassName, nullptr, hWndParent, dwExStyle, dwStyle, hMenu, -1, x, y, nWidth, nHeight, set_cursor) {}

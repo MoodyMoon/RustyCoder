@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "open_folder_dialog.h"
 
-OpenFolderDialog::OpenFolderDialog(HWND hWndParent, FileDialogEvents *events)
+rusty::controls::OpenFolderDialog::OpenFolderDialog(HWND hWndParent, FileDialogEvents *events)
 {
     assert(hWndParent != nullptr); //owner cannot be null. Dialog must block.
 
-    METHOD_ASSERT(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)), >= , 0);
+    ASSERT_METHOD(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd)), >= , 0);
 
     if(events != nullptr)
     {
@@ -35,14 +35,14 @@ OpenFolderDialog::OpenFolderDialog(HWND hWndParent, FileDialogEvents *events)
         file_dialog_events->QueryInterface(IID_PPV_ARGS(&pfde));
         file_dialog_events->Release();
 
-        METHOD_ASSERT(pfd->Advise(pfde, &dwCookie), == , S_OK);
+        ASSERT_METHOD(pfd->Advise(pfde, &dwCookie), == , S_OK);
     }
 
     unsigned long flags;
 
-    METHOD_ASSERT(pfd->GetOptions(&flags), >= , 0);
+    ASSERT_METHOD(pfd->GetOptions(&flags), >= , 0);
 
-    METHOD_ASSERT(pfd->SetOptions(flags | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_DONTADDTORECENT), >= , 0);
+    ASSERT_METHOD(pfd->SetOptions(flags | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_DONTADDTORECENT), >= , 0);
 
     if((pfd->Show(hWndParent)) == S_OK)
     {
@@ -52,39 +52,33 @@ OpenFolderDialog::OpenFolderDialog(HWND hWndParent, FileDialogEvents *events)
 
         wchar_t *ppszName;
 
-        METHOD_ASSERT(ppsi->GetDisplayName(SIGDN_DESKTOPABSOLUTEEDITING, &ppszName), >= , 0);
-        output_folder_path = ppszName;
+        ASSERT_METHOD(ppsi->GetDisplayName(SIGDN_FILESYSPATH, &ppszName), >= , 0);
+        folder_path = ppszName;
+        folder_path.append("\\");
         CoTaskMemFree(ppszName);
     }
 }
 
-bool OpenFolderDialog::HasResult(void)
+bool rusty::controls::OpenFolderDialog::HasResult(void)
 {
     return got_result;
 }
 
-std::wstring OpenFolderDialog::GetFolder()
+boost::filesystem::path rusty::controls::OpenFolderDialog::GetFolder()
 {
     assert(got_result);
 
-    wchar_t output_folder_path_last_character = output_folder_path.back();
-
-    if(output_folder_path_last_character == L'\\' || output_folder_path_last_character == L'/')
-    {
-        output_folder_path.pop_back();
-    }
-
-    return output_folder_path;
+    return folder_path;
 }
 
-OpenFolderDialog::~OpenFolderDialog(void)
+rusty::controls::OpenFolderDialog::~OpenFolderDialog(void)
 {
     if(pfde != nullptr)
     {
-        METHOD_ASSERT(pfd->Unadvise(dwCookie), == , S_OK);
+        ASSERT_METHOD(pfd->Unadvise(dwCookie), == , S_OK);
 
         pfde->Release();
     }
 
-    METHOD_ASSERT(pfd->Release(), == , 0ul);
+    ASSERT_METHOD(pfd->Release(), == , 0ul);
 }

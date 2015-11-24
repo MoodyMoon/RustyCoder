@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,10 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_COMBO_BOX_H
 #define CONTROLS_COMBO_BOX_H
 
+#include "window.h"
+
+namespace rusty
+{
+namespace controls
+{
 class ComboBox : public Window
 {
     public:
-        enum Type
+        enum class Type : unsigned long
         {
             SIMPLE = CBS_SIMPLE,
             DROP_DOWN = CBS_DROPDOWN,
@@ -33,7 +39,7 @@ class ComboBox : public Window
         ComboBox(const ComboBox &) = delete;
         ComboBox & operator=(const ComboBox &) = delete;
 
-        ComboBox(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_VSCROLL | WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_HASSTRINGS);
+        ComboBox(HINSTANCE hInstance, HWND hWndParent, uintptr_t hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle = WS_EX_LEFT, unsigned long dwStyle = WS_VSCROLL | WS_CLIPSIBLINGS | WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_HASSTRINGS);
 
         unsigned int GetSelectedItemIndex(void);
         LPARAM GetItemData(unsigned int index);
@@ -43,6 +49,7 @@ class ComboBox : public Window
         bool HasItemData(unsigned int index);
         void SelectItem(unsigned int index);
         void SelectItem(int start_index, const wchar_t *text);
+        void SelectItem(int start_index, LPARAM data);
         void AppendItem(const wchar_t *text);
         void AppendItem(const wchar_t *text, LPARAM data);
         void SetItemData(unsigned int index, LPARAM data);
@@ -53,5 +60,7 @@ class ComboBox : public Window
 
         virtual ~ComboBox(void) {}
 };
+}
+}
 
 #endif

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_OPEN_FILE_DIALOG_H
 #define CONTROLS_OPEN_FILE_DIALOG_H
 
+#include "file_dialog_events.h"
+
+namespace rusty
+{
+namespace controls
+{
 class OpenFileDialog
 {
     private:
@@ -32,8 +38,6 @@ class OpenFileDialog
 
         void GetResult(IShellItem **ppsi, int dwIndex);
         void DestroyResult(IShellItem *ppsi);
-        void GetFileNameExtension(IShellItem *ppsi, wchar_t **ppsz_name);
-        void GetFullPath(IShellItem *ppsi, wchar_t **ppszName);
 
     public:
         OpenFileDialog(const OpenFileDialog &) = delete;
@@ -41,10 +45,11 @@ class OpenFileDialog
 
         OpenFileDialog(HWND hWndParent, const COMDLG_FILTERSPEC * const rgFilterSpec, unsigned int cFileTypes, bool multi_select, FileDialogEvents *events = nullptr);
         bool HasResult(void);
-        std::wstring GetFile(RustyFile::File flag);
-        std::wstring GetFile(unsigned long dwIndex, RustyFile::File flag);
+        boost::filesystem::path GetFile(unsigned long dwIndex);
         unsigned long GetResultCount(void);
         virtual ~OpenFileDialog(void);
 };
+}
+}
 
 #endif

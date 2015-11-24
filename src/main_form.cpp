@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,49 +20,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "main_form.h"
 
-MainForm::MainForm(HINSTANCE hThisInstance, int nCmdShow) : hInstance(hThisInstance)
+rusty::gui::MainForm::MainForm(HINSTANCE hThisInstance, int nCmdShow) : hInstance(hThisInstance)
 {
-    window.reset(new Window(hThisInstance, this, L"MainForm", L"RustyCoder", HWND_DESKTOP, WS_EX_LEFT, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_VISIBLE, nCmdShow, RUSTYCODER_ICON, CW_USEDEFAULT, CW_USEDEFAULT, 750, 550, true));
+    window.reset(new controls::Window(hThisInstance, this, L"MainForm", L"RustyCoder", HWND_DESKTOP, WS_EX_LEFT, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_VISIBLE, nCmdShow, RUSTYCODER_ICON, CW_USEDEFAULT, CW_USEDEFAULT, 750, 550, true));
 }
 
 //InitCommonControlsEx is not needed to enabled new theme
-void MainForm::OnCreate(HWND hWnd)
+void rusty::gui::MainForm::OnCreate(HWND hWnd)
 {
-    menu_bar.reset(new MenuBar());
+    menu_bar.reset(new controls::MenuBar());
     menu_bar_events.reset(new MenuBarEvents(this));
     menu_bar->Attach(hWnd);
 
-    const unsigned long window_client_width = Window::GetClientWidth(hWnd);
-    const unsigned long window_client_height = Window::GetClientHeight(hWnd);
+    const unsigned long window_client_width = controls::Window::GetClientWidth(hWnd);
+    const unsigned long window_client_height = controls::Window::GetClientHeight(hWnd);
 
-    job_report_list_view.reset(new ReportListView(hInstance, hWnd, MAINFORM_JOB_REPORT_LIST_VIEW, 0, 0, window_client_width, window_client_height - 40, WS_EX_LEFT, LVS_REPORT | LVS_SHOWSELALWAYS | WS_CHILD | WS_VISIBLE));
-    job_report_list_view_events.reset(new JobReportListViewEvents(this, hWnd));
+    job_report_list_view.reset(new controls::ReportListView(hInstance, hWnd, MAINFORM_JOB_REPORT_LIST_VIEW, 0, 0, window_client_width, window_client_height - 40, WS_EX_LEFT, LVS_REPORT | LVS_SHOWSELALWAYS | WS_CHILD | WS_VISIBLE));
+    job_report_list_view_events.reset(new JobReportListViewEvents(this));
 
-    btn_add_files.reset(new Button(hInstance, L"Add files", hWnd, MAINFORM_BTN_ADD_FILES, 5, window_client_height - 30, 90, 25));
+    btn_add_files.reset(new controls::Button(hInstance, L"Add files", hWnd, MAINFORM_BTN_ADD_FILES, 5, window_client_height - 30, 90, 25));
     btn_add_files_events.reset(new BtnAddFilesEvents(this));
 
-    btn_remove_files.reset(new Button(hInstance, L"Remove files", hWnd, MAINFORM_BTN_REMOVE_FILES, 100, window_client_height - 30, 90, 25));
+    btn_remove_files.reset(new controls::Button(hInstance, L"Remove files", hWnd, MAINFORM_BTN_REMOVE_FILES, 100, window_client_height - 30, 90, 25));
     btn_remove_files_events.reset(new BtnRemoveFilesEvents(this));
 
-    btn_load_profile.reset(new Button(hInstance, L"Load profile", hWnd, MAINFORM_BTN_LOAD_PROFILE, 195, window_client_height - 30, 90, 25));
+    btn_load_profile.reset(new controls::Button(hInstance, L"Load profile", hWnd, MAINFORM_BTN_LOAD_PROFILE, 195, window_client_height - 30, 90, 25));
     btn_load_profile_events.reset(new BtnLoadProfileEvents(this));
 
-    btn_create_profile.reset(new Button(hInstance, L"Create profile", hWnd, MAINFORM_BTN_CREATE_PROFILE, 290, window_client_height - 30, 90, 25));
+    btn_create_profile.reset(new controls::Button(hInstance, L"Create profile", hWnd, MAINFORM_BTN_CREATE_PROFILE, 290, window_client_height - 30, 90, 25));
     btn_create_profile_events.reset(new BtnCreateProfileEvents(this));
 
-    btn_browse_folder.reset(new Button(hInstance, L"Browse folder", hWnd, MAINFORM_BTN_BROWSE_FOLDER, 385, window_client_height - 30, 90, 25));
+    btn_browse_folder.reset(new controls::Button(hInstance, L"Browse folder", hWnd, MAINFORM_BTN_BROWSE_FOLDER, 385, window_client_height - 30, 90, 25));
     btn_browse_folder_events.reset(new BtnBrowseFolderEvents(this));
 
-    btn_start_queue.reset(new Button(hInstance, L"Start queue", hWnd, MAINFORM_BTN_START_QUEUE, window_client_width - 190, window_client_height - 30, 90, 25));
+    btn_start_queue.reset(new controls::Button(hInstance, L"Start queue", hWnd, MAINFORM_BTN_START_QUEUE, window_client_width - 190, window_client_height - 30, 90, 25));
     btn_start_queue_events.reset(new BtnStartQueueEvents(this));
 
-    btn_pause_queue.reset(new Button(hInstance, L"Pause queue", hWnd, MAINFORM_BTN_PAUSE_QUEUE, window_client_width - 95, window_client_height - 30, 90, 25));
+    btn_pause_queue.reset(new controls::Button(hInstance, L"Pause queue", hWnd, MAINFORM_BTN_PAUSE_QUEUE, window_client_width - 95, window_client_height - 30, 90, 25));
     btn_pause_queue_events.reset(new BtnPauseQueueEvents(this));
 
     form_loaded = true;
 }
 
-void MainForm::OnSize(WPARAM wParam, LPARAM lParam)
+void rusty::gui::MainForm::OnSize(WPARAM wParam, LPARAM lParam)
 {
     switch(wParam)
     {
@@ -97,596 +97,276 @@ void MainForm::OnSize(WPARAM wParam, LPARAM lParam)
     }
 }
 
-void MainForm::OnBeforeDestroy()
+void rusty::gui::MainForm::OnBeforeDestroy()
 {
     job_report_list_view_events.reset();
 }
 
-MainForm::MenuBarEvents::MenuBarEvents(MainForm * const main_form) : main_form(main_form)
+rusty::gui::MainForm::MenuBarEvents::MenuBarEvents(MainForm * const main_form) : main_form(main_form)
 {
     HMENU sub_menu = main_form->menu_bar->CreateSubMenu(L"File", nullptr);
     main_form->menu_bar->CreateMenuItem(L"&Add files", MAINFORM_MENUBAR_FILE_ADDFILES, sub_menu);
     main_form->menu_bar->CreateMenuItem(L"&Exit", MAINFORM_MENUBAR_FILE_EXIT, sub_menu);
 }
 
-void MainForm::MenuBarEvents::File_AddFiles_OnClick()
+void rusty::gui::MainForm::MenuBarEvents::File_AddFiles_OnClick()
 {
-    main_form->job_report_list_view_events->AddJobs(main_form->window->GetHandle());
+    main_form->job_report_list_view_events->AddJob();
 }
 
-void MainForm::MenuBarEvents::File_Exit_OnClick()
+void rusty::gui::MainForm::MenuBarEvents::File_Exit_OnClick()
 {
     main_form->window.reset();
 }
 
-MainForm::JobReportListViewEvents::JobReportListViewEvents(MainForm * const main_form, HWND main_form_handle) : main_form(main_form), queue_processor(main_form_handle, 0ull, 200u, false)
+rusty::gui::MainForm::JobReportListViewEvents::JobReportListViewEvents(MainForm * const main_form) : main_form(main_form)
 {
     std::wstring text(L"File name");
     main_form->job_report_list_view->InsertColumn(250u, 0u, text.c_str());
 
-    text = L"Profile";
+    text = L"Decoder";
     main_form->job_report_list_view->InsertColumn(100u, 1u, text.c_str());
 
-    text = L"Status";
+    text = L"Profile";
     main_form->job_report_list_view->InsertColumn(100u, 2u, text.c_str());
 
-    text = L"Progress";
+    text = L"Encoder";
     main_form->job_report_list_view->InsertColumn(100u, 3u, text.c_str());
 
+    text = L"Status";
+    main_form->job_report_list_view->InsertColumn(100u, 4u, text.c_str());
+
+    text = L"Progress";
+    main_form->job_report_list_view->InsertColumn(100u, 5u, text.c_str());
+
     text = L"Save to";
-    main_form->job_report_list_view->InsertColumn(150u, 4u, text.c_str());
+    main_form->job_report_list_view->InsertColumn(150u, 6u, text.c_str());
 }
 
-void MainForm::JobReportListViewEvents::AddJobs(HWND hWnd)
+void rusty::gui::MainForm::JobReportListViewEvents::AddJob()
 {
-    OpenFileDialog open_file_dialog(hWnd, FileExtensionFilters::input_audio_format_filters, sizeof(FileExtensionFilters::input_audio_format_filters) / sizeof(COMDLG_FILTERSPEC), true);
+    controls::OpenFileDialog open_file_dialog(main_form->window->GetHandle(), FileExtensionFilters::input_audio_format_filters, sizeof(FileExtensionFilters::input_audio_format_filters) / sizeof(COMDLG_FILTERSPEC), true);
 
     if(open_file_dialog.HasResult())
     {
-        unsigned long result_count = open_file_dialog.GetResultCount();
-
-        unsigned int job_report_list_view_item_count = main_form->job_report_list_view->GetRowCount();
-        unsigned int job_report_list_view_item_index;
-
-        std::string source_file;
-        std::wstring source_file_w;
-        std::string source_file_name;
-        std::string source_file_extension;
-
         main_form->job_report_list_view->SetRedraw(false);
 
-        for(unsigned int i = 0ul; i < result_count; ++i)
+        for(unsigned int item_index = 0u, item_count = open_file_dialog.GetResultCount(); item_index < item_count; ++item_index)
         {
-            source_file = WindowsUtilities::UTF8_Encode(open_file_dialog.GetFile(i, RustyFile::File::FULL_PATH));
-            source_file_name = WindowsUtilities::UTF8_Encode(open_file_dialog.GetFile(i, RustyFile::File::NAME));
-            source_file_extension = WindowsUtilities::UTF8_Encode(open_file_dialog.GetFile(i, RustyFile::File::EXTENSION));
-
-            job_report_list_view_item_index = job_report_list_view_item_count + i;
-
-            JobDescription job_description(source_file);
-
-            try
-            {
-                job_description.SetOutputFileName(source_file_name);
-
-                job_descriptions.push_back(job_description);
-
-                source_file_w = open_file_dialog.GetFile(i, RustyFile::File::NAME_AND_EXTENSION);
-
-                main_form->job_report_list_view->InsertRow(job_report_list_view_item_index, source_file_w.c_str());
-                main_form->job_report_list_view->SetCellText(2, job_report_list_view_item_index, WindowsUtilities::UTF8_Decode(Job::state_to_string.at(job_description.GetState())).c_str());
-            }
-            catch(InvalidArgumentException &ex)
-            {
-                MsgBox::Show(ex.what(), hWnd);
-            }
+            job_queue.AppendJob(open_file_dialog.GetFile(item_index), *this);
         }
 
-        main_form->job_report_list_view->SetRedraw(true);
-
-        main_form->job_report_list_view->Redraw();
-    }
-}
-
-void MainForm::JobReportListViewEvents::RemoveSelectedJobs()
-{
-    int row_index = main_form->job_report_list_view->GetNextSelectedItem();
-
-    bool needs_redraw = row_index > -1;
-
-    if(needs_redraw)
-        main_form->job_report_list_view->SetRedraw(false);
-
-    while(row_index > -1)
-    {
-        switch(job_descriptions[row_index].GetState())
-        {
-            case Job::State::RUNNING:
-            case Job::State::PAUSE:
-            {
-                for(std::size_t job_indices_tracker_index = 0ull; job_indices_tracker_index < max_simultaneous_jobs_count; ++job_indices_tracker_index)
-                {
-                    if(job_indices_tracker[job_indices_tracker_index] == row_index)
-                    {
-                        if(jobs[job_indices_tracker_index]->GetStateSync() == Job::State::RUNNING)
-                        {
-                            jobs[job_indices_tracker_index]->PauseSync();
-                        }
-
-                        jobs[job_indices_tracker_index].reset();
-
-                        for(std::size_t job_indices_tracker_index2 = 0ull; job_indices_tracker_index2 < max_simultaneous_jobs_count; ++job_indices_tracker_index2)
-                        {
-                            if(job_indices_tracker[job_indices_tracker_index2] > row_index)
-                            {
-                                --job_indices_tracker[job_indices_tracker_index2];
-                            }
-                        }
-
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-
-        job_descriptions.erase(job_descriptions.begin() + row_index);
-
-        main_form->job_report_list_view->RemoveRow(row_index);
-
-        row_index = main_form->job_report_list_view->GetNextSelectedItem(row_index);
-    }
-
-    if(needs_redraw)
-    {
         main_form->job_report_list_view->SetRedraw(true);
         main_form->job_report_list_view->Redraw();
     }
 }
 
-void MainForm::JobReportListViewEvents::LoadProfile(HWND hWnd)
+void rusty::gui::MainForm::JobReportListViewEvents::SetEncoderProfilePath()
 {
     if(main_form->job_report_list_view->HasSelectedItems())
     {
-        OpenFileDialog open_file_dialog(hWnd, FileExtensionFilters::input_profile_format_filters, sizeof(FileExtensionFilters::input_profile_format_filters) / sizeof(COMDLG_FILTERSPEC), false);
+        controls::OpenFileDialog open_file_dialog(main_form->window->GetHandle(), FileExtensionFilters::profile_format_filters, sizeof(FileExtensionFilters::profile_format_filters) / sizeof(COMDLG_FILTERSPEC), false);
 
         if(open_file_dialog.HasResult())
         {
-            std::string profile_full_path(WindowsUtilities::UTF8_Encode(open_file_dialog.GetFile(RustyFile::File::FULL_PATH)));
-            std::wstring profile_file_name_extension(open_file_dialog.GetFile(RustyFile::File::NAME_AND_EXTENSION));
-            std::string output_file_full_path;
-            std::string output_path;
+            boost::filesystem::path encoder_profile_path(open_file_dialog.GetFile(0ul));
 
             int row_index = main_form->job_report_list_view->GetNextSelectedItem();
 
-            bool needs_redraw = row_index > -1;
+            std::vector<std::unique_ptr<engine2::JobBuilderRunner>>::const_iterator job_iterator;
 
-            if(needs_redraw)
-                main_form->job_report_list_view->SetRedraw(false);
+            main_form->job_report_list_view->SetRedraw(false);
 
             while(row_index > -1)
             {
-                switch(job_descriptions[row_index].GetState())
-                {
-                    case Job::State::NOT_READY:
-                    case Job::State::READY:
-                    {
-                        try
-                        {
-                            job_descriptions[row_index].SetProfileFullPath(profile_full_path);
-                            main_form->job_report_list_view->SetCellText(1, row_index, profile_file_name_extension.c_str());
-                            main_form->job_report_list_view->SetCellText(2, row_index, WindowsUtilities::UTF8_Decode(Job::state_to_string.at(job_descriptions[row_index].GetState())).c_str());
+                job_iterator = job_queue.GetJobIterator(row_index);
 
-                            output_path = job_descriptions[row_index].GetOutputPath();
+                (*job_iterator)->SetEncoderProfilePath(encoder_profile_path);
 
-                            if(!output_path.empty())
-                            {
-                                output_file_full_path = output_path + "\\" + job_descriptions[row_index].GetOutputFileName() + "." + job_descriptions[row_index].GetOutputFileExtension();
-                                main_form->job_report_list_view->SetCellText(4, row_index, WindowsUtilities::UTF8_Decode(output_file_full_path).c_str());
-                            }
-                        }
-                        catch(InvalidArgumentException &ex)
-                        {
-                            SetErrorMessage(&ex, row_index);
-                        }
-                        catch(ReadFileException &ex)
-                        {
-                            SetErrorMessage(&ex, row_index);
-                        }
-
-                        break;
-                    }
-                }
-
-                ++row_index;
-                row_index = main_form->job_report_list_view->GetNextSelectedItem(row_index);
+                row_index = main_form->job_report_list_view->GetNextSelectedItem(++row_index);
             }
 
-            if(needs_redraw)
-            {
-                main_form->job_report_list_view->SetRedraw(true);
-                main_form->job_report_list_view->Redraw();
-            }
+            main_form->job_report_list_view->SetRedraw(true);
+            main_form->job_report_list_view->Redraw();
         }
     }
 }
 
-void MainForm::JobReportListViewEvents::SetOutputPath(HWND hWnd)
+void rusty::gui::MainForm::JobReportListViewEvents::SetOutputPath()
 {
     if(main_form->job_report_list_view->HasSelectedItems())
     {
-        OpenFolderDialog open_folder_dialog(hWnd);
+        controls::OpenFolderDialog open_folder_dialog(main_form->window->GetHandle());
 
         if(open_folder_dialog.HasResult())
         {
-            std::string output_folder(WindowsUtilities::UTF8_Encode(open_folder_dialog.GetFolder()));
-            std::string output_file_extension;
-            std::string output_file_full_path;
+            boost::filesystem::path output_file_path(open_folder_dialog.GetFolder());
 
             int row_index = main_form->job_report_list_view->GetNextSelectedItem();
 
-            bool needs_redraw = row_index > -1;
+            std::vector<std::unique_ptr<engine2::JobBuilderRunner>>::const_iterator job_iterator;
 
-            if(needs_redraw)
-                main_form->job_report_list_view->SetRedraw(false);
+            main_form->job_report_list_view->SetRedraw(false);
 
             while(row_index > -1)
             {
-                switch(job_descriptions[row_index].GetState())
-                {
-                    case Job::State::NOT_READY:
-                    case Job::State::READY:
-                    {
-                        try
-                        {
-                            job_descriptions[row_index].SetOutputPath(output_folder);
+                job_iterator = job_queue.GetJobIterator(row_index);
 
-                            output_file_extension = job_descriptions[row_index].GetOutputFileExtension();
+                (*job_iterator)->SetOutputFilePath(output_file_path);
 
-                            if(output_file_extension.empty())
-                            {
-                                main_form->job_report_list_view->SetCellText(4, row_index, WindowsUtilities::UTF8_Decode(output_folder).c_str());
-                            }
-                            else
-                            {
-                                output_file_full_path = output_folder + "\\" + job_descriptions[row_index].GetOutputFileName() + "." + output_file_extension;
-                                main_form->job_report_list_view->SetCellText(4, row_index, WindowsUtilities::UTF8_Decode(output_file_full_path).c_str());
-                            }
-
-                            main_form->job_report_list_view->SetCellText(2, row_index, WindowsUtilities::UTF8_Decode(Job::state_to_string.at(job_descriptions[row_index].GetState())).c_str());
-                        }
-                        catch(InvalidArgumentException &ex)
-                        {
-                            SetErrorMessage(&ex, row_index);
-                        }
-
-                        break;
-                    }
-                }
-
-                ++row_index;
-                row_index = main_form->job_report_list_view->GetNextSelectedItem(row_index);
+                row_index = main_form->job_report_list_view->GetNextSelectedItem(++row_index);
             }
 
-            if(needs_redraw)
-            {
-                main_form->job_report_list_view->SetRedraw(true);
-                main_form->job_report_list_view->Redraw();
-            }
+            main_form->job_report_list_view->SetRedraw(true);
+            main_form->job_report_list_view->Redraw();
         }
     }
 }
 
-void MainForm::JobReportListViewEvents::StartQueue()
+void rusty::gui::MainForm::JobReportListViewEvents::RemoveJob()
 {
-    if(!queue_processor.IsStarted())
+    if(main_form->job_report_list_view->HasSelectedItems())
     {
-        queue_processor.Start();
-    }
-}
+        int row_index = main_form->job_report_list_view->GetNextSelectedItem();
 
-void MainForm::JobReportListViewEvents::PauseQueue()
-{
-    if(queue_processor.IsStarted())
-    {
-        PauseJobsIfAny();
-        UpdateJobDescriptions();
-        CleanActiveQueue();
-        queue_processor.Stop();
-    }
-}
+        std::vector<std::unique_ptr<engine2::JobBuilderRunner>>::const_iterator job_iterator;
 
-void MainForm::JobReportListViewEvents::OnTimerSyncTick()
-{
-    ResumeJobsIfAny();
+        main_form->job_report_list_view->SetRedraw(false);
 
-    TryQueueJobs();
-
-    UpdateJobDescriptions();
-
-    CleanActiveQueue();
-
-    TryStopQueueProcessor();
-}
-
-void MainForm::JobReportListViewEvents::PauseJobsIfAny()
-{
-    Job *job;
-
-    for(std::size_t index = 0u; index < max_simultaneous_jobs_count; ++index)
-    {
-        job = jobs[index].get();
-
-        if(job != nullptr && job->GetStateSync() == Job::State::RUNNING)
-            job->PauseSync();
-    }
-}
-
-void MainForm::JobReportListViewEvents::TryQueueJobs(void)
-{
-    if(!IsQueueFull())
-    {
-        std::size_t job_descriptions_count = job_descriptions.size();
-
-        for(std::size_t index = 0u; index < job_descriptions_count; ++index)
+        while(row_index > -1)
         {
-            if(job_descriptions[index].GetState() == Job::State::READY)
-            {
-                if(!IsQueueFull())
-                {
-                    std::size_t free_slot_index = GetFreeSlot();
+            job_iterator = job_queue.GetJobIterator(row_index);
 
-                    JobDescription *_job_description = &job_descriptions[index];
+            job_queue.RemoveJob(job_iterator, job_iterator + 1);
 
-                    try
-                    {
-                        CreateAndRunJob(_job_description, free_slot_index);
-                        job_indices_tracker[free_slot_index] = index;
-                    }
-                    catch(Exception &ex)
-                    {
-                        _job_description->SetState(Job::State::ERROR_OCCURED);
-                        SetErrorMessage(&ex, index);
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
+            main_form->job_report_list_view->RemoveRow(row_index);
+
+            row_index = main_form->job_report_list_view->GetNextSelectedItem(row_index);
+
+            main_form->job_report_list_view->SetRedraw(true);
+            main_form->job_report_list_view->Redraw();
         }
     }
 }
 
-void MainForm::JobReportListViewEvents::UpdateJobDescriptions(void)
+void rusty::gui::MainForm::JobReportListViewEvents::StartQueue()
 {
-    for(std::size_t index = 0u; index < max_simultaneous_jobs_count; ++index)
-    {
-        if(jobs[index].get() != nullptr)
-        {
-            Job *job = jobs[index].get();
-            JobDescription *job_description = &job_descriptions[job_indices_tracker[index]];
-            Job::State current_job_state = job->GetStateSync();
-
-            if(job_description->GetState() != current_job_state)
-            {
-                job_description->SetState(current_job_state);
-
-                if(current_job_state == Job::State::ERROR_OCCURED)
-                    SetErrorMessage(job->GetError(), job_indices_tracker[index]);
-                else
-                    main_form->job_report_list_view->SetCellText(2, job_indices_tracker[index], WindowsUtilities::UTF8_Decode(Job::state_to_string.at(current_job_state)).c_str());
-            }
-
-            main_form->job_report_list_view->SetCellText(3, job_indices_tracker[index], GetConversionProgress(index).c_str());
-        }
-    }
+    job_queue.Start();
 }
 
-void MainForm::JobReportListViewEvents::CleanActiveQueue(void)
+void rusty::gui::MainForm::JobReportListViewEvents::PauseQueue()
 {
-    Job *job;
-    Job::State state;
-
-    for(std::size_t index = 0u; index < max_simultaneous_jobs_count; ++index)
-    {
-        job = jobs[index].get();
-
-        if(job != nullptr)
-        {
-            state = job->GetStateSync();
-
-            if(job_descriptions[job_indices_tracker[index]].GetState() == state)
-            {
-                if(state != Job::State::RUNNING && state != Job::State::PAUSE)
-                {
-                    jobs[index].reset();
-                }
-            }
-        }
-    }
+    job_queue.Pause();
 }
 
-void MainForm::JobReportListViewEvents::TryStopQueueProcessor(void)
+void rusty::gui::MainForm::JobReportListViewEvents::OnInputFilePathChanged(const boost::filesystem::path &input_file_path, unsigned int job_index)
 {
-    Job::State state;
-
-    bool need_break_from_loop = false;
-
-    std::size_t jobs_index = 0ull;
-
-    for(; jobs_index < max_simultaneous_jobs_count; ++jobs_index)
-    {
-        if(jobs[jobs_index].get() != nullptr)
-        {
-            state = jobs[jobs_index]->GetStateSync();
-
-            switch(state)
-            {
-                case Job::READY:
-                case Job::RUNNING:
-                case Job::PAUSE:
-                    need_break_from_loop = true;
-                    break;
-            }
-
-            if(need_break_from_loop)
-                break;
-        }
-    }
-
-    if(jobs_index < max_simultaneous_jobs_count)
-    {
-        return;
-    }
-
-    std::size_t job_descriptions_count = job_descriptions.size();
-
-    need_break_from_loop = false;
-
-    std::size_t job_descriptions_index = 0ull;
-
-    for(; job_descriptions_index < job_descriptions_count; ++job_descriptions_index)
-    {
-        state = job_descriptions[job_descriptions_index].GetState();
-
-        switch(state)
-        {
-            case Job::READY:
-            case Job::RUNNING:
-            case Job::PAUSE:
-                need_break_from_loop = true;
-                break;
-        }
-
-        if(need_break_from_loop)
-            break;
-    }
-
-    if(job_descriptions_index == job_descriptions_count)
-    {
-        queue_processor.Stop();
-    }
+    if(job_index < main_form->job_report_list_view->GetRowCount())
+        main_form->job_report_list_view->SetCellText(0u, job_index, input_file_path.filename().wstring().c_str());
+    else
+        main_form->job_report_list_view->InsertRow(job_index, input_file_path.filename().wstring().c_str(), nullptr);
 }
 
-void MainForm::JobReportListViewEvents::ResumeJobsIfAny()
+void rusty::gui::MainForm::JobReportListViewEvents::OnEstimatedDecoderIDChanged(codecs::Decoder<void>::ID estimated_decoder_id, unsigned int job_index)
 {
-    Job *job;
-
-    for(std::size_t index = 0u; index < max_simultaneous_jobs_count; ++index)
-    {
-        job = jobs[index].get();
-
-        if(job != nullptr && job->GetStateSync() == Job::State::PAUSE)
-            job->StartAsync();
-    }
+    main_form->job_report_list_view->SetCellText(1u, job_index, core::WindowsUtilities::UTF8_Decode(codecs::Decoder<void>::decoder_id_to_text.at(estimated_decoder_id)).c_str());
 }
 
-bool MainForm::JobReportListViewEvents::IsQueueFull()
+void rusty::gui::MainForm::JobReportListViewEvents::OnEncoderProfilePathChanged(const boost::filesystem::path &encoder_profile_path, unsigned int job_index)
 {
-    for(std::size_t index = 0ull; index < max_simultaneous_jobs_count; ++index)
-    {
-        if(jobs[index].get() == nullptr)
-            return false;
-    }
-
-    return true;
+    main_form->job_report_list_view->SetCellText(2u, job_index, encoder_profile_path.filename().wstring().c_str());
 }
 
-std::size_t MainForm::JobReportListViewEvents::GetFreeSlot()
+void rusty::gui::MainForm::JobReportListViewEvents::OnEstimatedEncoderIDChanged(codecs::Encoder<void>::ID estimated_encoder_id, unsigned int job_index)
 {
-    for(std::size_t index = 0; index < max_simultaneous_jobs_count; ++index)
-    {
-        if(jobs[index].get() == nullptr)
-            return index;
-    }
-
-    assert(false);
-    throw OutOfRangeException("ActiveJobQueue", "Queue is full.");
+    main_form->job_report_list_view->SetCellText(3u, job_index, core::WindowsUtilities::UTF8_Decode(codecs::Encoder<void>::encoder_id_to_text.at(estimated_encoder_id)).c_str());
 }
 
-void MainForm::JobReportListViewEvents::CreateAndRunJob(const JobDescription *job_description, std::size_t free_slot_index)
+void rusty::gui::MainForm::JobReportListViewEvents::OnOutputFilePathChanged(boost::filesystem::path output_file_path, unsigned int job_index)
 {
-    switch(job_description->GetEncoderID())
+    main_form->job_report_list_view->SetCellText(6u, job_index, output_file_path.wstring().c_str());
+}
+
+void rusty::gui::MainForm::JobReportListViewEvents::OnStateChanged(engine2::Common::JobBuilderRunnerState state, unsigned int job_index)
+{
+    main_form->job_report_list_view->SetCellText(4u, job_index, core::WindowsUtilities::UTF8_Decode(engine2::Common::job_builder_runner_state_to_string.at(state)).c_str());
+}
+
+void rusty::gui::MainForm::JobReportListViewEvents::OnErrorOccurred(const core::Exception *error, unsigned int job_index)
+{
+    std::string error_message(error->GetErrorMessage());
+
+    main_form->job_report_list_view->SetCellText(6u, job_index, core::WindowsUtilities::UTF8_Decode(error_message).c_str());
+}
+
+void rusty::gui::MainForm::JobReportListViewEvents::OnWrittenFrameCountChanged(uint64_t written_frame_count, unsigned int job_index)
+{
+    std::vector<std::unique_ptr<engine2::JobBuilderRunner>>::const_iterator job_iterator = job_queue.GetJobIterator(job_index);
+
+    double total_frame_count = (*job_iterator)->GetTotalFrameCount();
+
+    double percentage;
+
+    if(total_frame_count == 0u)
     {
-        case Encoder<void>::ID::LAME:
-        {
-            LameOptions lame_options;
-            SettingsManager::Read(lame_options, job_description->GetProfileFullPath());
-            jobs[free_slot_index].reset(new Job(job_description->GetSourceFileFullPath(), job_description->GetOutputPath() + "\\" + job_description->GetOutputFileName() + "." + job_description->GetOutputFileExtension(), job_description->GetDecoderID(), lame_options));
-            break;
-        }
-        case Encoder<void>::ID::SNDFILEENCODER:
-        {
-            SndFileEncoderOptions sndfileencoder_options;
-            SettingsManager::Read(sndfileencoder_options, job_description->GetProfileFullPath());
-            jobs[free_slot_index].reset(new Job(job_description->GetSourceFileFullPath(), job_description->GetOutputPath() + "\\" + job_description->GetOutputFileName() + "." + job_description->GetOutputFileExtension(), job_description->GetDecoderID(), sndfileencoder_options));
-            break;
-        }
+        percentage = 0;
+    }
+    else
+    {
+        percentage = written_frame_count / total_frame_count;
+        percentage *= 100.0;
     }
 
-    Job *job = jobs[free_slot_index].get();
-    total_frame_count_uint64[free_slot_index] = job->GetTotalFrameCount();
-    total_frame_count_double[free_slot_index] = static_cast<double>(total_frame_count_uint64[free_slot_index]);
-    job->StartAsync();
+    main_form->job_report_list_view->SetCellText(5u, job_index, std::to_wstring(percentage).append(L"%").c_str());
 }
 
-void MainForm::JobReportListViewEvents::SetErrorMessage(const Exception *exception, std::size_t row_index)
+void rusty::gui::MainForm::JobReportListViewEvents::OnTotalFrameCountChanged(uint64_t /* total_frame_count */, unsigned int /* job_index */)
 {
-    std::string error_message(Job::state_to_string.at(Job::State::ERROR_OCCURED) + ": " + exception->what());
-    main_form->job_report_list_view->SetCellText(2, row_index, WindowsUtilities::UTF8_Decode(error_message).c_str());
+
 }
 
-std::wstring MainForm::JobReportListViewEvents::GetConversionProgress(std::size_t job_index)
-{
-    double progress = static_cast<double>(jobs[job_index]->GetWrittenFrameCount()) / total_frame_count_double[job_index] * 100.0;
-    std::wstring progress_wstr(std::to_wstring(progress));
-    std::wstring::size_type pos = progress_wstr.find_first_of(L'.') + 3u;
-    return progress_wstr.substr(0u, pos) + L'%';
-}
-
-MainForm::JobReportListViewEvents::~JobReportListViewEvents(void)
+rusty::gui::MainForm::JobReportListViewEvents::~JobReportListViewEvents()
 {
     PauseQueue();
 }
 
-void MainForm::BtnBrowseFolderEvents::OnClick(HWND hWnd)
+void rusty::gui::MainForm::BtnBrowseFolderEvents::OnClick()
 {
-    main_form->job_report_list_view_events->SetOutputPath(hWnd);
+    main_form->job_report_list_view_events->SetOutputPath();
 }
 
-void MainForm::BtnAddFilesEvents::OnClick(HWND hWnd)
+void rusty::gui::MainForm::BtnAddFilesEvents::OnClick()
 {
-    main_form->job_report_list_view_events->AddJobs(hWnd);
+    main_form->job_report_list_view_events->AddJob();
 }
 
-void MainForm::BtnRemoveFilesEvents::OnClick()
+void rusty::gui::MainForm::BtnRemoveFilesEvents::OnClick()
 {
-    main_form->job_report_list_view_events->RemoveSelectedJobs();
+    main_form->job_report_list_view_events->RemoveJob();
 }
 
-void MainForm::BtnLoadProfileEvents::OnClick(HWND hWnd)
+void rusty::gui::MainForm::BtnLoadProfileEvents::OnClick()
 {
-    main_form->job_report_list_view_events->LoadProfile(hWnd);
+    main_form->job_report_list_view_events->SetEncoderProfilePath();
 }
 
-void MainForm::BtnCreateProfileEvents::OnClick()
+void rusty::gui::MainForm::BtnCreateProfileEvents::OnClick()
 {
     if(main_form->profile_form.get() == nullptr)
         main_form->profile_form.reset(new ProfileForm(main_form->hInstance, main_form->window->GetHandle(), main_form->profile_form));
 }
 
-void MainForm::BtnStartQueueEvents::OnClick()
+void rusty::gui::MainForm::BtnStartQueueEvents::OnClick()
 {
     main_form->job_report_list_view_events->StartQueue();
 }
 
-void MainForm::BtnPauseQueueEvents::OnClick()
+void rusty::gui::MainForm::BtnPauseQueueEvents::OnClick()
 {
     main_form->job_report_list_view_events->PauseQueue();
 }
 
-LRESULT MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT rusty::gui::MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
@@ -713,7 +393,7 @@ LRESULT MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
-                            btn_browse_folder_events->OnClick(hWnd);
+                            btn_browse_folder_events->OnClick();
                             break;
                     }
                     break;
@@ -721,7 +401,7 @@ LRESULT MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
-                            btn_add_files_events->OnClick(hWnd);
+                            btn_add_files_events->OnClick();
                             break;
                     }
                     break;
@@ -737,7 +417,7 @@ LRESULT MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
-                            btn_load_profile_events->OnClick(hWnd);
+                            btn_load_profile_events->OnClick();
                             break;
                     }
                     break;
@@ -767,9 +447,6 @@ LRESULT MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                     break;
             }
             break;
-        case WM_TIMER:
-            job_report_list_view_events->OnTimerSyncTick();
-            break;
         case WM_SIZE:
             OnSize(wParam, lParam);
             break;
@@ -778,6 +455,7 @@ LRESULT MainForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             break;
         case WM_NCDESTROY:
             OnBeforeDestroy();
+			break;
         case WM_DESTROY:
             PostQuitMessage(0);
             break;

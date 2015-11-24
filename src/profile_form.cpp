@@ -20,66 +20,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "profile_form.h"
 
-ProfileForm::ProfileForm(HINSTANCE hInstance, HWND hWndParent, std::unique_ptr<ProfileForm> &me) : hInstance(hInstance), hWndParent(hWndParent), me(&me)
+rusty::gui::ProfileForm::ProfileForm(HINSTANCE hInstance, HWND hWndParent, std::unique_ptr<ProfileForm> &me) : hInstance(hInstance), hWndParent(hWndParent), me(&me)
 {
-    window.reset(new Window(hInstance, this, L"ProfileForm", L"Profile", hWndParent, WS_EX_DLGMODALFRAME, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_VISIBLE, -1, -1, CW_USEDEFAULT, CW_USEDEFAULT, 450, 550, true));
+    window.reset(new controls::Window(hInstance, this, L"ProfileForm", L"Profile", hWndParent, WS_EX_DLGMODALFRAME, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_VISIBLE, -1, -1, CW_USEDEFAULT, CW_USEDEFAULT, 450, 550, true));
     window->Focus();
 }
 
-void ProfileForm::OnCreate(HWND hWnd)
+void rusty::gui::ProfileForm::OnCreate(HWND hWnd)
 {
     int x_padding = 5;
     int y_padding = x_padding;
 
-    lbl_encoder_sign.reset(new Label(hInstance, L"Encoder", hWnd, PROFILEFORM_LBL_ENCODER_SIGN, x_padding, y_padding + 4, 50, 18));
+    lbl_encoder_sign.reset(new controls::Label(hInstance, L"Encoder", hWnd, PROFILEFORM_LBL_ENCODER_SIGN, x_padding, y_padding + 4, 50, 18));
 
-    cmbbx_encoder.reset(new ComboBox(hInstance, hWnd, PROFILEFORM_CMBBX_ENCODER, 65, y_padding, Window::GetClientWidth(hWnd) - x_padding - 160, ComboBox::Type::DROP_DOWN_LIST));
+    cmbbx_encoder.reset(new controls::ComboBox(hInstance, hWnd, PROFILEFORM_CMBBX_ENCODER, 65, y_padding, controls::Window::GetClientWidth(hWnd) - x_padding - 160, controls::ComboBox::Type::DROP_DOWN_LIST));
     cmbbx_encoder_events.reset(new CmbBxEncoderEvents(this));
 
-    btn_load_default.reset(new Button(hInstance, L"Load default", hWnd, PROFILEFORM_BTN_LOAD_DEFAULT, Window::GetClientRight(hWnd) - x_padding - 90, y_padding, 90, 22));
+    btn_load_default.reset(new controls::Button(hInstance, L"Load default", hWnd, PROFILEFORM_BTN_LOAD_DEFAULT, controls::Window::GetClientRight(hWnd) - x_padding - 90, y_padding, 90, 22));
     btn_load_default_events.reset(new BtnLoadDefaultEvents(this));
 
-    profile_report_list_view.reset(new ReportListView(hInstance, hWnd, PROFILEFORM_PROFILE_REPORT_LIST_VIEW, x_padding, y_padding + 27, Window::GetClientWidth(hWnd) - y_padding * 2, Window::GetClientHeight(hWnd) - 95 - y_padding, WS_EX_LEFT, LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_CHILD | WS_VISIBLE, true));
+    profile_report_list_view.reset(new controls::ReportListView(hInstance, hWnd, PROFILEFORM_PROFILE_REPORT_LIST_VIEW, x_padding, y_padding + 27, controls::Window::GetClientWidth(hWnd) - y_padding * 2, controls::Window::GetClientHeight(hWnd) - 95 - y_padding, WS_EX_LEFT, LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_CHILD | WS_VISIBLE, true));
     profile_report_list_view_events.reset(new ProfileReportListViewEvents(this));
 
-    lbl_option_value_sign.reset(new Label(hInstance, L"Value", hWnd, PROFILEFORM_LBL_OPTION_VALUE_SIGN, x_padding, Window::GetClientBottom(hWnd) - y_padding - 52, 32, 18, WS_EX_LEFT, SS_LEFT | SS_LEFTNOWORDWRAP | WS_CHILD | WS_VISIBLE));
+    lbl_option_value_sign.reset(new controls::Label(hInstance, L"Value", hWnd, PROFILEFORM_LBL_OPTION_VALUE_SIGN, x_padding, controls::Window::GetClientBottom(hWnd) - y_padding - 52, 32, 18, WS_EX_LEFT, SS_LEFT | SS_LEFTNOWORDWRAP | WS_CHILD | WS_VISIBLE));
 
-    btn_open.reset(new Button(hInstance, L"Open", hWnd, PROFILEFORM_BTN_OPEN, x_padding, Window::GetClientBottom(hWnd) - 30, 90, 25));
+    btn_open.reset(new controls::Button(hInstance, L"Open", hWnd, PROFILEFORM_BTN_OPEN, x_padding, controls::Window::GetClientBottom(hWnd) - 30, 90, 25));
     btn_open_events.reset(new BtnOpenEvents(this));
 
-    btn_save.reset(new Button(hInstance, L"Save", hWnd, PROFILEFORM_BTN_SAVE, 100, Window::GetClientBottom(hWnd) - 30, 90, 25));
-    btn_save_events.reset(new BtnSaveEvents(this));
-
-    btn_save_as.reset(new Button(hInstance, L"Save As", hWnd, PROFILEFORM_BTN_SAVE_AS, 195, Window::GetClientBottom(hWnd) - 30, 90, 25));
+    btn_save_as.reset(new controls::Button(hInstance, L"Save As", hWnd, PROFILEFORM_BTN_SAVE_AS, 100, controls::Window::GetClientBottom(hWnd) - 30, 90, 25));
     btn_save_as_events.reset(new BtnSaveAsEvents(this));
 
     form_loaded = true;
 }
 
-ProfileForm::~ProfileForm()
+rusty::gui::ProfileForm::~ProfileForm()
 {
-    Window::Focus(hWndParent);
+    controls::Window::Focus(hWndParent);
 }
 
-ProfileForm::CmbBxEncoderEvents::CmbBxEncoderEvents(ProfileForm *profile_form) : profile_form(profile_form)
+rusty::gui::ProfileForm::CmbBxEncoderEvents::CmbBxEncoderEvents(ProfileForm *profile_form) : profile_form(profile_form)
 {
-    profile_form->cmbbx_encoder->AppendItem(L"LAME", Encoder<void>::ID::LAME);
-    profile_form->cmbbx_encoder->AppendItem(L"Libsndfile Encoder", Encoder<void>::ID::SNDFILEENCODER);
+    profile_form->cmbbx_encoder->AppendItem(PROFILE_EXTENSION_DESCRIPTION_LAME_W, static_cast<LPARAM>(codecs::Encoder<void>::ID::LAME));
+    profile_form->cmbbx_encoder->AppendItem(PROFILE_EXTENSION_DESCRIPTION_SNDFILE_ENCODER_W, static_cast<LPARAM>(codecs::Encoder<void>::ID::SNDFILE_ENCODER));
 }
 
-bool ProfileForm::CmbBxEncoderEvents::IsSelectedEncoder()
+bool rusty::gui::ProfileForm::CmbBxEncoderEvents::IsSelectedEncoder()
 {
     return profile_form->cmbbx_encoder->HasSelectedItems();
 }
 
-Encoder<void>::ID ProfileForm::CmbBxEncoderEvents::GetSelectedEncoderID()
+rusty::codecs::Encoder<void>::ID rusty::gui::ProfileForm::CmbBxEncoderEvents::GetSelectedEncoderID()
 {
     unsigned int selected_item_index = profile_form->cmbbx_encoder->GetSelectedItemIndex();
 
-    return static_cast<Encoder<void>::ID>(profile_form->cmbbx_encoder->GetItemData(selected_item_index));
+    return static_cast<codecs::Encoder<void>::ID>(profile_form->cmbbx_encoder->GetItemData(selected_item_index));
 }
 
-void ProfileForm::BtnLoadDefaultEvents::OnClick()
+void rusty::gui::ProfileForm::CmbBxEncoderEvents::SetSelectedEncoderID(codecs::Encoder<void>::ID encoder_id)
+{
+    profile_form->cmbbx_encoder->SelectItem(-1, static_cast<LPARAM>(encoder_id));
+}
+
+void rusty::gui::ProfileForm::BtnLoadDefaultEvents::OnClick()
 {
     if(profile_form->cmbbx_encoder_events->IsSelectedEncoder())
     {
@@ -87,7 +89,7 @@ void ProfileForm::BtnLoadDefaultEvents::OnClick()
     }
 }
 
-ProfileForm::ProfileReportListViewEvents::ProfileReportListViewEvents(ProfileForm *profile_form) : profile_form(profile_form)
+rusty::gui::ProfileForm::ProfileReportListViewEvents::ProfileReportListViewEvents(ProfileForm *profile_form) : profile_form(profile_form)
 {
     std::wstring text(L"Option");
     profile_form->profile_report_list_view->InsertColumn(200u, 0u, text.c_str());
@@ -96,112 +98,97 @@ ProfileForm::ProfileReportListViewEvents::ProfileReportListViewEvents(ProfileFor
     profile_form->profile_report_list_view->InsertColumn(200u, 1u, text.c_str());
 }
 
-bool ProfileForm::ProfileReportListViewEvents::IsEncoderProfileLoaded()
+bool rusty::gui::ProfileForm::ProfileReportListViewEvents::IsEncoderProfileLoaded()
 {
     return loaded_encoder_profile;
 }
 
-bool ProfileForm::ProfileReportListViewEvents::HasUnsavedProfileChanges()
+bool rusty::gui::ProfileForm::ProfileReportListViewEvents::HasUnsavedProfileChanges()
 {
     return profile_has_unsaved_changes;
 }
 
-std::wstring ProfileForm::ProfileReportListViewEvents::GetCurrentProfileLastSavedFullPath()
+boost::filesystem::path & rusty::gui::ProfileForm::ProfileReportListViewEvents::GetCurrentProfileLastSavedFullPath()
 {
     return current_profile_last_saved_full_path;
 }
 
-Encoder<void>::ID ProfileForm::ProfileReportListViewEvents::GetLoadedProfileEncoderID()
+rusty::codecs::Encoder<void>::ID rusty::gui::ProfileForm::ProfileReportListViewEvents::GetLoadedProfileEncoderID()
 {
     return loaded_encoder_profile_id;
 }
 
-void ProfileForm::ProfileReportListViewEvents::SaveProfile(std::wstring profile_full_path)
+rusty::codecs::EncoderProfile * rusty::gui::ProfileForm::ProfileReportListViewEvents::GetEncoderProfile()
+{
+    return encoder_profile.get();
+}
+
+void rusty::gui::ProfileForm::ProfileReportListViewEvents::SaveProfile(const boost::filesystem::path &profile_full_path)
 {
     if(loaded_encoder_profile)
     {
-        switch(loaded_encoder_profile_id)
+        try
         {
-            case Encoder<void>::ID::LAME:
-            {
-                LameOptions *lame_options = static_cast<LameOptions *>(encoder_options.get());
-                SettingsManager::Write(*lame_options, WindowsUtilities::UTF8_Encode(profile_full_path));
-                break;
-            }
-            case Encoder<void>::ID::SNDFILEENCODER:
-            {
-                SndFileEncoderOptions *sndfileencoder_options = static_cast<SndFileEncoderOptions *>(encoder_options.get());
-                SettingsManager::Write(*sndfileencoder_options, WindowsUtilities::UTF8_Encode(profile_full_path));
-                break;
-            }
+            engine::EncoderProfileWriter encoder_profile_writer;
+            encoder_profile_writer.WriteFile(*encoder_profile.get(), loaded_encoder_profile_id, profile_full_path);
+
+            profile_has_unsaved_changes = false;
+        }
+        catch(core::WriteFileException &ex)
+        {
+            controls::MsgBox::Show(ex.what(), profile_form->window->GetHandle());
         }
 
-        profile_has_unsaved_changes = false;
         current_profile_last_saved_full_path = profile_full_path;
     }
 }
 
-void ProfileForm::ProfileReportListViewEvents::LoadProfile(HWND hWnd)
+void rusty::gui::ProfileForm::ProfileReportListViewEvents::LoadProfile()
 {
-    OpenFileDialog open_file_dialog(hWnd, FileExtensionFilters::input_profile_format_filters, sizeof(FileExtensionFilters::input_profile_format_filters) / sizeof(COMDLG_FILTERSPEC), false);
+    controls::OpenFileDialog open_file_dialog(profile_form->window->GetHandle(), FileExtensionFilters::profile_format_filters, sizeof(FileExtensionFilters::profile_format_filters) / sizeof(COMDLG_FILTERSPEC), false);
 
     if(open_file_dialog.HasResult())
     {
-        std::wstring profile_full_file_path = open_file_dialog.GetFile(RustyFile::File::FULL_PATH);
-        std::wstring profile_file_extension = open_file_dialog.GetFile(RustyFile::File::EXTENSION);
+        boost::filesystem::path profile_full_file_path(open_file_dialog.GetFile(0ul));
 
-        if(profile_file_extension == PROFILE_EXTENSION_LAME_W)
+        try
         {
-            try
-            {
-                LameOptions lame_options;
-                SettingsManager::Read(lame_options, WindowsUtilities::UTF8_Encode(profile_full_file_path));
-                PopulateListView(Encoder<void>::ID::LAME, &lame_options);
-            }
-            catch(ReadFileException &ex)
-            {
-                MsgBox::Show(ex.what(), hWnd);
-            }
+            engine::EncoderProfileReader encoder_profile_reader(profile_full_file_path);
 
-            current_profile_last_saved_full_path = profile_full_file_path;
+            std::shared_ptr<codecs::EncoderProfile> encoder_profile(encoder_profile_reader.GetEncoderProfile());
+
+            profile_form->cmbbx_encoder_events->SetSelectedEncoderID(encoder_profile_reader.GetEncoderID());
+
+            PopulateListView(encoder_profile_reader.GetEncoderID(), encoder_profile.get());
         }
-        else if(profile_file_extension == PROFILE_EXTENSION_SNDFILEENCODER_W)
+        catch(core::Exception &ex)
         {
-            try
-            {
-                SndFileEncoderOptions sndfileencoder_options;
-                SettingsManager::Read(sndfileencoder_options, WindowsUtilities::UTF8_Encode(profile_full_file_path));
-                PopulateListView(Encoder<void>::ID::SNDFILEENCODER, &sndfileencoder_options);
-            }
-            catch(ReadFileException &ex)
-            {
-                MsgBox::Show(ex.what(), hWnd);
-            }
-
-            current_profile_last_saved_full_path = profile_full_file_path;
+            controls::MsgBox::Show(ex.what(), profile_form->window->GetHandle());
         }
+
+        current_profile_last_saved_full_path = profile_full_file_path;
     }
 }
 
-void ProfileForm::ProfileReportListViewEvents::LoadDefaultProfile(Encoder<void>::ID encoder_id)
+void rusty::gui::ProfileForm::ProfileReportListViewEvents::LoadDefaultProfile(codecs::Encoder<void>::ID encoder_id)
 {
     PopulateListView(encoder_id, nullptr);
 }
 
-void ProfileForm::ProfileReportListViewEvents::SetEncoderOption(std::string &value)
+void rusty::gui::ProfileForm::ProfileReportListViewEvents::SetEncoderOption(std::string &value)
 {
     unsigned int selected_item_index = profile_form->profile_report_list_view->GetNextSelectedItem();
 
-    encoder_options->SetValueForOption(selected_item_index, value);
+    encoder_profile->SetValueForOption(selected_item_index, value);
 
-    encoder_options->GetCurrentValueForOptionInString(selected_item_index, value);
+    encoder_profile->GetCurrentValueForOptionInString(selected_item_index, value);
 
-    profile_form->profile_report_list_view->SetCellText(1, selected_item_index, WindowsUtilities::UTF8_Decode(value).c_str());
+    profile_form->profile_report_list_view->SetCellText(1, selected_item_index, core::WindowsUtilities::UTF8_Decode(value).c_str());
 
     profile_has_unsaved_changes = true;
 }
 
-void ProfileForm::ProfileReportListViewEvents::PopulateListView(Encoder<void>::ID encoder_id, EncoderOptions *encoder_options)
+void rusty::gui::ProfileForm::ProfileReportListViewEvents::PopulateListView(codecs::Encoder<void>::ID encoder_id, codecs::EncoderProfile *encoder_profile)
 {
     if(has_old_loaded_encoder_profile_id)
     {
@@ -209,7 +196,7 @@ void ProfileForm::ProfileReportListViewEvents::PopulateListView(Encoder<void>::I
 
         if(old_loaded_encoder_profile_id != encoder_id)
         {
-            this->encoder_options.reset();
+            this->encoder_profile.reset();
             current_profile_last_saved_full_path.clear();
             profile_form->profile_report_list_view->RemoveAllRows();
         }
@@ -221,78 +208,78 @@ void ProfileForm::ProfileReportListViewEvents::PopulateListView(Encoder<void>::I
     std::string text;
     unsigned int option_count;
 
-    EncoderOptions *_encoder_options;
+    codecs::EncoderProfile *_encoder_profile;
 
-    if(encoder_options != nullptr)
-        _encoder_options = encoder_options;
+    if(encoder_profile != nullptr)
+        _encoder_profile = encoder_profile;
     else
-        _encoder_options = this->encoder_options.get();
+        _encoder_profile = this->encoder_profile.get();
 
     switch(encoder_id)
     {
-        case Encoder<void>::ID::LAME:
+        case codecs::Encoder<void>::ID::LAME:
         {
-            if(encoder_options == nullptr)
-                this->encoder_options.reset(new LameOptions());
+            if(encoder_profile == nullptr)
+                this->encoder_profile.reset(new codecs::LameProfile());
             else
             {
-                LameOptions *lame_options = static_cast<LameOptions *>(encoder_options);
-                this->encoder_options.reset(new LameOptions(*lame_options));
+                codecs::LameProfile *lame_profile = static_cast<codecs::LameProfile *>(encoder_profile);
+                this->encoder_profile.reset(new codecs::LameProfile(*lame_profile));
             }
             break;
         }
-        case Encoder<void>::ID::SNDFILEENCODER:
+        case codecs::Encoder<void>::ID::SNDFILE_ENCODER:
         {
-            if(encoder_options == nullptr)
-                this->encoder_options.reset(new SndFileEncoderOptions());
+            if(encoder_profile == nullptr)
+                this->encoder_profile.reset(new codecs::SndFileEncoderProfile());
             else
             {
-                SndFileEncoderOptions *sndfileencoder_options = static_cast<SndFileEncoderOptions *>(encoder_options);
-                this->encoder_options.reset(new SndFileEncoderOptions(*sndfileencoder_options));
+                codecs::SndFileEncoderProfile *sndfile_encoder_profile = static_cast<codecs::SndFileEncoderProfile *>(encoder_profile);
+                this->encoder_profile.reset(new codecs::SndFileEncoderProfile(*sndfile_encoder_profile));
             }
             break;
         }
     }
 
-    _encoder_options = this->encoder_options.get();
+    _encoder_profile = this->encoder_profile.get();
 
     if(has_old_loaded_encoder_profile_id == false || old_loaded_encoder_profile_id != encoder_id)
     {
-        option_count = _encoder_options->GetOptionsCount();
+        option_count = _encoder_profile->GetOptionsCount();
 
         for(unsigned int index = 0u; index < option_count; ++index)
         {
-            text = _encoder_options->GetOptionsInString(index);
-            wtext = WindowsUtilities::UTF8_Decode(text);
-            profile_form->profile_report_list_view->InsertRow(index, wtext.c_str());
+            text = _encoder_profile->GetOptionsInString(index);
+            wtext = core::WindowsUtilities::UTF8_Decode(text);
+            profile_form->profile_report_list_view->InsertRow(index, wtext.c_str(), nullptr);
         }
     }
     else
-        option_count = _encoder_options->GetOptionsCount();
+        option_count = _encoder_profile->GetOptionsCount();
 
     has_old_loaded_encoder_profile_id = true;
 
     for(unsigned int index = 0u; index < option_count; ++index)
     {
-        text = _encoder_options->GetOptionsInString(index);
-        _encoder_options->GetCurrentValueForOptionInString(text, text);
-        wtext = WindowsUtilities::UTF8_Decode(text);
+        text = _encoder_profile->GetOptionsInString(index);
+        _encoder_profile->GetCurrentValueForOptionInString(text, text);
+        wtext = core::WindowsUtilities::UTF8_Decode(text);
         profile_form->profile_report_list_view->SetCellText(1u, index, wtext.c_str());
     }
 
-    if(encoder_options == nullptr)
+    if(encoder_profile == nullptr)
         profile_has_unsaved_changes = true;
 
     loaded_encoder_profile = true;
 }
 
-void ProfileForm::ProfileReportListViewEvents::OnItemChanged(NMLISTVIEW *list_view_notification_message)
+void rusty::gui::ProfileForm::ProfileReportListViewEvents::OnItemChanged(NMLISTVIEW *list_view_notification_message)
 {
     if(list_view_notification_message->uNewState == (LVIS_SELECTED | LVIS_FOCUSED) && list_view_notification_message->iItem >= 0)
     {
         style_change_count = 0u;
 
-        unsigned int selection_count = encoder_options->GetSelectionCountForOption(list_view_notification_message->iItem);
+        unsigned int selection_count = encoder_profile->GetSelectionCountForOption(list_view_notification_message->iItem);
 
         int value_text_length = 256;
         std::unique_ptr<wchar_t> value_text(new wchar_t[value_text_length]);
@@ -313,7 +300,7 @@ void ProfileForm::ProfileReportListViewEvents::OnItemChanged(NMLISTVIEW *list_vi
 
             if(profile_form->cmbbx_options_setter.get() == nullptr)
             {
-                profile_form->cmbbx_options_setter.reset(new ComboBox(profile_form->hInstance, profile_form->window->GetHandle(), PROFILEFORM_CMBBX_OPTION_SETTER, 45, profile_form->window->GetClientBottom() - 60, profile_form->window->GetClientRight() - 50, ComboBox::Type::DROP_DOWN_LIST));
+                profile_form->cmbbx_options_setter.reset(new controls::ComboBox(profile_form->hInstance, profile_form->window->GetHandle(), PROFILEFORM_CMBBX_OPTION_SETTER, 45, profile_form->window->GetClientBottom() - 60, profile_form->window->GetClientRight() - 50, controls::ComboBox::Type::DROP_DOWN_LIST));
                 profile_form->cmbbx_options_setter_events.reset(new CmbBxOptionsSetterEvents(profile_form));
                 setter_control_created = true;
             }
@@ -325,7 +312,7 @@ void ProfileForm::ProfileReportListViewEvents::OnItemChanged(NMLISTVIEW *list_vi
 
             for(unsigned int index = 0; index < selection_count; ++index)
             {
-                std::wstring selection(WindowsUtilities::UTF8_Decode(encoder_options->GetSelectionForOptionInString(list_view_notification_message->iItem, index)));
+                std::wstring selection(core::WindowsUtilities::UTF8_Decode(encoder_profile->GetSelectionForOptionInString(list_view_notification_message->iItem, index)));
                 profile_form->cmbbx_options_setter->AppendItem(selection.c_str());
             }
 
@@ -347,8 +334,8 @@ void ProfileForm::ProfileReportListViewEvents::OnItemChanged(NMLISTVIEW *list_vi
 
             if(profile_form->sltxtbx_options_setter.get() == nullptr)
             {
-                profile_form->sltxtbx_options_setter.reset(new SingleLineTextBox(profile_form->hInstance, nullptr, profile_form->window->GetHandle(), PROFILEFORM_SLTXTBX_OPTION_SETTER, 45, profile_form->window->GetClientBottom() - 60, profile_form->window->GetClientRight() - 145, 23));
-                profile_form->btn_set_option.reset(new Button(profile_form->hInstance, L"Set", profile_form->window->GetHandle(), PROFILEFORM_BTN_SET_OPTION, profile_form->window->GetClientRight() - 95, profile_form->window->GetClientBottom() - 60, 90, 23));
+                profile_form->sltxtbx_options_setter.reset(new controls::SingleLineTextBox(profile_form->hInstance, nullptr, profile_form->window->GetHandle(), PROFILEFORM_SLTXTBX_OPTION_SETTER, 45, profile_form->window->GetClientBottom() - 60, profile_form->window->GetClientRight() - 145, 23));
+                profile_form->btn_set_option.reset(new controls::Button(profile_form->hInstance, L"Set", profile_form->window->GetHandle(), PROFILEFORM_BTN_SET_OPTION, profile_form->window->GetClientRight() - 95, profile_form->window->GetClientBottom() - 60, 90, 23));
                 profile_form->btn_set_option_events.reset(new BtnSetOptionEvents(profile_form));
                 setter_control_created = true;
             }
@@ -386,7 +373,7 @@ void ProfileForm::ProfileReportListViewEvents::OnItemChanged(NMLISTVIEW *list_vi
     }
 }
 
-void ProfileForm::ProfileReportListViewEvents::OnDeleteAllItems()
+void rusty::gui::ProfileForm::ProfileReportListViewEvents::OnDeleteAllItems()
 {
     if(profile_form->cmbbx_options_setter.get() != nullptr)
     {
@@ -404,101 +391,90 @@ void ProfileForm::ProfileReportListViewEvents::OnDeleteAllItems()
     setter_control_created = false;
 }
 
-void ProfileForm::CmbBxOptionsSetterEvents::OnSelectionOk()
+void rusty::gui::ProfileForm::CmbBxOptionsSetterEvents::OnSelectionOk()
 {
-    std::string selected_item_text = WindowsUtilities::UTF8_Encode(profile_form->cmbbx_options_setter->GetItemText(profile_form->cmbbx_options_setter->GetSelectedItemIndex()));
+    std::string selected_item_text = core::WindowsUtilities::UTF8_Encode(profile_form->cmbbx_options_setter->GetItemText(profile_form->cmbbx_options_setter->GetSelectedItemIndex()));
     profile_form->profile_report_list_view_events->SetEncoderOption(selected_item_text);
 }
 
-void ProfileForm::BtnSetOptionEvents::OnClick(HWND hWnd)
+void rusty::gui::ProfileForm::BtnSetOptionEvents::OnClick(HWND hWnd)
 {
     wchar_t sltxtbx_options_setter_text[256];
     profile_form->sltxtbx_options_setter->GetText(sltxtbx_options_setter_text, 256);
 
-    std::string value(WindowsUtilities::UTF8_Encode(sltxtbx_options_setter_text));
+    std::string value(core::WindowsUtilities::UTF8_Encode(sltxtbx_options_setter_text));
 
     try
     {
         profile_form->profile_report_list_view_events->SetEncoderOption(value);
     }
-    catch(InvalidArgumentException &ex)
+    catch(core::InvalidArgumentException &ex)
     {
-        MsgBox::Show(ex.what(), hWnd);
+        controls::MsgBox::Show(ex.what(), hWnd);
     }
 }
 
-void ProfileForm::BtnOpenEvents::OnClick(HWND hWnd)
+void rusty::gui::ProfileForm::BtnOpenEvents::OnClick()
 {
-    profile_form->profile_report_list_view_events->LoadProfile(hWnd);
+    profile_form->profile_report_list_view_events->LoadProfile();
 }
 
-void ProfileForm::BtnSaveEvents::OnClick()
-{
-    std::wstring current_profile_last_saved_full_path(profile_form->profile_report_list_view_events->GetCurrentProfileLastSavedFullPath());
-
-    if(profile_form->profile_report_list_view_events->HasUnsavedProfileChanges() && !current_profile_last_saved_full_path.empty())
-    {
-        try
-        {
-            profile_form->profile_report_list_view_events->SaveProfile(current_profile_last_saved_full_path);
-        }
-        catch(WriteFileException &ex)
-        {
-            MsgBox::Show(ex.what(), profile_form->window->GetHandle());
-        }
-    }
-}
-
-void ProfileForm::BtnSaveAsEvents::OnClick(HWND hWnd)
+void rusty::gui::ProfileForm::BtnSaveAsEvents::OnClick(HWND hWnd)
 {
     if(profile_form->profile_report_list_view_events->IsEncoderProfileLoaded())
     {
-        Encoder<void>::ID encoder_id = profile_form->profile_report_list_view_events->GetLoadedProfileEncoderID();
+        codecs::Encoder<void>::ID encoder_id = profile_form->profile_report_list_view_events->GetLoadedProfileEncoderID();
 
-        std::unique_ptr<COMDLG_FILTERSPEC> output_profile_format_filters;
+        COMDLG_FILTERSPEC profile_format_filters[1];
+        unsigned int profile_format_filters_size = 1;
+
+        std::wstring filter_string;
 
         switch(encoder_id)
         {
-            case Encoder<void>::ID::LAME:
+            case codecs::Encoder<void>::ID::LAME:
             {
-                output_profile_format_filters.reset(new COMDLG_FILTERSPEC[1]);
-                COMDLG_FILTERSPEC *_output_profile_format_filters = output_profile_format_filters.get();
-                _output_profile_format_filters[0] = {L"LAME Profile", L"*.lame"};
+                profile_format_filters[0] = {PROFILE_EXTENSION_DESCRIPTION_LAME_W, ANYTHING_WILDCARD PROFILE_EXTENSION_LAME_MP3_W};
                 break;
             }
-            case Encoder<void>::ID::SNDFILEENCODER:
+            case codecs::Encoder<void>::ID::SNDFILE_ENCODER:
             {
-                output_profile_format_filters.reset(new COMDLG_FILTERSPEC[1]);
-                COMDLG_FILTERSPEC *_output_profile_format_filters = output_profile_format_filters.get();
-                _output_profile_format_filters[0] = {L"Libsndfile Encoder Profile", L"*.sndfe"};
+                codecs::SndFileEncoderProfile *sndfile_encoder_profile = static_cast<codecs::SndFileEncoderProfile *>(profile_form->profile_report_list_view_events->GetEncoderProfile());
+
+                filter_string = ANYTHING_WILDCARD PROFILE_EXTENSION_SNDFILE_ENCODER_W L"-";
+                filter_string.append(core::WindowsUtilities::UTF8_Decode(codecs::SndFileEncoderProfile::output_format_to_file_extension.at(sndfile_encoder_profile->output_format)));
+                profile_format_filters[0] = {PROFILE_EXTENSION_DESCRIPTION_SNDFILE_ENCODER_W,  filter_string.c_str()};
                 break;
             }
         }
 
-        SaveFileDialog save_file_dialog(hWnd, output_profile_format_filters.get(), 1);
+        controls::SaveFileDialog save_file_dialog(hWnd, profile_format_filters, profile_format_filters_size);
 
         if(save_file_dialog.HasResult())
         {
-            std::wstring profile_full_file_path(save_file_dialog.GetFile(RustyFile::File::FULL_PATH));
-            std::wstring profile_file_extension(save_file_dialog.GetFile(RustyFile::File::EXTENSION));
+            boost::filesystem::path profile_full_file_path(save_file_dialog.GetFile());
 
             switch(encoder_id)
             {
-                case Encoder<void>::ID::LAME:
+                case codecs::Encoder<void>::ID::LAME:
                 {
-                    if(profile_file_extension.empty() || profile_file_extension != WindowsUtilities::UTF8_Decode(LameOptions::profile_file_extension))
+                    if(!profile_full_file_path.has_extension() || profile_full_file_path.extension() == "." || profile_full_file_path.extension() != "." PROFILE_EXTENSION_LAME_MP3)
                     {
-                        profile_full_file_path.append(L".");
-                        profile_full_file_path.append(WindowsUtilities::UTF8_Decode(LameOptions::profile_file_extension));
+                        profile_full_file_path.replace_extension(PROFILE_EXTENSION_LAME_MP3);
                     }
                     break;
                 }
-                case Encoder<void>::ID::SNDFILEENCODER:
+                case codecs::Encoder<void>::ID::SNDFILE_ENCODER:
                 {
-                    if(profile_file_extension.empty() || profile_file_extension != WindowsUtilities::UTF8_Decode(SndFileEncoderOptions::profile_file_extension))
+                    codecs::SndFileEncoderProfile *sndfile_encoder_profile = static_cast<codecs::SndFileEncoderProfile *>(profile_form->profile_report_list_view_events->GetEncoderProfile());
+
+                    filter_string = L"." PROFILE_EXTENSION_SNDFILE_ENCODER_W L"-";
+
+                    filter_string.append(core::WindowsUtilities::UTF8_Decode(codecs::SndFileEncoderProfile::output_format_to_file_extension.at(sndfile_encoder_profile->output_format)));
+
+                    if(!profile_full_file_path.has_extension() || profile_full_file_path.extension() == "." || profile_full_file_path.extension() != filter_string)
                     {
-                        profile_full_file_path.append(L".");
-                        profile_full_file_path.append(WindowsUtilities::UTF8_Decode(SndFileEncoderOptions::profile_file_extension));
+                        profile_full_file_path.replace_extension(filter_string);
                     }
                     break;
                 }
@@ -508,15 +484,15 @@ void ProfileForm::BtnSaveAsEvents::OnClick(HWND hWnd)
             {
                 profile_form->profile_report_list_view_events->SaveProfile(profile_full_file_path);
             }
-            catch(WriteFileException &ex)
+            catch(core::WriteFileException &ex)
             {
-                MsgBox::Show(ex.what(), hWnd);
+                controls::MsgBox::Show(ex.what(), hWnd);
             }
         }
     }
 }
 
-LRESULT ProfileForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT rusty::gui::ProfileForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
@@ -551,17 +527,7 @@ LRESULT ProfileForm::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     switch(HIWORD(wParam))
                     {
                         case BN_CLICKED:
-                            btn_open_events->OnClick(hWnd);
-                            break;
-                    }
-                    break;
-                }
-                case PROFILEFORM_BTN_SAVE:
-                {
-                    switch(HIWORD(wParam))
-                    {
-                        case BN_CLICKED:
-                            btn_save_events->OnClick();
+                            btn_open_events->OnClick();
                             break;
                     }
                     break;

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,21 +28,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WIN32_LEAN_AND_MEAN
 
 #ifdef _DEBUG
-#define METHOD_ASSERT(left, compare_op, right) assert((left) compare_op (right))
+#define ASSERT_METHOD(left, compare_op, right) assert((left) compare_op (right))
 #else
-#define METHOD_ASSERT(left, compare_op, right) left
+#define ASSERT_METHOD(left, compare_op, right) left
 #endif
 
 #ifdef _MSC_VER
 #define NOMINMAX
+#define _SCL_SECURE_NO_WARNINGS
+#pragma warning(disable:4265)
+#pragma warning(disable:4365)
+#pragma warning(disable:4458)
+#pragma warning(disable:4514)
+#pragma warning(disable:4571)
+#pragma warning(disable:4625)
+#pragma warning(disable:4626)
+#pragma warning(disable:4668)
+#pragma warning(disable:4710)
+#pragma warning(disable:4711)
+#pragma warning(disable:4820)
+#pragma warning(disable:4917)
 #endif
 
 /** C++ standard headers */
+#include <array>
 #include <atomic>
 #include <cassert>
 #include <chrono>
 #include <exception>
 #include <fstream>
+#include <functional>
 #include <memory>
 #include <string>
 #include <thread>
@@ -59,17 +74,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <Commctrl.h>
 #include <Shlwapi.h>
 #include <Shobjidl.h>
+#include <Synchapi.h>
+
+/** Boost Filesystem */
+#include <boost/filesystem.hpp>
+
+#ifdef _MSC_VER
+#undef _SCL_SECURE_NO_WARNINGS
+#endif
 
 #ifdef _MSC_VER
 typedef SSIZE_T ssize_t; /** mpg123 typedef */
-#define noexcept _NOEXCEPT /** implementation didn't define noexcpt */
 #endif
 
 /** Windows defines */
 #include "targetver.h"
-
-/** Standard headers for MSVC */
-#include "msinttypes/inttypes.h"
 
 /** Third-party libraries */
 #include "libsndfile/sndfile.h"  /** Sampled sound reader and writer */
@@ -79,52 +98,13 @@ typedef SSIZE_T ssize_t; /** mpg123 typedef */
 /** Resources */
 #include "resources/resource.h"
 
-/** Core */
-#include "core/common.h"
-#include "core/exceptions.h"
-#include "core/file_reader.h"
-#include "core/file_writer.h"
-#include "core/rst_file.h"
-#include "core/rst_lock.h"
-#include "core/rst_thread.h"
-#include "core/timer_sync.h"
-#include "core/windows_utilities.h"
-
-/** Wrappers for third-party libraries */
-#include "codecs/file_extensions.h"
-#include "codecs/samples.h"
-#include "codecs/decoder.h"
-#include "codecs/encoder_options.h"
-#include "codecs/encoder.h"
-#include "codecs/rst_mpg123.h"
-#include "codecs/rst_sndfile_decoder.h"
-#include "codecs/rst_sndfile_encoder_options.h"
-#include "codecs/rst_sndfile_encoder.h"
-#include "codecs/rst_lame_options.h"
-#include "codecs/rst_lame.h"
-
-/* RustyCoder engine */
-#include "engine/settings_manager.h"
-#include "engine/codec_controller.h"
-#include "engine/job.h"
-#include "engine/job_description.h"
-
-/** Win32 control wrappers */
-#include "controls/event_handler_interface.h"
-#include "controls/global_window_procedure.h"
-#include "controls/window.h"
-#include "controls/msgbox.h"
-#include "controls/button.h"
-#include "controls/combo_box.h"
-#include "controls/file_dialog.h"
-#include "controls/file_dialog_events.h"
-#include "controls/label.h"
-#include "controls/menubar.h"
-#include "controls/open_file_dialog.h"
-#include "controls/open_folder_dialog.h"
-#include "controls/panel.h"
-#include "controls/report_list_view.h"
-#include "controls/save_file_dialog.h"
-#include "controls/single_line_text_box.h"
+#ifdef _MSC_VER
+#pragma warning(default:4265)
+#pragma warning(default:4571)
+#pragma warning(default:4625)
+#pragma warning(default:4626)
+#pragma warning(default:4668)
+#pragma warning(default:4917)
+#endif
 
 #endif

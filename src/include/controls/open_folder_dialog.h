@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_OPEN_FOLDER_DIALOG_H
 #define CONTROLS_OPEN_FOLDER_DIALOG_H
 
+#include"file_dialog_events.h"
+
+namespace rusty
+{
+namespace controls
+{
 class OpenFolderDialog
 {
     private:
@@ -27,7 +33,7 @@ class OpenFolderDialog
         IFileDialogEvents *pfde = nullptr;
         DWORD dwCookie;
 
-        std::wstring output_folder_path;
+        boost::filesystem::path folder_path;
 
         bool got_result = false;
 
@@ -37,8 +43,10 @@ class OpenFolderDialog
 
         OpenFolderDialog(HWND hWndParent, FileDialogEvents *events = nullptr);
         bool HasResult(void);
-        std::wstring GetFolder();
+        boost::filesystem::path GetFolder();
         virtual ~OpenFolderDialog(void);
 };
+}
+}
 
 #endif

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,26 +20,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "combo_box.h"
 
-ComboBox::ComboBox(HINSTANCE hInstance, HWND hWndParent, int hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, WC_COMBOBOX, nullptr, hWndParent, dwExStyle, dwStyle | combo_box_type, reinterpret_cast<HMENU>(hMenu), x, y, nWidth, Window::GetClientBottom(hWndParent) - x, true) {}
+rusty::controls::ComboBox::ComboBox(HINSTANCE hInstance, HWND hWndParent, uintptr_t hMenu, int x, int y, int nWidth, Type combo_box_type, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, WC_COMBOBOX, nullptr, hWndParent, dwExStyle, dwStyle | static_cast<unsigned long>(combo_box_type), hMenu, x, y, nWidth, Window::GetClientBottom(hWndParent) - x, true) {}
 
-unsigned int ComboBox::GetSelectedItemIndex(void)
+unsigned int rusty::controls::ComboBox::GetSelectedItemIndex(void)
 {
     assert(ComboBox_GetCurSel(hWnd) != CB_ERR);
     return ComboBox_GetCurSel(hWnd);
 }
 
-LPARAM ComboBox::GetItemData(unsigned int index)
+LPARAM rusty::controls::ComboBox::GetItemData(unsigned int index)
 {
     assert(ComboBox_GetItemData(hWnd, index) != CB_ERR);
     return ComboBox_GetItemData(hWnd, index);
 }
 
-unsigned int ComboBox::GetItemCount(void)
+unsigned int rusty::controls::ComboBox::GetItemCount(void)
 {
     return ComboBox_GetCount(hWnd);
 }
 
-std::wstring ComboBox::GetItemText(unsigned int index)
+std::wstring rusty::controls::ComboBox::GetItemText(unsigned int index)
 {
     std::unique_ptr<wchar_t> item_text;
 
@@ -49,42 +49,55 @@ std::wstring ComboBox::GetItemText(unsigned int index)
 
     item_text.reset(new wchar_t[item_text_length + 1]);
 
-    METHOD_ASSERT(ComboBox_GetLBText(hWnd, index, item_text.get()), !=, CB_ERR);
+    ASSERT_METHOD(ComboBox_GetLBText(hWnd, index, item_text.get()), !=, CB_ERR);
 
     return item_text.get();
 }
 
-bool ComboBox::HasSelectedItems(void)
+bool rusty::controls::ComboBox::HasSelectedItems(void)
 {
     return ComboBox_GetCurSel(hWnd) != CB_ERR;
 }
 
-bool ComboBox::HasItemData(unsigned int index)
+bool rusty::controls::ComboBox::HasItemData(unsigned int index)
 {
     return ComboBox_GetItemData(hWnd, index) != CB_ERR;
 }
 
-void ComboBox::SelectItem(unsigned int index)
+void rusty::controls::ComboBox::SelectItem(unsigned int index)
 {
     int text_length = ComboBox_GetLBTextLen(hWnd, index);
 
     std::unique_ptr<wchar_t> text(new wchar_t[text_length + 1]);
-    METHOD_ASSERT(ComboBox_GetLBText(hWnd, index, text.get()), >=, 0);
+    ASSERT_METHOD(ComboBox_GetLBText(hWnd, index, text.get()), >=, CB_ERR);
 
-    METHOD_ASSERT(ComboBox_SelectString(hWnd, index, text.get()), >=, 0);
+    ASSERT_METHOD(ComboBox_SelectString(hWnd, index, text.get()), >=, CB_ERR);
 }
 
-void ComboBox::SelectItem(int start_index, const wchar_t *text)
+void rusty::controls::ComboBox::SelectItem(int start_index, const wchar_t *text)
 {
-    METHOD_ASSERT(ComboBox_SelectString(hWnd, start_index, text), >=, 0);
+    ASSERT_METHOD(ComboBox_SelectString(hWnd, start_index, text), >=, CB_ERR);
 }
 
-void ComboBox::AppendItem(const wchar_t *text)
+void rusty::controls::ComboBox::SelectItem(int start_index, LPARAM data)
 {
-    METHOD_ASSERT(ComboBox_AddString(hWnd, text), >=, 0);
+    unsigned int item_count = GetItemCount();
+
+    for(++start_index; start_index < item_count; ++start_index)
+    {
+        if(GetItemData(start_index) == data)
+        {
+            SelectItem(start_index);
+        }
+    }
 }
 
-void ComboBox::AppendItem(const wchar_t *text, LPARAM data)
+void rusty::controls::ComboBox::AppendItem(const wchar_t *text)
+{
+    ASSERT_METHOD(ComboBox_AddString(hWnd, text), >=, 0);
+}
+
+void rusty::controls::ComboBox::AppendItem(const wchar_t *text, LPARAM data)
 {
     int index = ComboBox_AddString(hWnd, text);
     assert(index >= 0);
@@ -92,29 +105,29 @@ void ComboBox::AppendItem(const wchar_t *text, LPARAM data)
     SetItemData(index, data);
 }
 
-void ComboBox::SetItemData(unsigned int index, LPARAM data)
+void rusty::controls::ComboBox::SetItemData(unsigned int index, LPARAM data)
 {
-    METHOD_ASSERT(ComboBox_SetItemData(hWnd, index, data), !=, CB_ERR);
+    ASSERT_METHOD(ComboBox_SetItemData(hWnd, index, data), !=, CB_ERR);
 }
 
-void ComboBox::InsertItem(unsigned int index, const wchar_t *text)
+void rusty::controls::ComboBox::InsertItem(unsigned int index, const wchar_t *text)
 {
-    METHOD_ASSERT(ComboBox_InsertString(hWnd, index, text), >=, 0);
+    ASSERT_METHOD(ComboBox_InsertString(hWnd, index, text), >=, 0);
 }
 
-void ComboBox::InsertItem(unsigned int index, const wchar_t *text, LPARAM data)
+void rusty::controls::ComboBox::InsertItem(unsigned int index, const wchar_t *text, LPARAM data)
 {
-    METHOD_ASSERT(ComboBox_InsertString(hWnd, index, text), >=, 0);
+    ASSERT_METHOD(ComboBox_InsertString(hWnd, index, text), >=, 0);
 
     SetItemData(index, data);
 }
 
-void ComboBox::RemoveItem(unsigned int index)
+void rusty::controls::ComboBox::RemoveItem(unsigned int index)
 {
-    METHOD_ASSERT(ComboBox_DeleteString(hWnd, index), !=, CB_ERR);
+    ASSERT_METHOD(ComboBox_DeleteString(hWnd, index), !=, CB_ERR);
 }
 
-void ComboBox::RemoveAllItems(void)
+void rusty::controls::ComboBox::RemoveAllItems(void)
 {
     ComboBox_ResetContent(hWnd);
 }

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,13 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VERSION_MAJOR               1
 
 /** Increment this number when there are feature additions */
-#define VERSION_MINOR               0
+#define VERSION_MINOR               1
 
 /** Increment this number when there are bug fixes and minor improvements */
 #define VERSION_REVISION            0
 
 /** Change this to number of commits on the master branch before release */
-#define VERSION_BUILD               26
+#define VERSION_BUILD               27
 
 #define VER_FILEVERSION            VERSION_MAJOR,VERSION_MINOR,VERSION_REVISION,VERSION_BUILD
 #define VER_FILEVERSION_STR        MACRO_EXPANDED_STRINGIFY(VERSION_MAJOR) "." \
@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VER_FILEDESCRIPTION_STR    "RustyCoder"
 #define VER_ORIGINALFILENAME_STR   VER_PRODUCTNAME_STR ".exe"
 #define VER_INTERNALNAME_STR       VER_ORIGINALFILENAME_STR
-#define VER_COPYRIGHT_STR          "Copyright (C) 2012-2014 Chak Wai Yuan"
+#define VER_COPYRIGHT_STR          "Copyright (C) 2012-2015 Chak Wai Yuan"
 
 #ifdef _DEBUG
 #define VER_FILEFLAGS              VS_FF_DEBUG

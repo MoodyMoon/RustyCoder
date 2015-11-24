@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,11 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CODECS_ENCODER_H
 #define CODECS_ENCODER_H
 
+#include "common.h"
+#include "samples.h"
+
+namespace rusty
+{
+namespace codecs
+{
 /*!
 Base class for all encoders.
 \note All encoders must implement this class to be of use to higher levels classes. All samples
 obtained from all relevant member functions must return samples which are SCALED
-to the value range of its container. This interface assumes char is 8 bits wide, short 16 bits and int 32 bits.
+to the value range of its container. This class assumes char is 8 bits wide, short 16 bits and int 32 bits.
 The word "frame" refers to the a decoded audio frame and not a encoded audio frame like a MPEG frame.
 A frame may have multiple samples which is number is equal to the number of channels in the audio.
 */
@@ -42,16 +49,12 @@ class Encoder
         */
         virtual void SetFrameBuffer(T * container, uint64_t container_size) = 0;
 
-    public:
+    protected:
         Encoder(void) = default;
+
+    public:
         Encoder(const Encoder &) = delete;
         Encoder & operator=(const Encoder &) = delete;
-
-        /*!
-        Get the file extension for the output format.
-        \return file extension
-        */
-        virtual const char * const GetFileExtension(void) const noexcept = 0;
 
         /*!
         Write all valid frames in the container to file.
@@ -73,25 +76,36 @@ template<>
 class Encoder<void>
 {
     public:
-        enum ID
+        enum class ID : uint32_t
         {
-            SNDFILEENCODER,
+            SNDFILE_ENCODER,
             LAME
         };
 
-        std::unique_ptr<Sample::SampleContainer> valid_containers;
+        static const std::unordered_map<ID, std::string> encoder_id_to_text;
 
+    protected:
         Encoder(void) = default;
+
+    public:
         Encoder(const Encoder &) = delete;
         Encoder & operator=(const Encoder &) = delete;
 
         /*!
-        Get number of valid containers
-        \return Number of valid containers
+        Get an array of supported containers.
+        \return An array of supported containers
         */
-        virtual size_t GetValidContainersCount(void) const noexcept = 0;
+        virtual const Sample::SampleContainer * GetSupportedContainers(void) const noexcept = 0;
+
+        /*!
+        Get number of supported containers
+        \return Number of supported containers
+        */
+        virtual size_t GetSupportedContainersCount(void) const noexcept = 0;
 
         virtual ~Encoder(void) {};
 };
+}
+}
 
 #endif

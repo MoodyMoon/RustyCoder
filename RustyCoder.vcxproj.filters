@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3rd-Party Headers">
+      <UniqueIdentifier>{233918cd-7d1d-4b68-8a0f-d2aa6da3726d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Codecs">
+      <UniqueIdentifier>{3be273b3-0bc0-48d8-b841-0a6eafd6af83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls">
+      <UniqueIdentifier>{684a9873-76ad-42c3-9d72-2f17b39ec8c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{70303ade-51d7-497f-a317-6798f06233bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{bb62b127-cecc-4373-ba2e-276cdf721a16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{3a327d4e-bef2-4478-9677-5a83fd62de1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{c649e632-e89f-4318-9dca-76cb197ce289}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{a5767734-0fa2-49ab-888a-2198e4b7c6f4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\include\codecs\decoder.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\encoder.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\encoder_profile.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\lame.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\lame_profile.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\mpg123.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\samples.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\sndfile.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\sndfile_decoder.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\sndfile_encoder.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\codecs\sndfile_encoder_profile.cpp">
+      <Filter>Codecs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\button.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\combo_box.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\file_dialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\file_dialog_events.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\global_window_procedure.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\label.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\menu_bar.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\msg_box.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\numeric_up_down.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\open_file_dialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\open_folder_dialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\panel.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\report_list_view.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\save_file_dialog.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\single_line_text_box.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\vertical_split_window.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\controls\window.cpp">
+      <Filter>Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\critical_section.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\exception.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\file_reader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\file_writer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\reader_writer_lock.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\thread.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\timer_async.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\timer_sync.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\core\windows_utilities.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\codec_controller.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\common.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\encoder_profile_reader.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\encoder_profile_writer.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\job_builder.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\job_builder_runner.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\job_queue.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\engine\job_runner.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\file_extension_filters.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main_form.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\profile_form.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rustycoder.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\stdafx.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\include\lame\lame.h">
+      <Filter>3rd-Party Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\libsndfile\sndfile.h">
+      <Filter>3rd-Party Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mpg123\mpg123.h">
+      <Filter>3rd-Party Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\common.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\decoder.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\encoder.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\encoder_profile.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\lame.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\lame_profile.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\mpg123.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\samples.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\sndfile.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\sndfile_decoder.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\sndfile_encoder.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\codecs\sndfile_encoder_profile.h">
+      <Filter>Codecs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\button.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\combo_box.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\event_handler_interface.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\file_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\file_dialog_events.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\global_window_procedure.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\label.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\menu_bar.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\msg_box.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\numeric_up_down.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\open_file_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\open_folder_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\panel.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\report_list_view.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\save_file_dialog.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\single_line_text_box.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\vertical_split_window.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\controls\window.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\common.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\critical_section.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\exception.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\file_reader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\file_writer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\reader_writer_lock.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\thread.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\timer_async.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\timer_sync.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\core\windows_utilities.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\codec_controller.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\common.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\encoder_profile_reader.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\encoder_profile_writer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\job_builder.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\job_builder_runner.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\job_queue.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\engine\job_runner.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\file_extension_filters.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main_form.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\profile_form.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rustycoder.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\stdafx.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\targetver.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\resources\resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\resources\version_info.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="src\include\resources\app.manifest">
+      <Filter>Resources</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\include\resources\icon.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\include\resources\rusty_coder.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

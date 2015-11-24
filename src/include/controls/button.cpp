@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "Button.h"
+#include "button.h"
 
-Button::Button(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, L"BUTTON", lpWindowName, hWndParent, dwExStyle, dwStyle, reinterpret_cast<HMENU>(hMenu), x, y, nWidth, nHeight, true) {}
+rusty::controls::Button::Button(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, uintptr_t hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle, unsigned long dwStyle) : Window(hInstance, L"BUTTON", lpWindowName, hWndParent, dwExStyle, dwStyle, hMenu, x, y, nWidth, nHeight, true) {}

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "stdafx.h"
 
+namespace rusty
+{
+namespace controls
+{
 class EventHandlerInterface
 {
     protected:
@@ -35,5 +39,7 @@ class EventHandlerInterface
 
         virtual ~EventHandlerInterface(void) {}
 };
+}
+}
 
 #endif

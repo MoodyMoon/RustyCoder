@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,36 +20,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "timer_sync.h"
 
-TimerSync::TimerSync(HWND hWnd, UINT_PTR nIDEvent, unsigned int uElapse, bool start_now) : hWndParent(hWnd), nIDEvent(nIDEvent), uElapse(uElapse), started(start_now)
+std::unordered_map<uintptr_t, rusty::core::TimerSync::CallbackInterface *> rusty::core::TimerSync::timer_callbacks;
+
+rusty::core::TimerSync::TimerSync(CallbackInterface *callback, unsigned int uElapse, bool start_now) : callback(callback), uElapse(uElapse), started(start_now)
 {
+    assert(callback != nullptr);
+
     if(start_now)
-        METHOD_ASSERT(SetTimer(hWnd, nIDEvent, uElapse, nullptr), !=, 0);
+    {
+        id = SetTimer(nullptr, 0u, uElapse, TimerProc);
+        ASSERT_METHOD(id, != , 0u);
+
+        timer_callbacks.emplace(id, callback);
+    }
 }
 
-void TimerSync::Start(void)
+void rusty::core::TimerSync::Start(void)
 {
     if(!started)
     {
-        METHOD_ASSERT(SetTimer(hWndParent, nIDEvent, uElapse, nullptr), !=, 0);
+        id = SetTimer(nullptr, 0u, uElapse, TimerProc);
+        ASSERT_METHOD(id, != , 0u);
+
+        timer_callbacks.emplace(id, callback);
+
         started = true;
     }
 }
 
-void TimerSync::Stop(void)
+void rusty::core::TimerSync::Stop(void)
 {
     if(started)
     {
-        METHOD_ASSERT(KillTimer(hWndParent, nIDEvent), !=, 0);
+        ASSERT_METHOD(KillTimer(nullptr, id), != , 0);
+
+        timer_callbacks.erase(id);
+
         started = false;
     }
 }
 
-bool TimerSync::IsStarted(void)
+bool rusty::core::TimerSync::IsStarted(void)
 {
     return started;
 }
 
-TimerSync::~TimerSync(void)
+void __stdcall rusty::core::TimerSync::TimerProc(HWND /* hwnd */, unsigned int /* uMsg */, uintptr_t idEvent, unsigned long /* dwTime */)
+{
+    static CallbackInterface *callback;
+    callback = timer_callbacks.at(idEvent);
+    callback->OnTimerSyncTick();
+}
+
+rusty::core::TimerSync::~TimerSync(void)
 {
     Stop();
 }

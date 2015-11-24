@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,83 +20,90 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "file_dialog_events.h"
 
-void FileDialogEvents::SetData(void *data)
+void rusty::controls::FileDialogEvents::SetData(void *data)
 {
     this->data = data;
 }
 
-IFACEMETHODIMP FileDialogEvents::QueryInterface(REFIID riid, void** ppv)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::QueryInterface(REFIID riid, void** ppv)
 {
+    #ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable: 4838)
+    #endif
     static const QITAB qit[] = {QITABENT(FileDialogEvents, IFileDialogEvents), QITABENT(FileDialogEvents, IFileDialogControlEvents), {0}};
+    #ifdef _MSC_VER
+    #pragma warning(pop)
+    #endif
     return QISearch(this, qit, riid, ppv);
 }
 
-IFACEMETHODIMP_(ULONG) FileDialogEvents::AddRef()
+IFACEMETHODIMP_(ULONG) rusty::controls::FileDialogEvents::AddRef()
 {
     return InterlockedIncrement(&reference_count);
 }
 
-IFACEMETHODIMP_(ULONG) FileDialogEvents::Release()
+IFACEMETHODIMP_(ULONG) rusty::controls::FileDialogEvents::Release()
 {
     return InterlockedDecrement(&reference_count);
 }
 
-IFACEMETHODIMP FileDialogEvents::OnFileOk(IFileDialog * /* pfd */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnFileOk(IFileDialog * /* pfd */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnFolderChange(IFileDialog * /* pfd */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnFolderChange(IFileDialog * /* pfd */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnFolderChanging(IFileDialog * /* pfd */, IShellItem * /* psiFolder */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnFolderChanging(IFileDialog * /* pfd */, IShellItem * /* psiFolder */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnOverwrite(IFileDialog * /* pfd */, IShellItem * /* psi */, FDE_OVERWRITE_RESPONSE * /* pResponse */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnOverwrite(IFileDialog * /* pfd */, IShellItem * /* psi */, FDE_OVERWRITE_RESPONSE * /* pResponse */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnSelectionChange(IFileDialog * /* pfd */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnSelectionChange(IFileDialog * /* pfd */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnShareViolation(IFileDialog * /* pfd */, IShellItem * /* psi */, FDE_SHAREVIOLATION_RESPONSE * /* pResponse */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnShareViolation(IFileDialog * /* pfd */, IShellItem * /* psi */, FDE_SHAREVIOLATION_RESPONSE * /* pResponse */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnTypeChange(IFileDialog * /* pfd */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnTypeChange(IFileDialog * /* pfd */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnButtonClicked(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnButtonClicked(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnCheckButtonToggled(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */, BOOL /* bChecked */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnCheckButtonToggled(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */, BOOL /* bChecked */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnControlActivating(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnControlActivating(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */)
 {
     return E_NOTIMPL;
 }
 
-IFACEMETHODIMP FileDialogEvents::OnItemSelected(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */, DWORD /* dwIDItem */)
+IFACEMETHODIMP rusty::controls::FileDialogEvents::OnItemSelected(IFileDialogCustomize * /* pfdc */, DWORD /* dwIDCtl */, DWORD /* dwIDItem */)
 {
     return E_NOTIMPL;
 }
 
-FileDialogEvents::~FileDialogEvents()
+rusty::controls::FileDialogEvents::~FileDialogEvents()
 {
     assert(reference_count == 0);
 }

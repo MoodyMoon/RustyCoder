@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,19 +20,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CORE_TIMER_ASYNC_H
 #define CORE_TIMER_ASYNC_H
 
-class TimerAsyncCallbackInterface;
+#include "critical_section.h"
 
+namespace rusty
+{
+namespace core
+{
 class TimerAsync
 {
+    public:
+        class CallbackInterface;
+
     private:
         bool started = false;
 
-        RustyLock timer_lock;
+        CriticalSection timer_lock;
 
         std::unique_ptr<std::thread> timer_thread;
 
         const std::chrono::milliseconds interval;
-        TimerAsyncCallbackInterface *callback;
+        CallbackInterface *callback;
 
         void RunAsync(void);
 
@@ -40,7 +47,7 @@ class TimerAsync
         TimerAsync(const TimerAsync &) = delete;
         TimerAsync & operator=(const TimerAsync &) = delete;
 
-        TimerAsync(const std::chrono::milliseconds interval, TimerAsyncCallbackInterface *callback);
+        TimerAsync(const std::chrono::milliseconds interval, CallbackInterface *callback);
 
         void StartSync(void);
         void StopSync(void);
@@ -50,16 +57,17 @@ class TimerAsync
         ~TimerAsync(void);
 };
 
-class TimerAsyncCallbackInterface
+class TimerAsync::CallbackInterface
 {
     public:
-        TimerAsyncCallbackInterface() = default;
-        TimerAsyncCallbackInterface(const TimerAsyncCallbackInterface &) = delete;
-        TimerAsyncCallbackInterface & operator=(const TimerAsyncCallbackInterface &) = delete;
+    CallbackInterface() = default;
+    CallbackInterface(const CallbackInterface &) = delete;
+    CallbackInterface & operator=(const CallbackInterface &) = delete;
 
-        virtual void OnTickAsync(void) = 0;
-
-        virtual ~TimerAsyncCallbackInterface(void) {}
+    virtual void OnTimerAsyncTick(void) = 0;
+    virtual ~CallbackInterface(void) {}
 };
+}
+}
 
 #endif

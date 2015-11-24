@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "global_window_procedure.h"
 
-LRESULT CALLBACK GlobalWindowProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK rusty::controls::GlobalWindowProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
@@ -29,25 +29,17 @@ LRESULT CALLBACK GlobalWindowProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
             if(lParam != 0)
             {
                 CREATESTRUCT *cs = reinterpret_cast<CREATESTRUCT *>(lParam);
-                #ifndef X64
-                SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG>(cs->lpCreateParams));
-                #else
                 SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(cs->lpCreateParams));
-                #endif
             }
             return DefWindowProc(hWnd, uMsg, wParam, lParam); /*!< Must return this to to properly setup the window */
         }
         default:
         {
-            #ifndef X64
-            LONG address;
-            #else
             LONG_PTR address;
-            #endif
 
             address = GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
-            if(address != 0)
+            if(address != 0l)
             {
                 EventHandlerInterface *event_handler = reinterpret_cast<EventHandlerInterface *>(address);
                 return event_handler->HandleEvent(hWnd, uMsg, wParam, lParam);

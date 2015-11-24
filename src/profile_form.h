@@ -20,9 +20,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_PROFILE_FORM_H
 #define GUI_PROFILE_FORM_H
 
+#include "include/codecs/encoder.h"
+#include "include/codecs/encoder_profile.h"
+#include "include/codecs/common.h"
+#include "include/codecs/lame_profile.h"
+#include "include/codecs/sndfile_encoder_profile.h"
+#include "include/controls/button.h"
+#include "include/controls/combo_box.h"
+#include "include/controls/event_handler_interface.h"
+#include "include/controls/label.h"
+#include "include/controls/msg_box.h"
+#include "include/controls/open_file_dialog.h"
+#include "include/controls/report_list_view.h"
+#include "include/controls/save_file_dialog.h"
+#include "include/controls/single_line_text_box.h"
+#include "include/controls/window.h"
+#include "include/core/exception.h"
+#include "include/core/windows_utilities.h"
+#include "include/engine/encoder_profile_reader.h"
+#include "include/engine/encoder_profile_writer.h"
 #include "file_extension_filters.h"
 
-class ProfileForm : public EventHandlerInterface
+namespace rusty
+{
+namespace gui
+{
+class ProfileForm : public controls::EventHandlerInterface
 {
     private:
         class CmbBxEncoderEvents;
@@ -30,7 +53,6 @@ class ProfileForm : public EventHandlerInterface
         class CmbBxOptionsSetterEvents;
         class BtnSetOptionEvents;
         class BtnOpenEvents;
-        class BtnSaveEvents;
         class BtnSaveAsEvents;
         class BtnLoadDefaultEvents;
 
@@ -42,25 +64,23 @@ class ProfileForm : public EventHandlerInterface
         bool form_deleting = false;
 
         std::unique_ptr<ProfileForm> *me;
-        std::unique_ptr<Window> window;
-        std::unique_ptr<Label> lbl_encoder_sign;
-        std::unique_ptr<ComboBox> cmbbx_encoder;
+        std::unique_ptr<controls::Window> window;
+        std::unique_ptr<controls::Label> lbl_encoder_sign;
+        std::unique_ptr<controls::ComboBox> cmbbx_encoder;
         std::unique_ptr<CmbBxEncoderEvents> cmbbx_encoder_events;
-        std::unique_ptr<Button> btn_load_default;
+        std::unique_ptr<controls::Button> btn_load_default;
         std::unique_ptr<BtnLoadDefaultEvents> btn_load_default_events;
-        std::unique_ptr<ReportListView> profile_report_list_view;
+        std::unique_ptr<controls::ReportListView> profile_report_list_view;
         std::unique_ptr<ProfileReportListViewEvents> profile_report_list_view_events;
-        std::unique_ptr<Label> lbl_option_value_sign;
-        std::unique_ptr<ComboBox> cmbbx_options_setter;
+        std::unique_ptr<controls::Label> lbl_option_value_sign;
+        std::unique_ptr<controls::ComboBox> cmbbx_options_setter;
         std::unique_ptr<CmbBxOptionsSetterEvents> cmbbx_options_setter_events;
-        std::unique_ptr<SingleLineTextBox> sltxtbx_options_setter;
-        std::unique_ptr<Button> btn_set_option;
+        std::unique_ptr<controls::SingleLineTextBox> sltxtbx_options_setter;
+        std::unique_ptr<controls::Button> btn_set_option;
         std::unique_ptr<BtnSetOptionEvents> btn_set_option_events;
-        std::unique_ptr<Button> btn_open;
+        std::unique_ptr<controls::Button> btn_open;
         std::unique_ptr<BtnOpenEvents> btn_open_events;
-        std::unique_ptr<Button> btn_save;
-        std::unique_ptr<BtnSaveEvents> btn_save_events;
-        std::unique_ptr<Button> btn_save_as;
+        std::unique_ptr<controls::Button> btn_save_as;
         std::unique_ptr<BtnSaveAsEvents> btn_save_as_events;
 
         void OnCreate(HWND hWnd);
@@ -88,7 +108,8 @@ class ProfileForm::CmbBxEncoderEvents
         CmbBxEncoderEvents(ProfileForm * const profile_form);
 
         bool IsSelectedEncoder(void);
-        Encoder<void>::ID GetSelectedEncoderID(void);
+        codecs::Encoder<void>::ID GetSelectedEncoderID(void);
+        void SetSelectedEncoderID(codecs::Encoder<void>::ID encoder_id);
 };
 
 class ProfileForm::ProfileReportListViewEvents
@@ -105,14 +126,14 @@ class ProfileForm::ProfileReportListViewEvents
 
         unsigned int style_change_count = 0u;
 
-        Encoder<void>::ID old_loaded_encoder_profile_id;
-        Encoder<void>::ID loaded_encoder_profile_id;
+        codecs::Encoder<void>::ID old_loaded_encoder_profile_id;
+        codecs::Encoder<void>::ID loaded_encoder_profile_id;
 
-        std::wstring current_profile_last_saved_full_path;
+        boost::filesystem::path current_profile_last_saved_full_path;
 
-        std::unique_ptr<EncoderOptions> encoder_options;
+        std::unique_ptr<codecs::EncoderProfile> encoder_profile;
 
-        void PopulateListView(Encoder<void>::ID encoder_id, EncoderOptions *encoder_options = nullptr);
+        void PopulateListView(codecs::Encoder<void>::ID encoder_id, codecs::EncoderProfile *encoder_profile = nullptr);
 
         void OnItemChanged(NMLISTVIEW *list_view_notification_message);
         void OnDeleteAllItems(void);
@@ -126,14 +147,16 @@ class ProfileForm::ProfileReportListViewEvents
         bool IsEncoderProfileLoaded(void);
         bool HasUnsavedProfileChanges(void);
 
-        std::wstring GetCurrentProfileLastSavedFullPath(void);
+        boost::filesystem::path & GetCurrentProfileLastSavedFullPath(void);
 
-        Encoder<void>::ID GetLoadedProfileEncoderID(void);
+        codecs::Encoder<void>::ID GetLoadedProfileEncoderID(void);
 
-        void SaveProfile(std::wstring profile_full_path);
+        codecs::EncoderProfile * GetEncoderProfile(void);
 
-        void LoadProfile(HWND hWnd);
-        void LoadDefaultProfile(Encoder<void>::ID encoder_id);
+        void SaveProfile(const boost::filesystem::path &profile_full_path);
+
+        void LoadProfile(void);
+        void LoadDefaultProfile(codecs::Encoder<void>::ID encoder_id);
 
         void SetEncoderOption(std::string &value);
 };
@@ -177,29 +200,13 @@ class ProfileForm::BtnOpenEvents
     private:
         ProfileForm * const profile_form = nullptr;
 
-        void OnClick(HWND hWnd);
+        void OnClick(void);
 
     public:
         BtnOpenEvents(const BtnOpenEvents &) = delete;
         BtnOpenEvents & operator=(const BtnOpenEvents &) = delete;
 
         BtnOpenEvents(ProfileForm * const profile_form) : profile_form(profile_form) {}
-};
-
-class ProfileForm::BtnSaveEvents
-{
-    friend class ProfileForm;
-
-    private:
-        ProfileForm * const profile_form = nullptr;
-
-        void OnClick(void);
-
-    public:
-        BtnSaveEvents(const BtnSaveEvents &) = delete;
-        BtnSaveEvents & operator=(const BtnSaveEvents &) = delete;
-
-        BtnSaveEvents(ProfileForm * const profile_form) : profile_form(profile_form) {}
 };
 
 class ProfileForm::BtnSaveAsEvents
@@ -233,5 +240,7 @@ class ProfileForm::BtnLoadDefaultEvents
 
         BtnLoadDefaultEvents(ProfileForm * const profile_form) : profile_form(profile_form) {}
 };
+}
+}
 
 #endif

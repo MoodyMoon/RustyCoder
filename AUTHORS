@@ -15,6 +15,6 @@ mpg123
 LGPLv2.1
 http://mpg123.de/
 
-msinttypes
-New BSD License
-https://code.google.com/p/msinttypes/
+Boost C++ Libraries
+Boost Filesystem
+http://www.boost.org/

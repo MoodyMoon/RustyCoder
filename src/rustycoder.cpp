@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "stdafx.h"
-#include "RustyCoder.h"
+#include "rustycoder.h"
 
-int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
+int _stdcall WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR /* lpszArgument */, int nCmdShow)
 {
     #ifdef _DEBUG
     assert(std::numeric_limits<char>::min() == -128);
@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE /* hPrevInstance */, LPSTR
     assert(std::numeric_limits<unsigned long long>::max() == 18446744073709551615ull);
     #endif
 
-    MainForm mainform(hThisInstance, nCmdShow);
+    rusty::gui::MainForm mainform(hThisInstance, nCmdShow);
     msg_loop_start();
 }
 

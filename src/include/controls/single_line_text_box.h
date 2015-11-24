@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,15 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONTROLS_SINGLE_LINE_TEXT_BOX_H
 #define CONTROLS_SINGLE_LINE_TEXT_BOX_H
 
+#include "window.h"
+
+namespace rusty
+{
+namespace controls
+{
 class SingleLineTextBox : public Window
 {
     public:
         SingleLineTextBox(const SingleLineTextBox &) = delete;
         SingleLineTextBox & operator=(const SingleLineTextBox &) = delete;
 
-        SingleLineTextBox(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_CLIENTEDGE, unsigned long dwStyle = WS_VISIBLE | WS_CLIPSIBLINGS | WS_CHILD | ES_AUTOHSCROLL);
+        SingleLineTextBox(HINSTANCE hInstance, const wchar_t * const lpWindowName, HWND hWndParent, uintptr_t hMenu, int x, int y, int nWidth, int nHeight, unsigned long dwExStyle = WS_EX_CLIENTEDGE, unsigned long dwStyle = WS_VISIBLE | WS_CLIPSIBLINGS | WS_CHILD | ES_AUTOHSCROLL);
 
         virtual ~SingleLineTextBox(void) {}
 };
+}
+}
 
 #endif

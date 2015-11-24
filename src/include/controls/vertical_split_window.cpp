@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "vertical_split_window.h"
 
-VerticalSplitWindow::VerticalSplitWindow(HINSTANCE hInstance, const wchar_t * const lpClassName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long splitter_position_x, unsigned int min_width, MinWidthPanel panel_set_min_width, unsigned long dwExStyle, unsigned long dwStyle) : Panel(hInstance, this, lpClassName, hWndParent, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle, false)
+rusty::controls::VerticalSplitWindow::VerticalSplitWindow(HINSTANCE hInstance, const wchar_t * const lpClassName, HWND hWndParent, int hMenu, int x, int y, int nWidth, int nHeight, unsigned long splitter_position_x, unsigned int min_width, MinWidthPanel panel_set_min_width, unsigned long dwExStyle, unsigned long dwStyle) : Panel(hInstance, this, lpClassName, hWndParent, hMenu, x, y, nWidth, nHeight, dwExStyle, dwStyle, false)
 {
     assert(nWidth >= 10 && nHeight >= 10);
     assert((splitter_position_x + splitter_width - 1) <= static_cast<unsigned long>(Window::GetClientRight()));
@@ -48,7 +48,7 @@ VerticalSplitWindow::VerticalSplitWindow(HINSTANCE hInstance, const wchar_t * co
     split_window = this;
 }
 
-void VerticalSplitWindow::SetLeftPanel(Panel *panel, bool fit_to_client_area)
+void rusty::controls::VerticalSplitWindow::SetLeftPanel(Panel *panel, bool fit_to_client_area)
 {
     if(panel == nullptr)
     {
@@ -57,7 +57,7 @@ void VerticalSplitWindow::SetLeftPanel(Panel *panel, bool fit_to_client_area)
             left_panel = nullptr;
             left_panel_handle = nullptr;
         }
-        #ifndef NDEBUG
+        #ifdef _DEBUG
         else
             assert(false); //prevent caller from setting nullptr if the panel still exists.
         #endif
@@ -72,7 +72,7 @@ void VerticalSplitWindow::SetLeftPanel(Panel *panel, bool fit_to_client_area)
     }
 }
 
-void VerticalSplitWindow::SetRightPanel(Panel *panel, bool fit_to_client_area)
+void rusty::controls::VerticalSplitWindow::SetRightPanel(Panel *panel, bool fit_to_client_area)
 {
     if(panel == nullptr)
     {
@@ -81,7 +81,7 @@ void VerticalSplitWindow::SetRightPanel(Panel *panel, bool fit_to_client_area)
             right_panel = nullptr;
             right_panel_handle = nullptr;
         }
-        #ifndef NDEBUG
+        #ifdef _DEBUG
         else
             assert(false); //prevent caller from setting nullptr if the panel still exists.
         #endif
@@ -96,7 +96,7 @@ void VerticalSplitWindow::SetRightPanel(Panel *panel, bool fit_to_client_area)
     }
 }
 
-void VerticalSplitWindow::UpdatePanelsPositions(void)
+void rusty::controls::VerticalSplitWindow::UpdatePanelsPositions(void)
 {
     if(IsWindow(left_panel_handle))
         split_window->SetLeftPanelToFit(left_panel);
@@ -115,21 +115,21 @@ void VerticalSplitWindow::UpdatePanelsPositions(void)
     }
 }
 
-void VerticalSplitWindow::SetLeftPanelToFit(Panel *panel)
+void rusty::controls::VerticalSplitWindow::SetLeftPanelToFit(Panel *panel)
 {
     RECT rectangle;
     GetSplitterLeftRectangle(rectangle);
     panel->MoveAndResizeTo(rectangle.left, rectangle.top, rectangle.right + 1, rectangle.bottom + 1);
 }
 
-void VerticalSplitWindow::SetRightPanelToFit(Panel *panel)
+void rusty::controls::VerticalSplitWindow::SetRightPanelToFit(Panel *panel)
 {
     RECT rectangle;
     GetSplitterRightRectangle(rectangle);
     panel->MoveAndResizeTo(rectangle.left, rectangle.top, rectangle.right - splitter.right, rectangle.bottom + 1);
 }
 
-void VerticalSplitWindow::GetSplitterLeftRectangle(RECT &rectangle)
+void rusty::controls::VerticalSplitWindow::GetSplitterLeftRectangle(RECT &rectangle)
 {
     rectangle.left = 0;
     rectangle.top = 0;
@@ -137,7 +137,7 @@ void VerticalSplitWindow::GetSplitterLeftRectangle(RECT &rectangle)
     rectangle.bottom = Window::GetClientBottom();
 }
 
-void VerticalSplitWindow::GetSplitterRightRectangle(RECT &rectangle)
+void rusty::controls::VerticalSplitWindow::GetSplitterRightRectangle(RECT &rectangle)
 {
     rectangle.left = splitter.right + 1;
     rectangle.top = 0;
@@ -145,17 +145,17 @@ void VerticalSplitWindow::GetSplitterRightRectangle(RECT &rectangle)
     rectangle.bottom = Window::GetClientBottom();
 }
 
-unsigned int VerticalSplitWindow::GetSplitterLeftWidth(void)
+unsigned int rusty::controls::VerticalSplitWindow::GetSplitterLeftWidth(void)
 {
     return splitter.left;
 }
 
-unsigned int VerticalSplitWindow::GetSplitterRightWidth(void)
+unsigned int rusty::controls::VerticalSplitWindow::GetSplitterRightWidth(void)
 {
     return Window::GetClientRight() - splitter.right;
 }
 
-LRESULT VerticalSplitWindowEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT rusty::controls::VerticalSplitWindowEvents::HandleEvent(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {

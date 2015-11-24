@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "stdafx.h"
 #include "timer_async.h"
 
-TimerAsync::TimerAsync(const std::chrono::milliseconds interval, TimerAsyncCallbackInterface *callback) : interval(interval), callback(callback) {}
+rusty::core::TimerAsync::TimerAsync(const std::chrono::milliseconds interval, CallbackInterface *callback) : interval(interval), callback(callback) {}
 
-void TimerAsync::StartSync()
+void rusty::core::TimerAsync::StartSync()
 {
     timer_lock.Lock();
     if(!started)
@@ -33,7 +33,7 @@ void TimerAsync::StartSync()
     timer_lock.Unlock();
 }
 
-void TimerAsync::StopSync()
+void rusty::core::TimerAsync::StopSync()
 {
     timer_lock.Lock();
     if(started)
@@ -51,7 +51,7 @@ void TimerAsync::StopSync()
     timer_thread.reset();
 }
 
-bool TimerAsync::IsStartedSync()
+bool rusty::core::TimerAsync::IsStartedSync()
 {
     timer_lock.Lock();
     bool _started = started;
@@ -59,16 +59,16 @@ bool TimerAsync::IsStartedSync()
     return _started;
 }
 
-void TimerAsync::RunAsync()
+void rusty::core::TimerAsync::RunAsync()
 {
     while(IsStartedSync())
     {
         std::this_thread::sleep_for(interval);
-        callback->OnTickAsync();
+        callback->OnTimerAsyncTick();
     }
 }
 
-TimerAsync::~TimerAsync()
+rusty::core::TimerAsync::~TimerAsync()
 {
     StopSync();
 }

@@ -1,7 +1,7 @@
 /*
 RustyCoder
 
-Copyright (C) 2012-2014 Chak Wai Yuan
+Copyright (C) 2012-2015 Chak Wai Yuan
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,10 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_MAIN_FORM_H
 #define GUI_MAIN_FORM_H
 
-#include "file_extension_filters.h"
+#include "include/controls/menu_bar.h"
+#include "include/controls/open_file_dialog.h"
+#include "include/controls/open_folder_dialog.h"
+#include "include/core/windows_utilities.h"
+#include "include/engine/job_queue.h"
 #include "profile_form.h"
 
-class MainForm : public EventHandlerInterface
+namespace rusty
+{
+namespace gui
+{
+class MainForm : public controls::EventHandlerInterface
 {
     private:
         class MenuBarEvents;
@@ -36,31 +44,30 @@ class MainForm : public EventHandlerInterface
         class BtnStartQueueEvents;
         class BtnPauseQueueEvents;
 
+    private:
         HINSTANCE hInstance = nullptr;
 
         bool form_loaded = false;
 
-        std::unique_ptr<Window> window;
-        std::unique_ptr<MenuBar> menu_bar;
+        std::unique_ptr<controls::Window> window;
+        std::unique_ptr<controls::MenuBar> menu_bar;
         std::unique_ptr<MenuBarEvents> menu_bar_events;
-        std::unique_ptr<ReportListView> job_report_list_view;
+        std::unique_ptr<controls::ReportListView> job_report_list_view;
         std::unique_ptr<JobReportListViewEvents> job_report_list_view_events;
-        std::unique_ptr<Button> btn_add_files;
+        std::unique_ptr<controls::Button> btn_add_files;
         std::unique_ptr<BtnAddFilesEvents> btn_add_files_events;
-        std::unique_ptr<Button> btn_remove_files;
+        std::unique_ptr<controls::Button> btn_remove_files;
         std::unique_ptr<BtnRemoveFilesEvents> btn_remove_files_events;
-        std::unique_ptr<Button> btn_load_profile;
+        std::unique_ptr<controls::Button> btn_load_profile;
         std::unique_ptr<BtnLoadProfileEvents> btn_load_profile_events;
-        std::unique_ptr<Button> btn_create_profile;
+        std::unique_ptr<controls::Button> btn_create_profile;
         std::unique_ptr<BtnCreateProfileEvents> btn_create_profile_events;
-        std::unique_ptr<Button> btn_browse_folder;
+        std::unique_ptr<controls::Button> btn_browse_folder;
         std::unique_ptr<BtnBrowseFolderEvents> btn_browse_folder_events;
-        std::unique_ptr<Button> btn_start_queue;
+        std::unique_ptr<controls::Button> btn_start_queue;
         std::unique_ptr<BtnStartQueueEvents> btn_start_queue_events;
-        std::unique_ptr<Button> btn_pause_queue;
+        std::unique_ptr<controls::Button> btn_pause_queue;
         std::unique_ptr<BtnPauseQueueEvents> btn_pause_queue_events;
-
-        std::unique_ptr<Job> job;
 
         std::unique_ptr<ProfileForm> profile_form;
 
@@ -88,65 +95,44 @@ class MainForm::MenuBarEvents
         void File_Exit_OnClick(void);
 
     public:
-        MenuBarEvents(const MenuBar &) = delete;
+        MenuBarEvents(const controls::MenuBar &) = delete;
         MenuBarEvents & operator=(const MenuBarEvents &) = delete;
 
         MenuBarEvents(MainForm * const main_form);
 };
 
-class MainForm::JobReportListViewEvents
+class MainForm::JobReportListViewEvents : public engine2::JobQueue::Callback
 {
     friend class MainForm;
 
     private:
         MainForm * const main_form = nullptr;
 
-        /*!
-        Queue processor members;
-        */
+        engine2::JobQueue job_queue;
 
-        TimerSync queue_processor;
+        virtual void OnInputFilePathChanged(const boost::filesystem::path &input_file_path, unsigned int job_index);
+        virtual void OnEstimatedDecoderIDChanged(codecs::Decoder<void>::ID estimated_decoder_id, unsigned int job_index);
+        virtual void OnEncoderProfilePathChanged(const boost::filesystem::path &encoder_profile_path, unsigned int job_index);
+        virtual void OnEstimatedEncoderIDChanged(codecs::Encoder<void>::ID estimated_encoder_id, unsigned int job_index);
+        virtual void OnOutputFilePathChanged(boost::filesystem::path output_file_path, unsigned int job_index);
 
-        static const std::size_t max_simultaneous_jobs_count = 2;
-
-        std::vector<JobDescription> job_descriptions;
-        std::unique_ptr<Job> jobs[max_simultaneous_jobs_count];
-        std::size_t job_indices_tracker[max_simultaneous_jobs_count];
-
-        uint64_t total_frame_count_uint64[max_simultaneous_jobs_count];
-        double total_frame_count_double[max_simultaneous_jobs_count];
-
-        void OnTimerSyncTick(void);
-
-        void ResumeJobsIfAny(void);
-        void TryQueueJobs(void);
-        void UpdateJobDescriptions(void);
-        void CleanActiveQueue(void);
-        void TryStopQueueProcessor(void);
-        void PauseJobsIfAny(void);
-
-        bool IsQueueFull(void);
-        std::size_t GetFreeSlot(void);
-        void CreateAndRunJob(const JobDescription *job_description, std::size_t free_slot_index);
-        void SetErrorMessage(const Exception *exception, std::size_t row_index);
-        std::wstring GetConversionProgress(std::size_t job_index);
+        virtual void OnStateChanged(engine2::Common::JobBuilderRunnerState state, unsigned int job_index);
+        virtual void OnErrorOccurred(const core::Exception *error, unsigned int job_index);
+        virtual void OnWrittenFrameCountChanged(uint64_t written_frame_count, unsigned int job_index);
+        virtual void OnTotalFrameCountChanged(uint64_t total_frame_count, unsigned int job_index);
 
     public:
-        void AddJobs(HWND hWnd);
-        void RemoveSelectedJobs(void);
-        void LoadProfile(HWND hWnd);
-        void SetOutputPath(HWND hWnd);
-
-        /*!
-        Queueing functions
-        */
-        void StartQueue(void);
-        void PauseQueue(void);
-
         JobReportListViewEvents(const JobReportListViewEvents &) = delete;
         JobReportListViewEvents & operator=(const JobReportListViewEvents &) = delete;
 
-        JobReportListViewEvents(MainForm * const main_form, HWND main_form_handle);
+        JobReportListViewEvents(MainForm * const main_form);
+
+        void AddJob(void);
+        void SetEncoderProfilePath(void);
+        void SetOutputPath(void);
+        void RemoveJob(void);
+        void StartQueue(void);
+        void PauseQueue(void);
 
         ~JobReportListViewEvents(void);
 };
@@ -158,7 +144,7 @@ class MainForm::BtnBrowseFolderEvents
     private:
         MainForm * const main_form = nullptr;
 
-        void OnClick(HWND hWnd);
+        void OnClick(void);
 
     public:
         BtnBrowseFolderEvents(const BtnBrowseFolderEvents &) = delete;
@@ -174,7 +160,7 @@ class MainForm::BtnAddFilesEvents
     private:
         MainForm * const main_form = nullptr;
 
-        void OnClick(HWND hWnd);
+        void OnClick(void);
 
     public:
         BtnAddFilesEvents(const BtnAddFilesEvents &) = delete;
@@ -206,7 +192,7 @@ class MainForm::BtnLoadProfileEvents
     private:
         MainForm * const main_form = nullptr;
 
-        void OnClick(HWND hWnd);
+        void OnClick(void);
 
     public:
         BtnLoadProfileEvents(const BtnLoadProfileEvents &) = delete;
@@ -262,5 +248,7 @@ class MainForm::BtnPauseQueueEvents
 
         BtnPauseQueueEvents(MainForm * const main_form) : main_form(main_form) {}
 };
+}
+}
 
 #endif
